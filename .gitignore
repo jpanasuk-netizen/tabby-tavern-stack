@@ -1,0 +1,58 @@
+# -- User-specific data (do not commit) --
+sillytavern_data/default-user/secrets.json
+sillytavern_data/cookie-secret.txt
+sillytavern_data/access.log
+sillytavern_data/content.log
+sillytavern_data/backups/
+sillytavern_data/_storage/
+sillytavern_data/_cache/
+
+# -- ST_Data alternate directory --
+st_data/default-user/secrets.json
+st_data/default-user/settings.json
+st_data/default-user/user/
+st_data/default-user/backups/
+
+# -- Model weights (too large for git) --
+tabby_models/*/
+models/*/
+config/Qwen2.5-14B-Instruct-exl2-4.25bpw/output-*.safetensors
+config/Llama-3.1-8B-Instruct-exl2-6.0bpw/output*.safetensors
+config/Meta-Llama-3.1-8B-Instruct-exl2-6.5bpw/output*.safetensors
+
+# -- HF download caches --
+*/.cache/huggingface/
+
+# -- Ollama data (user-specific) --
+ollama_data/id_ed25519
+ollama_data/id_ed25519.pub
+ollama_data/models/
+ollama_data/cache/
+
+# -- Open WebUI databases --
+openwebui_data/webui.db
+openwebui_data/webui.db-shm
+openwebui_data/webui.db-wal
+openwebui_data/vector_db/
+openwebui_data/cache/
+
+# -- Secrets and keys --
+.env
+.env.*
+*.key
+*.pem
+secrets.json
+
+# -- OS files --
+.DS_Store
+Thumbs.db
+
+# -- Python --
+__pycache__/
+*.pyc
+
+# -- Git subrepos --
+tabbyAPI-src/.git/
+
+# -- Keep .gitkeep files
+!**/.gitkeep

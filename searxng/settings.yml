@@ -1,0 +1,18 @@
+use_default_settings: true
+
+server:
+  secret_key: "YOUR_SEARXNG_SECRET_KEY_HERE"
+  limiter: false
+  bind_address: "0.0.0.0"
+
+search:
+  safe_search: 0
+  autocomplete: ""
+  formats:
+    - html
+    - json
+
+enabled_plugins:
+  - 'Hash plugin'
+  - 'Self Information'
+  - 'Tracker URL remover'

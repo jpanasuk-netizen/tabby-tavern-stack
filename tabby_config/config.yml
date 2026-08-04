@@ -1,0 +1,10 @@
+network:
+  host: 0.0.0.0
+  port: 5000
+  disable_auth: false
+
+model:
+  model_dir: models
+  model_name: Llama-3.1-8B-Instruct-exl3-5.0bpw
+  max_seq_len: 10240
+  cache_size: 10240

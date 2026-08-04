@@ -1,0 +1,8 @@
+# Example TabbyAPI config — copy to config.yml and adjust.
+# DO NOT commit real admin passwords to a public fork without rotating them.
+network:
+  host: 0.0.0.0
+  port: 5000
+# For a private lab, set a strong password and restrict network exposure.
+# The original lab used a simple shared credential so peer containers could connect;
+# treat that as a local-dev convenience, not a production posture.

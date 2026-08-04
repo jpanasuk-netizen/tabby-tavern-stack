@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tabby Tavern Stack — Private AI, Owned Outright</title>
+<style>
+  :root {
+    --navy: #0B1F3A;
+    --blue: #1F5FA8;
+    --accent: #E8730C;
+    --light: #EEF3F8;
+    --gray: #3E4C59;
+    --green: #1E8E5A;
+    --cream: #FFF7EC;
+    --tag: #FFD9A8;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    background: #f5f7fa;
+    color: var(--gray);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ---- BANNER ---- */
+  .banner {
+    background: var(--navy);
+    color: white;
+    text-align: center;
+    padding: 40px 24px 36px;
+  }
+  .banner h1 {
+    font-size: 2.2rem;
+    font-weight: 800;
+    letter-spacing: 1px;
+    margin-bottom: 12px;
+  }
+  .banner .tagline {
+    font-size: 1.05rem;
+    color: var(--tag);
+    max-width: 720px;
+    margin: 0 auto 10px;
+    line-height: 1.5;
+  }
+  .banner .contact {
+    font-size: 0.9rem;
+    color: var(--tag);
+    opacity: 0.85;
+  }
+
+  /* ---- KICKER ---- */
+  .kicker-wrap { padding: 0 24px; }
+  .kicker {
+    background: var(--light);
+    border: 1.5px solid var(--blue);
+    text-align: center;
+    padding: 14px 20px;
+    margin: -18px auto 0;
+    max-width: 820px;
+    border-radius: 6px;
+    position: relative;
+    z-index: 1;
+  }
+  .kicker p {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--navy);
+  }
+
+  /* ---- MAIN CONTAINER ---- */
+  .container {
+    max-width: 820px;
+    margin: 0 auto;
+    padding: 28px 24px 60px;
+  }
+
+  /* ---- SECTIONS ---- */
+  .section { margin-bottom: 28px; }
+  .section h2 {
+    font-size: 1.3rem;
+    font-weight: 800;
+    color: var(--navy);
+    margin-bottom: 4px;
+  }
+  .section h2::before {
+    content: "\25B6";
+    color: var(--accent);
+    margin-right: 8px;
+    font-size: 0.85rem;
+  }
+  .section hr {
+    border: none;
+    border-top: 1.5px solid var(--blue);
+    margin-bottom: 12px;
+  }
+  .section p {
+    font-size: 0.95rem;
+    margin-bottom: 10px;
+  }
+  .section ul {
+    list-style: none;
+    padding: 0;
+  }
+  .section ul li {
+    font-size: 0.93rem;
+    padding: 5px 0 5px 22px;
+    position: relative;
+  }
+  .section ul li::before {
+    content: "\2022";
+    position: absolute;
+    left: 4px;
+    top: 0;
+    color: var(--blue);
+    font-weight: bold;
+  }
+  .section ul li b { color: var(--navy); }
+
+  .quote {
+    font-style: italic;
+    color: #4A5A6A;
+    border-left: 3px solid var(--blue);
+    padding-left: 16px;
+    margin: 14px 0 0;
+    font-size: 0.92rem;
+  }
+
+  /* ---- PRICING ---- */
+  .pricing-header {
+    background: var(--navy);
+    color: white;
+    text-align: center;
+    padding: 30px 24px;
+    border-radius: 8px 8px 0 0;
+  }
+  .pricing-header h2 {
+    font-size: 1.8rem;
+    font-weight: 800;
+    color: white;
+  }
+  .pricing-header h2::before { display: none; }
+  .pricing-header p {
+    color: var(--tag);
+    font-size: 0.95rem;
+    margin-top: 8px;
+  }
+
+  .tiers {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 16px;
+    margin-top: 16px;
+  }
+  @media (min-width: 768px) {
+    .tiers { grid-template-columns: repeat(3, 1fr); }
+  }
+
+  .tier-card {
+    border: 2px solid;
+    border-radius: 8px;
+    padding: 20px 16px;
+    text-align: center;
+  }
+  .tier-card.blue { border-color: var(--blue); background: var(--light); }
+  .tier-card.accent { border-color: var(--accent); background: var(--cream); }
+  .tier-card.green { border-color: var(--green); background: #EAF7F0; }
+
+  .tier-card h3 {
+    font-size: 1.05rem;
+    font-weight: 800;
+    color: var(--navy);
+    margin-bottom: 6px;
+  }
+  .tier-card .price {
+    font-size: 1.6rem;
+    font-weight: 800;
+    color: var(--accent);
+  }
+  .tier-card .price-sub {
+    font-size: 0.78rem;
+    color: var(--gray);
+    margin-bottom: 8px;
+  }
+  .tier-card .who {
+    font-style: italic;
+    font-size: 0.82rem;
+    color: var(--gray);
+    margin-bottom: 12px;
+    min-height: 40px;
+  }
+  .tier-card ul {
+    list-style: none;
+    padding: 0;
+    text-align: left;
+  }
+  .tier-card ul li {
+    font-size: 0.85rem;
+    padding: 3px 0 3px 16px;
+    position: relative;
+  }
+  .tier-card ul li::before {
+    content: "\2022";
+    position: absolute;
+    left: 2px;
+    color: inherit;
+  }
+
+  /* ---- BOTTOM LINE ---- */
+  .bottom-line {
+    background: var(--light);
+    border-top: 2px solid var(--accent);
+    border-bottom: 2px solid var(--accent);
+    padding: 18px 20px;
+    margin: 24px 0;
+    border-radius: 4px;
+  }
+  .bottom-line p {
+    font-size: 0.93rem;
+    color: var(--gray);
+  }
+  .bottom-line b { color: var(--navy); }
+
+  /* ---- FOOTER ---- */
+  .footer {
+    text-align: center;
+    padding: 20px 24px 40px;
+    font-size: 0.82rem;
+    color: var(--gray);
+  }
+  .footer a {
+    color: var(--blue);
+    text-decoration: underline;
+  }
+  .footer .refs {
+    margin-top: 8px;
+    opacity: 0.8;
+  }
+
+  /* ---- DOWNLOAD BUTTON ---- */
+  .download-bar {
+    text-align: center;
+    padding: 16px;
+  }
+  .download-bar a {
+    display: inline-block;
+    background: var(--accent);
+    color: white;
+    font-weight: 700;
+    font-size: 0.95rem;
+    padding: 10px 28px;
+    border-radius: 6px;
+    text-decoration: none;
+    transition: opacity 0.2s;
+  }
+  .download-bar a:hover { opacity: 0.88; }
+</style>
+</head>
+<body>
+
+<!-- BANNER -->
+<div class="banner">
+  <h1>PRIVATE AI, OWNED OUTRIGHT.</h1>
+  <p class="tagline">A self-hosted AI development environment your business controls &mdash; no cloud keys, no telemetry, no per-seat fees.</p>
+  <p class="contact">Tabby Tavern Stack &nbsp;|&nbsp; Jeremy Panasuk &nbsp;|&nbsp; jpanasuk@gmail.com &nbsp;|&nbsp; 715.970.0204</p>
+</div>
+
+<!-- KICKER -->
+<div class="kicker-wrap">
+  <div class="kicker">
+    <p>YOU DON'T NEED ANOTHER SUBSCRIPTION. YOU NEED YOUR OWN AI.</p>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- THE PROBLEM -->
+  <div class="section">
+    <h2>THE PROBLEM</h2>
+    <hr>
+    <p>Every month your team pays for code assistants, chat subscriptions, and API credits &mdash; and every prompt, snippet, and internal pattern leaves your building. You're renting infrastructure you could own. Meanwhile your competitors are training AI on your data, your compliance team is nervous, and your per-seat costs keep climbing as AI becomes core to every role.</p>
+  </div>
+
+  <!-- THE SOLUTION -->
+  <div class="section">
+    <h2>THE SOLUTION &mdash; THE TABBY TAVERN STACK</h2>
+    <hr>
+    <p>A complete, containerized AI development environment installed on hardware <b>you</b> control. One deployment brings up AI code completion, private chat, local LLM inference, web search, and tool integration &mdash; all inside your network. Published, documented, and battle-tested on Hugging Face: <a href="https://huggingface.co/jpanasuk/tabby-tavern-stack" style="color:var(--blue);">huggingface.co/jpanasuk/tabby-tavern-stack</a>.</p>
+    <ul>
+      <li><b>Code Completion &amp; AI Pair-Programming</b> &mdash; Tabby-powered Copilot alternative that lives on your network. VS Code, JetBrains, Vim ready.</li>
+      <li><b>Private Chat &amp; Knowledge Work</b> &mdash; Open WebUI and SillyTavern front-ends for drafting, research, summarization &mdash; with no third-party logging.</li>
+      <li><b>Hardware-Optimized Inference</b> &mdash; EXL3-quantized models running on consumer GPUs (RTX-class), tuned for 40+ tokens/second response.</li>
+      <li><b>Web Search &amp; Tooling</b> &mdash; SearXNG private search engine plus Model Context Protocol integration for tool-use actions (files, commands, APIs).</li>
+      <li><b>Docker-First &amp; Reboot-Proof</b> &mdash; docker-compose orchestration with health checks, persistent volumes, and automatic startup. Survives outages.</li>
+    </ul>
+  </div>
+
+  <!-- WHAT THIS MEANS -->
+  <div class="section">
+    <h2>WHAT THIS MEANS FOR YOUR BUSINESS</h2>
+    <hr>
+    <ul>
+      <li><b>Kill per-seat AI fees:</b> one install replaces $30&ndash;$60/user/month subscriptions. Breakeven on a 20-person team: under 4 months.</li>
+      <li><b>Data stays home:</b> no vendor training on your code. Attorney-client privileged documents, patient notes, proprietary IP &mdash; never leave the building.</li>
+      <li><b>Latency that feels local:</b> sub-100ms completions beats any cloud round-trip. Your developers stay in flow.</li>
+      <li><b>Zero vendor lock-in:</b> model weights, configs, and full documentation are yours. You own it forever, or we maintain it for you.</li>
+    </ul>
+  </div>
+
+  <!-- WHO DELIVERS IT -->
+  <div class="section">
+    <h2>WHO DELIVERS IT</h2>
+    <hr>
+    <p>Built by Jeremy Panasuk &mdash; 22+ years of enterprise data &amp; infrastructure delivered to JPMorgan Chase, PepsiCo, Federal Reserve, Navy Federal, BNY Mellon, Micron, Toyota, and Harvard. $2M+ program management. 19/20 crisis accounts rescued. This isn't a weekend project: it's the same rigor applied to Fortune 100 engagements, packaged for your business.</p>
+    <p class="quote">"You sent one of the best that Informatica has to offer in Jeremy." &mdash; MF Global Infrastructure</p>
+  </div>
+
+</div><!-- /container -->
+
+<!-- PRICING -->
+<div class="container" style="padding-top:0;">
+  <div class="pricing-header">
+    <h2>OFFERS &amp; ENGAGEMENTS</h2>
+    <p>Three ways to get your private AI stack live. All include 30 days of email support post-deployment.</p>
+  </div>
+
+  <div class="tiers">
+    <!-- Tier 1 -->
+    <div class="tier-card blue">
+      <h3>SINGLE-GPU INSTALL</h3>
+      <div class="price">$12,500</div>
+      <div class="price-sub">one-time</div>
+      <div class="who">Small teams (up to ~15 users), one office, one GPU system.</div>
+      <ul>
+        <li>Tabby-Tavern stack deployed on your hardware</li>
+        <li>Code completion, private chat, AI search</li>
+        <li>Hardware spec + procurement guidance</li>
+        <li>Security hardening &amp; network isolation</li>
+        <li>Half-day team onboarding session</li>
+      </ul>
+    </div>
+
+    <!-- Tier 2 -->
+    <div class="tier-card accent">
+      <h3>PRODUCTION DEPLOYMENT</h3>
+      <div class="price">$25,000</div>
+      <div class="price-sub">one-time</div>
+      <div class="who">Mid-size orgs (15&ndash;100 users), high-availability, monitored.</div>
+      <ul>
+        <li>Everything in Single-GPU Install</li>
+        <li>Redundant inference nodes + failover</li>
+        <li>User auth, role-based access, audit logs</li>
+        <li>Monitoring, alerts, automated backups</li>
+        <li>Full-day training + doc library for your team</li>
+      </ul>
+    </div>
+
+    <!-- Tier 3 -->
+    <div class="tier-card green">
+      <h3>MANAGED PRIVATE AI</h3>
+      <div class="price">$3,500<span style="font-size:0.7em;">/mo</span></div>
+      <div class="price-sub">ongoing</div>
+      <div class="who">Ongoing care: we run your stack so yours never thinks about it.</div>
+      <ul>
+        <li>Everything in Production Deployment</li>
+        <li>24&times;7 monitoring &amp; incident response</li>
+        <li>Model upgrades, retunes &amp; new quantization packs</li>
+        <li>Quarterly health checks &amp; performance reports</li>
+        <li>Priority phone + Slack/Teams response, 4hr SLA</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- BOTTOM LINE -->
+  <div class="bottom-line">
+    <p><b>THE BOTTOM LINE.</b> A 20-person shop paying $50/user/mo for AI subscriptions spends $12,000/year &mdash; forever. A single installed private stack pays for itself in the first year, then it's just yours. If your data can't leave the building, or your bill can't keep growing, this is the out.</p>
+  </div>
+
+  <!-- DOWNLOAD PDF -->
+  <div class="download-bar">
+    <a href="Tabby_Tavern_Sell_Sheet.pdf" download>Download PDF Version</a>
+  </div>
+
+</div>
+
+<!-- FOOTER -->
+<div class="footer">
+  <p>Jeremy Panasuk &nbsp;&bull;&nbsp; jpanasuk@gmail.com &nbsp;&bull;&nbsp; 715.970.0204 &nbsp;&bull;&nbsp; <a href="https://huggingface.co/jpanasuk/tabby-tavern-stack">huggingface.co/jpanasuk/tabby-tavern-stack</a> &nbsp;&bull;&nbsp; <a href="https://github.com/jpanasuk-netizen">github.com/jpanasuk-netizen</a></p>
+  <p class="refs">References available on request &mdash; Fortune 100 delivery record and customer testimonials on file.</p>
+</div>
+
+</body>
+</html>
