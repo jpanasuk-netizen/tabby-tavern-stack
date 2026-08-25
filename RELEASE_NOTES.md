@@ -2,6 +2,8 @@
 
 First tagged release of the live lab tree. Hugging Face model card, GitHub, and this tag are aligned.
 
+Tabby Tavern 2.0 is the **six-service compose** in this repo. Taproot (llama.cpp + WebUI :3001) is a separate project on the same machine — see README / DEVLOG (2026-08-25). Do not mix the brands.
+
 ## What's in the stack now
 
 - TabbyAPI EXL3 (ExLlamaV3) on `local/tabbyapi:exl3-fixed`

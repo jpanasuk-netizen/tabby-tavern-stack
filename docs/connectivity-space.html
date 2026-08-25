@@ -2,80 +2,10 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Local AI Stack Connectivity — the /v1 rule</title>
-<style>
-  :root { --bg:#0f172a; --card:#111c33; --line:#334155; --ink:#e2e8f0; --muted:#94a3b8; --cyan:#22d3ee; --ind:#818cf8; --warn:#f59e0b; }
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: -apple-system, "Segoe UI", Roboto, sans-serif; background: var(--bg); color: var(--ink); line-height: 1.6; }
-  .wrap { max-width: 860px; margin: 0 auto; padding: 36px 20px 64px; }
-  .badge { display:inline-block; background:#312e81; border:1px solid #6366f1; border-radius:20px; padding:2px 12px; font-size:.78em; margin:0 6px 8px 0; color:#c7d2fe; }
-  h1 { font-size: clamp(1.6rem, 4vw, 2.2rem); margin: .2em 0 .4em; background: linear-gradient(90deg,var(--ind),var(--cyan)); -webkit-background-clip:text; background-clip:text; color:transparent; }
-  h2 { margin-top: 1.8em; margin-bottom:.4em; border-bottom:1px solid var(--line); padding-bottom:.3em; color:#a5b4fc; font-size:1.15rem; }
-  p, li { color: var(--ink); font-size: .95rem; }
-  p { margin: .6em 0; }
-  ul, ol { padding-left: 1.2em; margin: .6em 0; }
-  a { color: var(--cyan); }
-  code, pre { background: #1e293b; border-radius: 6px; }
-  code { padding: 2px 6px; font-size: .88em; }
-  pre { padding: 14px; overflow-x: auto; margin: 12px 0; font-size: .85rem; }
-  .rule {
-    background: var(--card);
-    border-left: 3px solid var(--cyan);
-    padding: 16px 18px;
-    border-radius: 0 10px 10px 0;
-    margin: 1.2em 0;
-  }
-  .rule strong { color: var(--cyan); }
-  table { border-collapse: collapse; width: 100%; margin: 1em 0; font-size: .88rem; }
-  th, td { border: 1px solid var(--line); padding: 8px 10px; text-align: left; }
-  th { background: #1e293b; color: #a5b4fc; }
-  .muted { color: var(--muted); font-size: .85rem; margin-top: 2.5em; }
-</style>
+<meta http-equiv="refresh" content="0; url=spaces/local-ai-stack-connectivity/index.html">
+<title>Connectivity companion</title>
 </head>
 <body>
-<div class="wrap">
-  <p><span class="badge">Hermes skill</span><span class="badge">44 recipes</span><span class="badge">Tabby Tavern companion</span></p>
-  <h1>Local AI Stack Connectivity</h1>
-  <p>A verified playbook for wiring Docker inference engines, chat UIs, search, and MCP gateways on one network. Distilled from the Tabby Tavern lab — not theory.</p>
-
-  <div class="rule">
-    <strong>THE CONNECTION RULE</strong> — wire any OpenAI-compatible UI to an engine:
-    <ol>
-      <li><b>Path is always <code>/v1</code></b> → <code>http://&lt;host&gt;:&lt;port&gt;/v1</code>. Never <code>/api/v1</code>. Never put <code>/v1/chat/completions</code> in the base URL.</li>
-      <li><b>Host is the in-network service name, not localhost.</b> Inside Docker, <code>localhost</code> is the container you are in. Open WebUI talks to TabbyAPI at <code>http://tabbyapi:5000/v1</code>.</li>
-      <li><b>Model is the exact served id</b> (e.g. <code>llama3.1:8b</code>), not the word “ollama”. Ask <code>/v1/models</code>.</li>
-      <li>If the engine has auth, pass its API key. Do not “fix” a 401 by changing the host.</li>
-    </ol>
-  </div>
-
-  <h2>What’s in this Space</h2>
-  <table>
-    <tr><th>File</th><th>What it is</th></tr>
-    <tr><td><code>SKILL.md</code></td><td>Full Hermes skill: connection rule, discovery, wiring workflow, pitfalls</td></tr>
-    <tr><td><code>references/wiring-recipes.md</code></td><td>44 recipes — config location, keys, one-line fix, verify step</td></tr>
-  </table>
-
-  <h2>Pitfalls already paid for</h2>
-  <ul>
-    <li>Ollama global 64K context → ~6 GB KV cache → 8B weights pushed to CPU. Use flash-attn + <code>q8_0</code> KV instead.</li>
-    <li>Two heavy engines on a 12 GB card: the second CUDA alloc can <b>block forever</b> instead of erroring. Free VRAM first.</li>
-    <li>TabbyAPI current images dropped EXL2. Point <code>model_name</code> at an EXL3 directory.</li>
-    <li>Empty MCPO <code>mcpServers: {}</code> crashes the proxy. Keep at least one server.</li>
-  </ul>
-
-  <h2>Install as a Hermes skill</h2>
-  <pre>mkdir -p ~/.hermes/skills/mlops/local-ai-stack-connectivity
-cp SKILL.md ~/.hermes/skills/mlops/local-ai-stack-connectivity/
-cp -r references ~/.hermes/skills/mlops/local-ai-stack-connectivity/</pre>
-
-  <h2>Reference implementation</h2>
-  <p>
-    <a href="https://huggingface.co/jpanasuk/tabby-tavern-stack">Tabby Tavern stack v2.0.0</a> ·
-    <a href="https://huggingface.co/spaces/jpanasuk/dockroot-mcp">dockroot-mcp</a> ·
-    <a href="https://huggingface.co/spaces/jpanasuk/tabby-tavern-sell-sheet">sell sheet</a>
-  </p>
-  <p class="muted">Skill author: Jeremy Panasuk. License: Apache-2.0. Hermes Agent by Nous Research.</p>
-</div>
+<p>Moved to <a href="spaces/local-ai-stack-connectivity/index.html">docs/spaces/local-ai-stack-connectivity/</a>.</p>
 </body>
 </html>

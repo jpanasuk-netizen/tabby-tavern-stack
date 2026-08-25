@@ -1,0 +1,405 @@
+/* Tabby Tavern 2.0 — shared Space tokens.
+   Copy this file next to index.html when uploading a static HF Space. */
+:root {
+  --navy: #0B1F3A;
+  --navy-2: #12284a;
+  --blue: #1F5FA8;
+  --accent: #E8730C;
+  --light: #EEF3F8;
+  --gray: #3E4C59;
+  --green: #1E8E5A;
+  --cream: #FFF7EC;
+  --tag: #FFD9A8;
+  --ink: #0B1F3A;
+  --line: #d5e0ec;
+  --warn: #9A3412;
+  --paper: #f4f7fb;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  background: var(--paper);
+  color: var(--gray);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+a { color: var(--blue); }
+a:hover { color: var(--accent); }
+
+code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.86em;
+  background: #e8eef5;
+  padding: 1px 6px;
+  border-radius: 4px;
+  color: var(--navy);
+}
+
+pre {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  background: var(--navy);
+  color: #e8eef5;
+  padding: 14px 16px;
+  border-radius: 8px;
+  overflow-x: auto;
+  font-size: 0.8rem;
+  line-height: 1.45;
+  margin: 10px 0 0;
+}
+pre code { background: transparent; color: inherit; padding: 0; }
+
+.banner {
+  background: linear-gradient(160deg, var(--navy) 0%, var(--navy-2) 55%, #16355f 100%);
+  color: white;
+  text-align: center;
+  padding: 48px 24px 40px;
+}
+.badge-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+.badge {
+  display: inline-block;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 5px 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(255,217,168,0.45);
+  color: var(--tag);
+  background: rgba(255,255,255,0.06);
+}
+.banner h1 {
+  font-size: clamp(1.6rem, 4vw, 2.35rem);
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  margin-bottom: 12px;
+  line-height: 1.15;
+}
+.banner .tagline {
+  font-size: 1.05rem;
+  color: var(--tag);
+  max-width: 740px;
+  margin: 0 auto 14px;
+}
+.banner .contact { font-size: 0.9rem; color: var(--tag); opacity: 0.9; }
+.banner .links {
+  margin-top: 16px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+}
+.banner .links a {
+  color: white;
+  text-decoration: none;
+  background: var(--accent);
+  font-weight: 700;
+  font-size: 0.85rem;
+  padding: 8px 14px;
+  border-radius: 6px;
+}
+.banner .links a.ghost {
+  background: transparent;
+  border: 1px solid rgba(255,217,168,0.5);
+  color: var(--tag);
+}
+
+.kicker-wrap { padding: 0 24px; }
+.kicker {
+  background: white;
+  border: 1.5px solid var(--blue);
+  text-align: center;
+  padding: 14px 20px;
+  margin: -18px auto 0;
+  max-width: 880px;
+  border-radius: 8px;
+  position: relative;
+  z-index: 1;
+  box-shadow: 0 8px 24px rgba(11,31,58,0.08);
+}
+.kicker p { font-size: 1.05rem; font-weight: 800; color: var(--navy); }
+
+.container { max-width: 880px; margin: 0 auto; padding: 28px 24px 24px; }
+.container.narrow-top { padding-top: 0; }
+
+.stats-bar {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  background: var(--navy);
+  color: white;
+  border-radius: 10px;
+  padding: 18px 12px;
+  margin: 8px 0 28px;
+}
+.stat { text-align: center; }
+.stat .num { font-size: 1.7rem; font-weight: 800; color: var(--accent); }
+.stat .label {
+  font-size: 0.72rem;
+  color: var(--tag);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.section { margin-bottom: 30px; }
+.section h2 {
+  font-size: 1.22rem;
+  font-weight: 800;
+  color: var(--navy);
+  margin-bottom: 4px;
+}
+.section h2::before {
+  content: "\25B6";
+  color: var(--accent);
+  margin-right: 8px;
+  font-size: 0.8rem;
+}
+.section hr {
+  border: none;
+  border-top: 1.5px solid var(--blue);
+  margin-bottom: 12px;
+}
+.section p { font-size: 0.95rem; margin-bottom: 10px; }
+.section ul { list-style: none; }
+.section ul li {
+  font-size: 0.93rem;
+  padding: 5px 0 5px 22px;
+  position: relative;
+}
+.section ul li::before {
+  content: "\2022";
+  position: absolute;
+  left: 4px;
+  color: var(--blue);
+  font-weight: bold;
+}
+.section ol { padding-left: 1.3em; margin: 8px 0; }
+.section ol li { font-size: 0.93rem; padding: 4px 0; }
+.section ul li b, .section ol li b, .section p b { color: var(--navy); }
+
+.cap-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+  margin-top: 16px;
+}
+.cap-card {
+  border: 1.5px solid var(--line);
+  border-radius: 10px;
+  padding: 14px 14px 12px;
+  background: white;
+  min-height: 132px;
+}
+.cap-card h3 {
+  font-size: 0.78rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 6px;
+}
+.cap-card p { font-size: 0.84rem; margin: 0; line-height: 1.45; }
+.cap-card p b { color: var(--navy); }
+.cap-card .port {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.72rem;
+  color: var(--accent);
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+.c1 { border-top: 3px solid var(--blue); }
+.c1 h3 { color: var(--blue); }
+.c2 { border-top: 3px solid var(--accent); }
+.c2 h3 { color: var(--accent); }
+.c3 { border-top: 3px solid var(--green); }
+.c3 h3 { color: var(--green); }
+.c4 { border-top: 3px solid #6C3FA8; }
+.c4 h3 { color: #6C3FA8; }
+.c5 { border-top: 3px solid #0E8E8E; }
+.c5 h3 { color: #0E8E8E; }
+.c6 { border-top: 3px solid #C0392B; }
+.c6 h3 { color: #C0392B; }
+
+.note, .vram, .neighbor {
+  border-radius: 8px;
+  padding: 12px 14px;
+  font-size: 0.88rem;
+  margin-top: 14px;
+}
+.note {
+  background: var(--cream);
+  border: 1px solid #f0d2a8;
+}
+.vram {
+  background: #fff1e8;
+  border: 1.5px solid var(--accent);
+}
+.neighbor {
+  background: white;
+  border: 1.5px dashed #6C3FA8;
+}
+.note b, .vram b, .neighbor b { color: var(--navy); }
+.neighbor h3 {
+  font-size: 0.78rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #6C3FA8;
+  margin-bottom: 6px;
+}
+.neighbor p { margin-bottom: 8px; }
+.neighbor p:last-child { margin-bottom: 0; }
+
+.quote {
+  font-style: italic;
+  color: #4A5A6A;
+  border-left: 3px solid var(--blue);
+  padding-left: 16px;
+  margin: 14px 0 0;
+  font-size: 0.92rem;
+}
+
+table.ports {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.84rem;
+  margin-top: 8px;
+  background: white;
+  border-radius: 8px;
+  overflow: hidden;
+}
+table.ports th, table.ports td {
+  border: 1px solid var(--line);
+  padding: 8px 10px;
+  text-align: left;
+}
+table.ports th {
+  background: var(--navy);
+  color: var(--tag);
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+table.ports td:first-child, table.ports td:nth-child(2) {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.78rem;
+  color: var(--navy);
+  white-space: nowrap;
+}
+
+.rule {
+  background: white;
+  border-left: 3px solid var(--accent);
+  padding: 14px 16px;
+  border-radius: 0 8px 8px 0;
+  margin: 10px 0 0;
+  font-size: 0.9rem;
+}
+.rule strong { color: var(--navy); }
+
+.pricing-header {
+  background: var(--navy);
+  color: white;
+  text-align: center;
+  padding: 28px 24px;
+  border-radius: 10px 10px 0 0;
+}
+.pricing-header h2 { font-size: 1.6rem; font-weight: 800; color: white; }
+.pricing-header h2::before { display: none; }
+.pricing-header p { color: var(--tag); font-size: 0.95rem; margin-top: 8px; }
+
+.tiers {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+  margin-top: 16px;
+}
+.tier-card {
+  border: 2px solid;
+  border-radius: 10px;
+  padding: 20px 16px;
+  text-align: center;
+  background: white;
+}
+.tier-card.blue { border-color: var(--blue); background: var(--light); }
+.tier-card.accent { border-color: var(--accent); background: var(--cream); }
+.tier-card.green { border-color: var(--green); background: #EAF7F0; }
+.tier-card h3 { font-size: 1.0rem; font-weight: 800; color: var(--navy); margin-bottom: 6px; }
+.tier-card .price { font-size: 1.55rem; font-weight: 800; color: var(--accent); }
+.tier-card .price-sub { font-size: 0.78rem; margin-bottom: 8px; }
+.tier-card .who { font-style: italic; font-size: 0.82rem; margin-bottom: 12px; min-height: 42px; }
+.tier-card ul { list-style: none; text-align: left; }
+.tier-card ul li { font-size: 0.85rem; padding: 3px 0 3px 16px; position: relative; }
+.tier-card ul li::before { content: "\2022"; position: absolute; left: 2px; color: var(--navy); }
+
+.bottom-line {
+  background: white;
+  border-top: 2px solid var(--accent);
+  border-bottom: 2px solid var(--accent);
+  padding: 18px 20px;
+  margin: 24px 0 8px;
+  border-radius: 4px;
+}
+.bottom-line p { font-size: 0.93rem; }
+.bottom-line b { color: var(--navy); }
+
+.family {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 8px;
+}
+.family a {
+  text-decoration: none;
+  font-size: 0.8rem;
+  font-weight: 700;
+  padding: 6px 10px;
+  border-radius: 6px;
+  border: 1px solid var(--line);
+  background: white;
+  color: var(--navy);
+}
+.family a:hover { border-color: var(--accent); color: var(--accent); }
+
+.footer {
+  text-align: center;
+  padding: 16px 24px 40px;
+  font-size: 0.82rem;
+}
+.footer .refs { margin-top: 8px; opacity: 0.85; }
+
+@media (min-width: 640px) {
+  .stats-bar { grid-template-columns: repeat(4, 1fr); }
+  .cap-grid { grid-template-columns: 1fr 1fr; }
+}
+@media (min-width: 768px) {
+  .tiers { grid-template-columns: repeat(3, 1fr); }
+}
+@media (min-width: 900px) {
+  .cap-grid { grid-template-columns: 1fr 1fr 1fr; }
+}
+@media (max-width: 639px) {
+  .banner { padding: 36px 16px 32px; }
+  .banner h1 { font-size: 1.28rem; letter-spacing: 0; }
+  .banner .tagline { font-size: 0.9rem; }
+  .banner .contact { font-size: 0.8rem; line-height: 1.45; }
+  .badge { font-size: 0.65rem; padding: 4px 8px; }
+  .kicker { margin-left: 0; margin-right: 0; padding: 12px 12px; }
+  .kicker p { font-size: 0.8rem; line-height: 1.35; }
+  .container { padding: 22px 16px 16px; }
+  .stat .num { font-size: 1.45rem; }
+  .stat .label { font-size: 0.62rem; letter-spacing: 0.04em; }
+  .cap-card { min-height: 0; }
+  .section h2 { font-size: 1.08rem; }
+  table.ports { font-size: 0.75rem; }
+  table.ports td:first-child, table.ports td:nth-child(2) { white-space: normal; }
+}

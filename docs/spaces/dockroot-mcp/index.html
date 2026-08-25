@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>dockroot-mcp — read-only docker vision</title>
+<meta name="description" content="Companion to Tabby Tavern 2.0: read-only MCP docker tools. Diagnose the stack without host root.">
+<link rel="stylesheet" href="tavern.css">
+</head>
+<body>
+
+<div class="banner">
+  <div class="badge-row">
+    <span class="badge">Companion</span>
+    <span class="badge">MCP</span>
+    <span class="badge">Read-only</span>
+  </div>
+  <h1>dockroot-mcp</h1>
+  <p class="tagline">Virtual docker root for AI agents. Read-only power over a compose stack — without host root. Companion to Tabby Tavern 2.0, not a Tabby service.</p>
+  <div class="links">
+    <a href="https://huggingface.co/spaces/jpanasuk/tabby-tavern-stack">Tabby lab tour</a>
+    <a class="ghost" href="https://huggingface.co/spaces/jpanasuk/local-ai-stack-connectivity">Connectivity skill</a>
+  </div>
+</div>
+
+<div class="kicker-wrap">
+  <div class="kicker">
+    <p>DIAGNOSE. NEVER DESTROY. NO START / STOP / RM / EXEC.</p>
+  </div>
+</div>
+
+<div class="container">
+  <div class="section">
+    <h2>WHY THIS EXISTS</h2>
+    <hr>
+    <p>Agents get asked “why is Open WebUI broken?” Without docker access they invent commands. With dockroot they list containers, read logs, inspect env/mounts, watch CPU/memory, and see networks — then answer from evidence.</p>
+    <div class="rule">
+      <strong>Tools:</strong> <code>docker_ps</code> · <code>docker_logs</code> · <code>docker_inspect</code> · <code>docker_stats</code> · <code>docker_networks</code>
+      plus the tavern connectivity toolkit (<code>status</code>, <code>self_check</code>, <code>wire</code>, <code>rediscover</code>, <code>models</code>, <code>chat</code>).
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>SECURITY MODEL</h2>
+    <hr>
+    <div class="vram">
+      <b>Read-only by design.</b> Opt-in socket mount. Internal only — socket access is still powerful; do not publish this port. No socket mount, no docker access; the server reports that honestly.
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>HOW IT RELATES TO TABBY</h2>
+    <hr>
+    <p>Tabby Tavern 2.0 already runs <b>MCPO</b> at <code>:8001</code> with FastMCP stack tools. Dockroot is the optional “see the Docker daemon” add-on — a different job than MCPO’s TabbyAPI/Ollama/SearXNG tools.</p>
+    <div class="neighbor">
+      <h3>Live lab note (2026-08-25)</h3>
+      <p>On LightBringer, <code>~/dockroot</code> is a local recipe/MCP helper (<code>tavern.sh</code>, <code>tavern_mcp.py</code>, <code>discover.py</code>, <code>recipes.py</code>). It is <b>not</b> running as a container right now. This Space documents the companion; it is not a live docker socket.</p>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>DROP-IN SHAPE</h2>
+    <hr>
+    <pre>services:
+  dockroot:
+    image: jpanasuk/dockroot-mcp:latest
+    container_name: dockroot
+    restart: unless-stopped
+    networks: [ai-network]
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock</pre>
+    <p>Wire through Hermes stdio or add a second MCPO <code>mcpServers</code> entry. Keep Tabby’s existing <code>host-master</code> server — empty configs crash MCPO.</p>
+  </div>
+
+  <div class="section">
+    <h2>FAMILY</h2>
+    <hr>
+    <div class="family">
+      <a href="https://github.com/jpanasuk-netizen/tabby-tavern-stack">Tabby GitHub</a>
+      <a href="https://huggingface.co/spaces/jpanasuk/tabby-tavern-stack">Lab tour</a>
+      <a href="https://huggingface.co/spaces/jpanasuk/tabby-tavern-sell-sheet">Sell sheet</a>
+      <a href="https://huggingface.co/spaces/jpanasuk/local-ai-stack-connectivity">Connectivity</a>
+      <a href="https://huggingface.co/jpanasuk/dockroot-mcp-source">Source</a>
+      <a href="https://hub.docker.com/r/jpanasuk/dockroot-mcp">Docker Hub</a>
+    </div>
+  </div>
+</div>
+
+<div class="footer">
+  <p>Jeremy Panasuk · read-only docker vision for local AI labs</p>
+  <p class="refs">Companion. Not duplicated from the Tabby README.</p>
+</div>
+
+</body>
+</html>
