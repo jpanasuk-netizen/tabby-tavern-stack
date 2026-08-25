@@ -51,4 +51,4 @@ Optional: mirror `README.md` from GitHub to the **model card** (not the Space):
 hf upload jpanasuk/tabby-tavern-stack README.md README.md --repo-type model
 ```
 
-`short_description` on the new Space is ≤60 characters: Independent AI lab — EXL3 compose + llama.cpp 262k desk. The Space is **not** live until these commands succeed. This environment has no HF token.
+`short_description` on the new Space is ≤60 characters: Learn AI infra in 21 days — Tabby then Taproot. The Space is **not** live until these commands succeed. This environment has no HF token.

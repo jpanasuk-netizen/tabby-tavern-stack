@@ -6,7 +6,7 @@ colorTo: orange
 sdk: static
 pinned: true
 license: mit
-short_description: Independent AI lab — EXL3 compose + llama.cpp 262k desk
+short_description: Learn AI infra in 21 days — Tabby then Taproot
 tags:
   - docker
   - local-ai
@@ -21,7 +21,9 @@ tags:
 
 # Tabby Tavern 2.0 (Space)
 
-Static **lab tour** for the Independent AI Lab on LightBringer: EXL3 Tabby compose, llama.cpp 262k operator desk, VS Code / Continue / Grok / Hermes, and MCP.
+**Basically, you can learn AI Infrastructure in 21 days too.** Static **lab tour** of the same story as the GitHub README and DEVLOG.
+
+**Tabby** is local AI you can actually use. **Taproot** is the next step: a local coding desk, no internet required — llama.cpp 262k, VS Code / Continue / Grok / Hermes.
 
 This Space is **not** the model card. The model card (same slug, no `/spaces/`) is:
 
@@ -33,4 +35,4 @@ Open the **App** tab for the page.
 - Sell sheet: https://huggingface.co/spaces/jpanasuk/tabby-tavern-sell-sheet
 - Companions: [dockroot-mcp](https://huggingface.co/spaces/jpanasuk/dockroot-mcp) · [connectivity](https://huggingface.co/spaces/jpanasuk/local-ai-stack-connectivity)
 
-Tabby compose service names and ports stay Tabby. The llama.cpp desk is first-class in the story; its compose lives on the machine at `~/taproot` and is not copied into this git tree.
+Tabby compose service names and ports stay Tabby. Taproot’s llama.cpp compose lives on the machine at `~/taproot` and is not copied into this git tree. Same lab. Same docs family.

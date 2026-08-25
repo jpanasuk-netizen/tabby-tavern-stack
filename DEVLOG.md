@@ -2,14 +2,14 @@
 
 Engineering history for the Independent AI Lab on LightBringer. Public tree is sanitized — no live keys, no weights, no chat logs.
 
-**Tabby Tavern 2.0 is the whole lab:** EXL3 Tabby compose (this repo) + llama.cpp 262k operator desk (`~/taproot`) + VS Code / Continue / Grok / Hermes + MCP. Tabby **service names and ports stay Tabby**. Class files in `~/annie-scratch` stay out of this repo.
+**Tabby Tavern 2.0 is one lab:** **Tabby** (local AI you can actually use) then **Taproot** (the next step — local coding desk, no internet: llama.cpp 9B 262k :1234, WebUI :3001, Continue, Remote-WSL, Grok, Hermes), plus dockroot and connectivity. One README. One DEVLOG. One Space family. Tabby **service names and ports stay Tabby**. Class files in `~/annie-scratch` stay out of this repo.
 
 ## Hardware baseline
 
 - Host: LightBringer — WSL2 Ubuntu
 - GPU: NVIDIA GeForce RTX 4070 (12 GB) — **one heavy engine at a time**
-- Character / EXL3 layer: TabbyAPI + SillyTavern + Open WebUI :3000 + Ollama :11435 + SearXNG + MCPO
-- Long-context layer: llama.cpp Qwen3.5-9B `n_ctx` 262144 on :1234 + Open WebUI :3001
+- **Tabby** layer: TabbyAPI + SillyTavern + Open WebUI :3000 + Ollama :11435 + SearXNG + MCPO
+- **Taproot** layer: llama.cpp Qwen3.5-9B `n_ctx` 262144 on :1234 + Open WebUI :3001 + Continue + Remote-WSL + Grok + Hermes
 - Desk: Windows VS Code + Remote-WSL + Continue 2.0; Grok 1.0.5; Hermes v0.20.0
 - Docker vision: `~/dockroot` helper + dockroot-mcp Space
 
@@ -93,15 +93,15 @@ Full from-scratch rebuild on clean WSL2 (same RTX 4070). Every fix is in the REA
 - Public `mcpo/config.json` no longer contains a live TabbyAPI key (placeholder only)
 - Cards, MCPO, WSL2 Dockerfile fix, and dual-backend Open WebUI are in the published compose
 
-## 2026-08-25 — full lab: EXL3 compose + llama.cpp 262k desk
+## 2026-08-25 — Tabby then Taproot (one lab)
 
-GitHub README was stale vs the live box (it still read as if Tabby owned the GPU). **This snapshot wins.** Tabby compose was **not** rewritten and was **not** renamed to Taproot. `~/annie-scratch` class files stay out of this repo.
+GitHub README was stale vs the live box (it still read as if Tabby owned the GPU). **This snapshot wins.** Tabby compose was **not** rewritten and Tabby **service names/ports stay Tabby**. `~/annie-scratch` class files stay out of this repo.
 
-Tabby Tavern 2.0 **is** the whole LightBringer lab. The llama.cpp / Continue / Grok / Hermes path is first-class, not a footnote.
+Tabby Tavern 2.0 is the LightBringer lab: Tabby you can actually use, then Taproot as the local coding desk (llama.cpp / Continue / Grok / Hermes), no internet required.
 
 ### What is actually running (LightBringer)
 
-- **Operator layer** — `/home/jpanasuk/taproot/docker-compose.yml`, project name `taproot`:
+- **Taproot** — `/home/jpanasuk/taproot/docker-compose.yml`, project name `taproot`:
   - `qwen38-llama-server` **Up**, `0.0.0.0:1234->8080`, image `ghcr.io/ggml-org/llama.cpp:server-cuda`, model Qwen3.5-9B UD-Q4_K_XL, `n_ctx` 262144. Container name is still `qwen38-llama-server` (yaml wants `taproot-qwen`; **not recreated** — do not bounce it).
   - `taproot-webui` **Up** on **:3001**, `WEBUI_NAME=Taproot`, `OPENAI_API_BASE_URL=http://host.docker.internal:1234/v1`, data `/home/jpanasuk/taproot/open-webui-data`. Separate from Tabby Open WebUI **:3000** so the UIs do not share a database.
 - `/home/jpanasuk/qwen38-agent/docker-compose.yml` still exists (27B then 9B 262k). Live llama started from this lineage.
@@ -109,7 +109,7 @@ Tabby Tavern 2.0 **is** the whole LightBringer lab. The llama.cpp / Continue / G
 - `/home/jpanasuk/tabby-tavern/docker-compose.yml` **restored** from `.bak-tabby` (Tabby names/ports). All Tabby containers **Exited** ~17 h, `restart=no`.
 - Grok 1.0.5 at `/home/jpanasuk/.local/bin/grok`. Hermes v0.20.0 at `~/.hermes/hermes-agent`.
 - Windows VS Code **1.134.0** + Remote-WSL **0.104.3** + Continue **2.0** on `/home/jpanasuk/taproot`. Continue → `http://127.0.0.1:1234/v1` Qwen3.5-9B (`~/.continue/config.yaml`).
-- Linux snap VS Code **1.134.0** on `~/annie-scratch` is **Annie++ Python class only** — not the lab desk.
+- Linux snap VS Code **1.134.0** on `~/annie-scratch` is **Annie++ Python class only** — not the lab desk, not this repo.
 - Dockroot `~/dockroot` is a local recipe/MCP helper (`tavern.sh`, `tavern_mcp.py`, `discover.py`, `recipes.py`), **not** running as a container right now.
 
 ### VRAM last call
@@ -120,8 +120,8 @@ No Qwen3.5-9B llama.cpp tok/s is recorded here.
 
 ### Public 2.0 packaging (same calendar day)
 
-- README retitled **Tabby Tavern 2.0** as the Independent AI Lab: EXL3 character path **and** llama.cpp 262k operator path **and** VS Code/Continue/Grok/Hermes **and** MCP. Compose architecture in this repo unchanged (Tabby names/ports).
-- Static HTML family under `docs/spaces/` (shared `tavern.css`): sell sheet, lab-tour Space, connectivity companion, dockroot companion — one product story.
+- Public pitch: “Basically, you can learn AI Infrastructure in 21 days too.” Progression: **Tabby** = local AI you can actually use; **Taproot** = next step, local coding desk, no internet. Proof is the live stack plus Week 4’s from-scratch WSL2 rebuild — not a day-by-day syllabus.
+- Static HTML family under `docs/spaces/` (shared `tavern.css`): sell sheet, lab-tour Space, connectivity companion, dockroot companion. One family documents both layers.
 - Intended new Hugging Face **Space** `jpanasuk/tabby-tavern-stack` (static SDK) is distinct from the existing **model card** at `huggingface.co/jpanasuk/tabby-tavern-stack`. Upload commands: `docs/spaces/UPLOAD.md`. This environment has no HF token; the Space is not live until those commands run.
 
 ## Open follow-ups

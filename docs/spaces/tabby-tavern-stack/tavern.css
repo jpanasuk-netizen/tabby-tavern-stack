@@ -85,6 +85,13 @@ pre code { background: transparent; color: inherit; padding: 0; }
   margin-bottom: 12px;
   line-height: 1.15;
 }
+.banner h1.hero-hook {
+  letter-spacing: 0.01em;
+  font-size: clamp(1.35rem, 3.4vw, 2.05rem);
+  max-width: 18em;
+  margin-left: auto;
+  margin-right: auto;
+}
 .banner .tagline {
   font-size: 1.05rem;
   color: var(--tag);
@@ -229,7 +236,7 @@ pre code { background: transparent; color: inherit; padding: 0; }
 .c6 { border-top: 3px solid #C0392B; }
 .c6 h3 { color: #C0392B; }
 
-.note, .vram, .neighbor {
+.note, .vram {
   border-radius: 8px;
   padding: 12px 14px;
   font-size: 0.88rem;
@@ -243,21 +250,37 @@ pre code { background: transparent; color: inherit; padding: 0; }
   background: #fff1e8;
   border: 1.5px solid var(--accent);
 }
-.neighbor {
-  background: white;
-  border: 1.5px dashed #6C3FA8;
+.note b, .vram b { color: var(--navy); }
+
+.steps {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+  margin-top: 14px;
 }
-.note b, .vram b, .neighbor b { color: var(--navy); }
-.neighbor h3 {
-  font-size: 0.78rem;
+.step {
+  background: white;
+  border: 1.5px solid var(--line);
+  border-radius: 10px;
+  padding: 14px 16px;
+  text-align: left;
+}
+.step .n {
+  font-size: 0.7rem;
   font-weight: 800;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
-  letter-spacing: 0.06em;
-  color: #6C3FA8;
+  color: var(--accent);
+  margin-bottom: 4px;
+}
+.step h3 {
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: var(--navy);
   margin-bottom: 6px;
 }
-.neighbor p { margin-bottom: 8px; }
-.neighbor p:last-child { margin-bottom: 0; }
+.step p { font-size: 0.9rem; margin: 0; line-height: 1.45; }
+.step p b { color: var(--navy); }
 
 .quote {
   font-style: italic;
@@ -380,6 +403,7 @@ table.ports td:first-child, table.ports td:nth-child(2) {
 @media (min-width: 640px) {
   .stats-bar { grid-template-columns: repeat(4, 1fr); }
   .cap-grid { grid-template-columns: 1fr 1fr; }
+  .steps { grid-template-columns: 1fr 1fr; }
 }
 @media (min-width: 768px) {
   .tiers { grid-template-columns: repeat(3, 1fr); }
@@ -390,6 +414,7 @@ table.ports td:first-child, table.ports td:nth-child(2) {
 @media (max-width: 639px) {
   .banner { padding: 36px 16px 32px; }
   .banner h1 { font-size: 1.28rem; letter-spacing: 0; }
+  .banner h1.hero-hook { font-size: 1.08rem; max-width: none; }
   .banner .tagline { font-size: 0.9rem; }
   .banner .contact { font-size: 0.8rem; line-height: 1.45; }
   .badge { font-size: 0.65rem; padding: 4px 8px; }

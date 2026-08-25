@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Tabby Tavern 2.0 — Independent AI Lab</title>
-<meta name="description" content="Tabby Tavern 2.0 is the Independent AI Lab on LightBringer: EXL3 character path, llama.cpp 262k operator desk, VS Code/Continue/Grok/Hermes, and MCP.">
+<title>Tabby Tavern 2.0 — Learn AI infrastructure in 21 days</title>
+<meta name="description" content="Basically, you can learn AI Infrastructure in 21 days too. Tabby is local AI you can actually use. Taproot is the next step: a local coding desk, no internet.">
 <link rel="stylesheet" href="tavern.css">
 </head>
 <body>
@@ -12,12 +12,12 @@
 <div class="banner">
   <div class="badge-row">
     <span class="badge">Tabby Tavern 2.0</span>
-    <span class="badge">Independent AI Lab</span>
-    <span class="badge">EXL3 + 262k</span>
+    <span class="badge">Tabby + Taproot</span>
+    <span class="badge">21 days</span>
     <span class="badge">RTX 4070</span>
   </div>
-  <h1>PRIVATE AI.<br>ON HARDWARE YOU OWN.</h1>
-  <p class="tagline">Tabby Tavern 2.0 is the whole LightBringer lab: EXL3 character inference, llama.cpp 262k operator desk, VS Code / Continue / Grok / Hermes, and MCP. The YAML work is the product. Weights and live keys stay off the public tree.</p>
+  <h1 class="hero-hook">BASICALLY, YOU CAN LEARN AI INFRASTRUCTURE IN 21 DAYS TOO!</h1>
+  <p class="tagline"><b>Tabby</b> is local AI you can actually use. <b>Taproot</b> is the next step: a local coding desk, no internet required — llama.cpp 262k, VS Code/Continue, Grok, Hermes. One lab. One repo. The live stack is the lesson. Private IaaS on a 4070. Production-shaped, not SaaS. Weights and live keys stay off the public tree.</p>
   <p class="contact">Jeremy Panasuk &nbsp;|&nbsp; LightBringer · WSL2 Ubuntu · RTX 4070 12 GB &nbsp;|&nbsp; jpanasuk@gmail.com &nbsp;|&nbsp; 715.970.0204</p>
   <div class="links">
     <a href="https://github.com/jpanasuk-netizen/tabby-tavern-stack">GitHub</a>
@@ -28,7 +28,7 @@
 
 <div class="kicker-wrap">
   <div class="kicker">
-    <p>ONE LAB. EXL3 CHARACTERS. 262K OPERATOR DESK. ONE 4070 — LAST CALL.</p>
+    <p>TABBY: LOCAL AI YOU CAN USE. TAPROOT: LOCAL CODING DESK. NO INTERNET.</p>
   </div>
 </div>
 
@@ -41,9 +41,26 @@
   </div>
 
   <div class="section">
-    <h2>WHAT IT IS</h2>
+    <h2>THE PROGRESSION</h2>
     <hr>
-    <p>A private lab on Linux / WSL2. Production-<i>shaped</i>, not SaaS, not a hosted endpoint. Published as a GitHub tree, a Hugging Face <b>model card</b>, and a static lab-tour Space. Tabby compose names and ports stay Tabby. The operator desk is first-class — not a footnote.</p>
+    <p>Private IaaS on a 4070 — production-<i>shaped</i>, not SaaS, not a hosted endpoint. No fake 21-day syllabus: the page teaches by showing the live stack. Tabby compose names and ports stay Tabby (<code>8000</code> / <code>3000</code> / <code>5000</code> / <code>11435</code> / <code>8080</code> / <code>8001</code>).</p>
+    <div class="steps">
+      <div class="step">
+        <div class="n">Step 1</div>
+        <h3>Tabby</h3>
+        <p>Local AI you can actually use. Six-service EXL3 compose: TabbyAPI, SillyTavern + cards, Open WebUI <code>:3000</code>, Ollama, SearXNG, MCPO.</p>
+      </div>
+      <div class="step">
+        <div class="n">Next step</div>
+        <h3>Taproot</h3>
+        <p>Local coding desk, no internet. llama.cpp Qwen 9B 262k on <code>:1234</code>, WebUI <code>:3001</code>, VS Code / Continue, Grok, Hermes.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>THE LAB</h2>
+    <hr>
     <div class="cap-grid">
       <div class="cap-card c1">
         <div class="port">:5000</div>
@@ -72,14 +89,14 @@
       </div>
       <div class="cap-card c6">
         <div class="port">:3001</div>
-        <h3>Operator WebUI</h3>
+        <h3>Taproot WebUI</h3>
         <p><code>WEBUI_NAME=Taproot</code>. <code>OPENAI_API_BASE_URL=http://host.docker.internal:1234/v1</code>.</p>
       </div>
     </div>
   </div>
 
   <div class="section">
-    <h2>OPERATOR DESK</h2>
+    <h2>TAPROOT — LOCAL CODING DESK</h2>
     <hr>
     <ul>
       <li><b>Windows VS Code 1.134.0</b> + Remote-WSL 0.104.3 on <code>/home/jpanasuk/taproot</code>.</li>
@@ -102,7 +119,7 @@
       <li><b>SearXNG</b> <code>search.formats: html + json</code> or MCPO + RAG starve.</li>
       <li><b>MCPO</b> FastMCP seven tools under <code>/host-master/</code>, python <code>/app/.venv/bin/python3</code>. Empty <code>mcpServers</code> crashes it.</li>
       <li><b>NVIDIA toolkit apt</b> noble <code>main</code> line is malformed; flat <code>amd64 /</code> works.</li>
-      <li><b>Operator WebUI</b> uses <code>host.docker.internal:1234/v1</code> because llama is published on the host. Continue uses <code>127.0.0.1</code> because Continue is on the host.</li>
+      <li><b>Taproot WebUI</b> uses <code>host.docker.internal:1234/v1</code> because llama is published on the host. Continue uses <code>127.0.0.1</code> because Continue is on the host.</li>
       <li><b>Networks split</b> — <code>tabby-tavern_ai-network</code> removed from the llama side so two GPU engines cannot both allocate.</li>
     </ul>
   </div>
@@ -118,8 +135,8 @@
       <tr><td>ollama</td><td>:11435</td><td>GGUF engine</td></tr>
       <tr><td>searxng</td><td>:8080</td><td>Private search</td></tr>
       <tr><td>mcpo</td><td>:8001</td><td>MCP → OpenAPI</td></tr>
-      <tr><td>llama.cpp</td><td>:1234</td><td>Qwen3.5-9B 262k</td></tr>
-      <tr><td>operator WebUI</td><td>:3001</td><td>Long-context workspace</td></tr>
+      <tr><td>Taproot llama.cpp</td><td>:1234</td><td>Qwen 9B 262k</td></tr>
+      <tr><td>Taproot WebUI</td><td>:3001</td><td>Long-context workspace</td></tr>
     </table>
     <div class="vram">
       <b>VRAM last call (12 GB RTX 4070).</b> Lab snapshot 2026-08-25: llama resident at <b>11450 / 12282 MiB</b>. TabbyAPI / Ollama stay down while llama is serving. Two heavy engines stall CUDA instead of erroring. Xwayland ~3.6 GB when the desktop is up. Do not kill grok / hermes / llama to “clean tavern.” Do not recreate <code>qwen38-llama-server</code>.
@@ -155,7 +172,7 @@
       <h3>SINGLE-GPU INSTALL</h3>
       <div class="price">$12,500</div>
       <div class="price-sub">one-time</div>
-      <div class="who">One office, one RTX-class box, the full lab: EXL3 compose + operator desk.</div>
+      <div class="who">One office, one RTX-class box, the full lab: Tabby compose + Taproot desk.</div>
       <ul>
         <li>TabbyAPI EXL3 + llama.cpp path + UIs on your hardware</li>
         <li>Character cards; Continue / VS Code wiring</li>
@@ -193,7 +210,7 @@
   </div>
 
   <div class="bottom-line">
-    <p><b>THE BOTTOM LINE.</b> Tabby Tavern 2.0 is the Independent AI Lab — EXL3 characters, 262k llama.cpp desk, VS Code/Continue/Grok/Hermes, MCP — on a box you own. Production-shaped, not SaaS. One GPU, last call.</p>
+    <p><b>THE BOTTOM LINE.</b> Basically, you can learn AI Infrastructure in 21 days too. <b>Tabby</b> is local AI you can actually use. <b>Taproot</b> is the next step — local coding desk, no internet. One box you own. Production-shaped private IaaS, not SaaS. One GPU, last call.</p>
   </div>
 
   <div class="section">

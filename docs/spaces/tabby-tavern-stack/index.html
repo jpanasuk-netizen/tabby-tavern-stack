@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Tabby Tavern 2.0 — Independent AI Lab tour</title>
-<meta name="description" content="Lab tour for Tabby Tavern 2.0 on LightBringer: EXL3 Tabby compose, llama.cpp 262k operator desk, VS Code/Continue/Grok/Hermes, MCP.">
+<meta name="description" content="Lab tour for Tabby Tavern 2.0: Tabby is local AI you can actually use. Taproot is the next step — local coding desk, no internet. llama.cpp 262k, VS Code/Continue, Grok, Hermes.">
 <link rel="stylesheet" href="tavern.css">
 </head>
 <body>
@@ -15,8 +15,8 @@
     <span class="badge">Tabby Tavern 2.0</span>
     <span class="badge">Not the model card</span>
   </div>
-  <h1>TABBY TAVERN 2.0</h1>
-  <p class="tagline">The Independent AI Lab on LightBringer. This Space is the lab tour. The <b>model card</b> lives at the same slug without <code>/spaces/</code>.</p>
+  <h1 class="hero-hook">BASICALLY, YOU CAN LEARN AI INFRASTRUCTURE IN 21 DAYS TOO!</h1>
+  <p class="tagline"><b>Tabby</b> is local AI you can actually use. <b>Taproot</b> is the next step: a local coding desk, no internet required — llama.cpp 262k, VS Code/Continue, Grok, Hermes. This Space is the lab tour. The <b>model card</b> lives at the same slug without <code>/spaces/</code>.</p>
   <p class="contact">Jeremy Panasuk · LightBringer · WSL2 Ubuntu · NVIDIA RTX 4070 12 GB</p>
   <div class="links">
     <a href="https://github.com/jpanasuk-netizen/tabby-tavern-stack">GitHub source</a>
@@ -27,7 +27,7 @@
 
 <div class="kicker-wrap">
   <div class="kicker">
-    <p>ONE PRODUCT. EXL3 CHARACTER PATH + LLAMA.CPP 262K DESK + MCP.</p>
+    <p>TABBY: LOCAL AI YOU CAN USE. TAPROOT: LOCAL CODING DESK. NO INTERNET.</p>
   </div>
 </div>
 
@@ -40,14 +40,25 @@
   </div>
 
   <div class="section">
-    <h2>THE LAB</h2>
+    <h2>THE PROGRESSION</h2>
     <hr>
-    <p><b>Tabby Tavern 2.0</b> is the whole private lab: TabbyAPI EXL3, SillyTavern cards, Open WebUI :3000, Ollama, SearXNG, MCPO, <b>and</b> llama.cpp Qwen3.5-9B at 262k with operator WebUI :3001, Continue, Grok, Hermes, dockroot. MIT. No weights. No live keys.</p>
-    <p>This GitHub tree ships the EXL3 compose. The llama.cpp compose lives at <code>~/taproot</code> on the machine. Tabby <b>service names and ports stay Tabby</b> — a rename was reverted. Do not <code>docker compose up</code> the live llama container from this repo; recreating it would bounce <code>qwen38-llama-server</code>.</p>
+    <div class="steps">
+      <div class="step">
+        <div class="n">Step 1</div>
+        <h3>Tabby</h3>
+        <p>Local AI you can actually use. This GitHub tree ships the six-service EXL3 compose: TabbyAPI, SillyTavern + cards, Open WebUI <code>:3000</code>, Ollama, SearXNG, MCPO. Service names and ports stay Tabby.</p>
+      </div>
+      <div class="step">
+        <div class="n">Next step</div>
+        <h3>Taproot</h3>
+        <p>Local coding desk, no internet. llama.cpp Qwen3.5-9B at 262k on <code>:1234</code>, WebUI <code>:3001</code>, Continue, Grok, Hermes. Compose lives at <code>~/taproot</code> on the machine — same lab, same docs.</p>
+      </div>
+    </div>
+    <p style="margin-top:12px;">Private IaaS. MIT. No weights. No live keys. No invented day-by-day curriculum — see DEVLOG Week 4 (from-scratch WSL2) and v2.0 packaging. Do not <code>docker compose up</code> the live llama container from this repo; recreating it would bounce <code>qwen38-llama-server</code>.</p>
   </div>
 
   <div class="section">
-    <h2>LAYER A — TABBY COMPOSE</h2>
+    <h2>LAYER A — TABBY</h2>
     <hr>
     <div class="cap-grid">
       <div class="cap-card c1">
@@ -63,7 +74,7 @@
       <div class="cap-card c3">
         <div class="port">open-webui · :3000</div>
         <h3>Dual backend UI</h3>
-        <p>Ollama GGUF <b>and</b> TabbyAPI. Own data dir — not the :3001 operator UI.</p>
+        <p>Ollama GGUF <b>and</b> TabbyAPI. Own data dir — not the Taproot UI on :3001.</p>
       </div>
       <div class="cap-card c4">
         <div class="port">ollama · :11435</div>
@@ -84,19 +95,19 @@
   </div>
 
   <div class="section">
-    <h2>LAYER B — LLAMA.CPP OPERATOR DESK</h2>
+    <h2>LAYER B — TAPROOT</h2>
     <hr>
     <table class="ports">
       <tr><th>Piece</th><th>Live</th><th>Why that YAML</th></tr>
       <tr><td>llama.cpp</td><td><code>qwen38-llama-server</code> :1234<br>Qwen3.5-9B UD-Q4_K_XL, n_ctx 262144</td><td>262k on 12 GB is this engine, not EXL3 8k. YAML wants <code>taproot-qwen</code> — <b>do not recreate</b>.</td></tr>
-      <tr><td>Operator WebUI</td><td>:3001 <code>WEBUI_NAME=Taproot</code></td><td><code>OPENAI_API_BASE_URL=http://host.docker.internal:1234/v1</code> — WebUI is in Docker, llama is on the host.</td></tr>
+      <tr><td>Taproot WebUI</td><td>:3001 <code>WEBUI_NAME=Taproot</code></td><td><code>OPENAI_API_BASE_URL=http://host.docker.internal:1234/v1</code> — WebUI is in Docker, llama is on the host.</td></tr>
       <tr><td>Data</td><td><code>~/taproot/open-webui-data</code></td><td>Separate from Tabby Open WebUI :3000.</td></tr>
       <tr><td>Lineage</td><td><code>~/qwen38-agent</code> (27B then 9B 262k)</td><td>Live llama started here. <code>tabby-tavern_ai-network</code> removed so GPU stacks do not collide.</td></tr>
     </table>
   </div>
 
   <div class="section">
-    <h2>LAYER C — THE DESK</h2>
+    <h2>LAYER C — THE TAPROOT DESK</h2>
     <hr>
     <ul>
       <li>Windows VS Code 1.134.0 + Remote-WSL 0.104.3 on <code>/home/jpanasuk/taproot</code>.</li>
@@ -120,7 +131,7 @@
 OLLAMA_BASE_URL=http://ollama:11434
 OPENAI_API_BASE_URL=http://tabbyapi:5000/v1
 
-# Operator WebUI :3001
+# Taproot WebUI :3001
 OPENAI_API_BASE_URL=http://host.docker.internal:1234/v1
 
 # Continue (host)
@@ -154,7 +165,7 @@ search.formats: [html, json]</pre>
     <hr>
     <p>MCPO tools: <code>list_tabbyapi_models</code>, <code>tabbyapi_chat</code>, <code>list_ollama_models</code>, <code>ollama_pull_model</code>, <code>ollama_chat</code>, <code>get_stack_status</code>, <code>searxng_search</code>.</p>
     <div class="rule">
-      <strong>Connection rule.</strong> Path is always <code>/v1</code>. Inside compose, host is the service name. Continue on the host uses <code>127.0.0.1:1234/v1</code>. Operator WebUI uses <code>host.docker.internal:1234/v1</code>. Skill + 44 recipes: <a href="https://huggingface.co/spaces/jpanasuk/local-ai-stack-connectivity">local-ai-stack-connectivity</a>. Read-only docker vision: <a href="https://huggingface.co/spaces/jpanasuk/dockroot-mcp">dockroot-mcp</a> (local helper on the box, not a running container).
+      <strong>Connection rule.</strong> Path is always <code>/v1</code>. Inside compose, host is the service name. Continue on the host uses <code>127.0.0.1:1234/v1</code>. Taproot WebUI uses <code>host.docker.internal:1234/v1</code>. Skill + 44 recipes: <a href="https://huggingface.co/spaces/jpanasuk/local-ai-stack-connectivity">local-ai-stack-connectivity</a>. Read-only docker vision: <a href="https://huggingface.co/spaces/jpanasuk/dockroot-mcp">dockroot-mcp</a> (local helper on the box, not a running container).
     </div>
   </div>
 
@@ -167,7 +178,7 @@ docker build -f Dockerfile.tabby -t local/tabbyapi:exl3-fixed .
 cp -n tabby_config/config.example.yml tabby_config/config.yml
 # generate keys, download EXL3 into tabby_models/, free the GPU, then:
 docker compose up -d</pre>
-    <p>Full stranger path and WSL2 notes: the GitHub README. Do not run that <code>up</code> against the live llama / taproot compose. Do not copy <code>~/annie-scratch</code> into this tree.</p>
+    <p>Full stranger path and WSL2 notes: the GitHub README. Do not run that <code>up</code> against the live llama / Taproot compose. Do not copy <code>~/annie-scratch</code> into this tree.</p>
   </div>
 
   <div class="section">

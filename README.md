@@ -35,22 +35,19 @@ library_name: exllama
 
 # Tabby Tavern 2.0
 
-**The Independent AI Lab on LightBringer.** One private workstation: EXL3 character inference, llama.cpp long-context operator desk, VS Code / Continue / Grok / Hermes, and MCP. Production-*shaped*, not a multi-tenant SaaS, not a hosted endpoint.
+**Basically, you can learn AI Infrastructure in 21 days too.**
 
-Hardware: **LightBringer**, WSL2 Ubuntu, **NVIDIA RTX 4070 12 GB**.
+**Tabby** is local AI you can actually use. **Taproot** is the next step: a local coding desk, no internet required — llama.cpp 262k, VS Code/Continue, Grok, Hermes.
+
+One repo story: `tabby-tavern-stack`. One Space family. Both layers, one lab. Private IaaS on a workstation you own — production-*shaped*, not SaaS. The page teaches by showing the live stack. Proof is [`DEVLOG.md`](DEVLOG.md) **Week 4** (clean WSL2 rebuild on the same 4070) plus **v2.0 packaging** (2026-08-25). Hardware: **LightBringer**, WSL2 Ubuntu, **NVIDIA RTX 4070 12 GB**.
 
 | Layer | What runs |
 | --- | --- |
-| Character / EXL3 | **TabbyAPI** `:5000` + **SillyTavern** `:8000` + shipped **character cards** |
-| Dual-backend workspace | **Open WebUI** `:3000` → Ollama **and** TabbyAPI `/v1` |
-| GGUF | **Ollama** host `:11435` (container still `:11434`) |
-| Search | **SearXNG** `:8080` (`html` + `json`) |
-| MCP in compose | **MCPO** `:8001` — seven FastMCP tools |
-| Long-context operator | **llama.cpp** `:1234` Qwen3.5-9B `n_ctx` 262144 + Open WebUI `:3001` (`WEBUI_NAME=Taproot`) |
-| Desk | Windows VS Code 1.134.0 + Remote-WSL + **Continue 2.0** → `:1234/v1`; **Grok** 1.0.5; **Hermes** v0.20.0 |
+| **Tabby** — local AI you can use | **TabbyAPI** `:5000` EXL3 + **SillyTavern** `:8000` + shipped **character cards** + **Open WebUI** `:3000` (Ollama **and** TabbyAPI `/v1`) + **Ollama** `:11435` + **SearXNG** `:8080` + **MCPO** `:8001` |
+| **Taproot** — local coding desk | **llama.cpp** `:1234` Qwen 9B `n_ctx` 262144 + Open WebUI `:3001` (`WEBUI_NAME=Taproot`) + Windows VS Code 1.134.0 + Remote-WSL + **Continue 2.0** → `:1234/v1` + **Grok** 1.0.5 + **Hermes** v0.20.0 |
 | Docker vision | `~/dockroot` helper + [dockroot-mcp](https://huggingface.co/spaces/jpanasuk/dockroot-mcp) Space |
 
-This GitHub tree is the public **EXL3 compose** (six Tabby services, YAML, cards, MCPO) **and** the lab card for the whole box. The llama.cpp / Open WebUI `:3001` compose lives on the machine at `~/taproot` — documented here as a first-class layer, not copied into this repo. Tabby compose **service names and ports stay Tabby**. A brief rename of those services to Taproot was reverted on purpose.
+This GitHub tree ships the Tabby EXL3 compose (six services, YAML, cards, MCPO) and the lab card for the whole box. Taproot’s llama.cpp / Open WebUI `:3001` compose lives on the machine at `~/taproot` — same lab, same docs, not a second repo. Tabby compose **service names and ports stay Tabby** (`8000` / `3000` / `5000` / `11435` / `8080` / `8001`). Class work in `~/annie-scratch` stays out of this tree.
 
 | Surface | URL |
 | -------------------------- | ---------------------------------------------------------------------------------------------------------------------------------- |
@@ -89,9 +86,9 @@ Full notes: [`DEVLOG.md`](DEVLOG.md) § 2026-08-25.
 
 ---
 
-## Layer A — Tabby compose (this repo)
+## Layer A — Tabby: local AI you can actually use
 
-Six services on bridge `ai-network`. **Do not rename these.**
+Six services on bridge `ai-network`. **Do not rename these ports or service names.**
 
 | Compose service | Container name (default) | Host port | In-container | Role |
 | --------------- | ------------------------------ | ------------ | ------------ | ------------------------------- |
@@ -114,19 +111,19 @@ RAG_WEB_SEARCH_ENGINE=searxng
 SEARXNG_QUERY_URL=http://searxng:8080/search?q=<query>
 ```
 
-`tabby-tavern_ai-network` was **removed** from the llama.cpp side so the two GPU stacks cannot collide. They are both the lab; they do not share a Docker network.
+`tabby-tavern_ai-network` was **removed** from the llama.cpp side so Tabby and Taproot cannot both grab the 4070. Same lab; they do not share a Docker network.
 
 ---
 
-## Layer B — llama.cpp operator desk (`~/taproot`)
+## Layer B — Taproot: local coding desk, no internet (`~/taproot`)
 
-First-class lab path. Compose project name **`taproot`**, file `/home/jpanasuk/taproot/docker-compose.yml`. Not this git tree; do not paste it over `docker-compose.yml` here.
+The next step after Tabby. Compose project name **`taproot`**, file `/home/jpanasuk/taproot/docker-compose.yml`. Not copied into this git tree; do not paste it over `docker-compose.yml` here.
 
 | Piece | Live fact | Why that YAML exists |
 | --- | --- | --- |
 | llama.cpp server | Host **`0.0.0.0:1234→8080`**, image `ghcr.io/ggml-org/llama.cpp:server-cuda`, Qwen3.5-9B **UD-Q4_K_XL**, `n_ctx` **262144** | 262k context on a 12 GB card needs the llama.cpp server path, not TabbyAPI EXL3 8k |
 | Container name | Still **`qwen38-llama-server`**. YAML wants `taproot-qwen`. **Not recreated.** | Recreating would bounce the live server. Leave it. |
-| Open WebUI | **`taproot-webui` :3001**, `WEBUI_NAME=Taproot`, data `/home/jpanasuk/taproot/open-webui-data` | Separate from Tabby Open WebUI **:3000** so character and operator UIs do not share a DB |
+| Open WebUI | **`taproot-webui` :3001**, `WEBUI_NAME=Taproot`, data `/home/jpanasuk/taproot/open-webui-data` | Separate from Tabby Open WebUI **:3000** so the two UIs do not share a DB |
 | Engine URL | `OPENAI_API_BASE_URL=http://host.docker.internal:1234/v1` | WebUI is in Docker; llama is published on the host. `localhost` inside the container is the wrong box. Path is `/v1`, not `/v1/chat/completions` |
 | Lineage | `/home/jpanasuk/qwen38-agent/docker-compose.yml` (27B then 9B 262k) | Live llama started from this lineage before the taproot project name |
 
@@ -136,17 +133,17 @@ No Qwen3.5-9B tok/s is published (not measured in this tree).
 
 ---
 
-## Layer C — how the human drives it
+## Layer C — the Taproot desk (VS Code, Continue, Grok, Hermes)
 
 | Tool | Where | Why |
 | --- | --- | --- |
-| Windows VS Code **1.134.0** + Remote-WSL **0.104.3** | `/home/jpanasuk/taproot` | Operator desk for the 262k engine |
+| Windows VS Code **1.134.0** + Remote-WSL **0.104.3** | `/home/jpanasuk/taproot` | Local coding desk for the 262k engine |
 | Continue **2.0** | `~/.continue/config.yaml` → `http://127.0.0.1:1234/v1` Qwen3.5-9B | Continue runs on the host, so the host loopback port, not `host.docker.internal` |
 | Grok Build **1.0.5** | `~/.local/bin/grok` | Host CLI for the lab |
 | Hermes **v0.20.0** | `~/.hermes/hermes-agent` | Agent runtime; loads the connectivity skill |
 | Linux snap VS Code **1.134.0** | `~/annie-scratch` | **Annie++ Python class only.** Not the lab. Not this repo. Do not copy class files here. |
 
-VS Code is the desk, not a Tabby container. `docker-compose.starter.yml`’s browser IDE is an optional overlay, not how LightBringer is driven.
+VS Code is the Taproot desk, not a Tabby container. `docker-compose.starter.yml`’s browser IDE is an optional overlay, not how LightBringer is driven.
 
 ---
 
@@ -364,7 +361,7 @@ curl -sS -o /dev/null -w "mcpo         %{http_code}\n" http://127.0.0.1:8001/doc
 
 Browser (Tabby layer): SillyTavern `:8000` · Open WebUI `:3000` · TabbyAPI `:5000` · Ollama `:11435` · SearXNG `:8080` · MCPO `:8001/docs`
 
-Operator layer (already live on LightBringer): llama.cpp `:1234` · Taproot Open WebUI `:3001`
+Taproot (already live on LightBringer): llama.cpp `:1234` · Taproot Open WebUI `:3001`
 
 ### 7) Point SillyTavern at TabbyAPI
 
@@ -501,15 +498,14 @@ Qwen3.5-9B llama.cpp tok/s is **not** published. Re-measure on your hardware.
 See [`DEVLOG.md`](DEVLOG.md):
 
 * Tabby compose consolidation + EXL3 + WSL2 `libcuda` + MCPO + cards
-* llama.cpp 262k operator desk (qwen38-agent lineage → taproot project)
-* VS Code / Continue / Grok / Hermes as the desk
+* Taproot local coding desk (qwen38-agent lineage → taproot project: llama.cpp 262k, VS Code / Continue / Grok / Hermes)
 * VRAM last-call: one heavy engine on the 4070
 
 ---
 
 ## Optional coding starter overlay
 
-`docker-compose.starter.yml` is **optional** (browser IDE, vector DBs, n8n). Not required. Not the live operator desk. Expects `ai-network` to exist. Change every placeholder password before `up`.
+`docker-compose.starter.yml` is **optional** (browser IDE, vector DBs, n8n). Not required. Not Taproot. Expects `ai-network` to exist. Change every placeholder password before `up`.
 
 ---
 
@@ -560,7 +556,7 @@ Tabby compose maps `11435:11434`. Open WebUI still uses `http://ollama:11434` in
 
 24/24 checks when Tabby owns the GPU: six containers, EXL3 chat, Ollama `llama3.1:8b`, Open WebUI dual backend, SillyTavern with cards, SearXNG JSON, MCPO 7 tools, ~8 GB / 12 GB VRAM.
 
-### Verified working state (operator path, 2026-08-25)
+### Verified working state (Taproot path, 2026-08-25)
 
 llama.cpp `qwen38-llama-server` Up on `:1234`; Taproot WebUI Up on `:3001`; Continue on host `:1234/v1`; Tabby GPU path Exited; VRAM 11450 / 12282 MiB.
 
