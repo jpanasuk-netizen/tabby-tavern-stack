@@ -1,6 +1,6 @@
 # Tabby Tavern UNIFIED stack (public tree)
 # Merges former Taproot (Qwen llama.cpp) + Basecamp coding pack + Tabby Tavern chat/MCP.
-# Default: 15 services, one network. TabbyAPI/Ollama: --profile alternate-inference
+# Default: 16 services, one network. TabbyAPI/Ollama: --profile alternate-inference
 # dockroot: --profile diagnostics
 # Copy .env.example -> .env and set your own keys. Weights are not included.
 
@@ -39,6 +39,8 @@ volumes:
     name: basecamp_meilisearch-data
   postgres-data:
     name: basecamp_postgres_data
+  firefox-config:
+    name: tabby-tavern_firefox-config
 
 services:
   # Primary inference engine: Qwen3.5-9B GGUF on llama.cpp CUDA.
@@ -340,6 +342,34 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+    networks: [ai-network]
+
+  # Lab browser (default). Optional in the sense the rest of the stack
+  # does not depend on it. Host GUI is :3010 (container 3000).
+  # Homepage / managed favorites use host.docker.internal so they hit the
+  # same UNIFIED host ports as browser/bookmarks.html (localhost import).
+  # Do not put live passwords here — use .env placeholders.
+  firefox:
+    image: lscr.io/linuxserver/firefox:latest
+    container_name: tabby-tavern-firefox
+    restart: unless-stopped
+    ports:
+      - "3010:3000"
+    shm_size: "1gb"
+    environment:
+      PUID: "1000"
+      PGID: "1000"
+      TZ: UTC
+      TITLE: Tabby Tavern
+      CUSTOM_USER: ${FIREFOX_USER:-change-me}
+      PASSWORD: ${FIREFOX_PASSWORD:-change-me}
+      FIREFOX_CLI: http://host.docker.internal:3000
+    volumes:
+      - firefox-config:/config
+      - ./browser/bookmarks.html:/config/bookmarks.html:ro
+      - ./browser/policies.json:/usr/lib/firefox/distribution/policies.json:ro
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     networks: [ai-network]
 
   # Optional legacy compatibility name for clients expecting `tabby`.

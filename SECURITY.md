@@ -12,6 +12,7 @@ This stack is designed for a **private local lab** (single trusted machine / LAN
 - Keep model directories and user chat data out of git (see `.gitignore`)
 - Prefer `disable_auth: false` and long random keys in TabbyAPI config
 - SillyTavern on `0.0.0.0` needs `basicAuthMode: true` (or user accounts) or it will refuse to start
+- Replace Firefox GUI `FIREFOX_USER` / `FIREFOX_PASSWORD` (linuxserver basic auth). The container desktop includes a terminal; do not expose `:3010` to the internet.
 
 ## Incident note (public mirror hygiene)
 

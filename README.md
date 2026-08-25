@@ -46,12 +46,13 @@ Default GPU engine is **Qwen3.5-9B** (llama.cpp CUDA). TabbyAPI EXL3 and Ollama 
 | Private search | **SearXNG** (JSON) |
 | MCP | **MCPO** + FastMCP · optional **dockroot** diagnostics |
 | Coding pack (ex-Basecamp) | code-server, Continue, Qdrant, Chroma, n8n, Lobe, AnythingLLM, LibreChat, Mongo, Meilisearch, pgvector |
+| Lab browser | **linuxserver Firefox** · host **3010** (optional; default `up`) |
 
 This is a **private-lab / portfolio** stack — production-*shaped*, not a multi-tenant SaaS product and not a hosted inference endpoint.
 
 Lab baseline hardware: **NVIDIA GeForce RTX 4070** (Linux + Docker Compose + NVIDIA Container Toolkit, WSL2 Ubuntu).
 
-Release **v3.0.0 UNIFIED** (Aug 2026) matches the live lab after Hermes reconciled Taproot and Basecamp into this tree: 15 default services on `tabby-tavern_ai-network`, Qwen healthy, MCPO `/docs` 200, character cards in `cards/`.
+Release **v3.0.0 UNIFIED** (Aug 2026) matches the live lab after Hermes reconciled Taproot and Basecamp into this tree: 16 default services on `tabby-tavern_ai-network` (including linuxserver Firefox on **:3010**), Qwen healthy, MCPO `/docs` 200, character cards in `cards/`.
 
 | Surface | URL |
 | -------------------------- | ---------------------------------------------------------------------------------------------------------------------------------- |
@@ -76,6 +77,7 @@ Default path is **Qwen → Open WebUI**. Inside Docker use the service name, not
 | ------- | ---- | ---------- | ---- |
 | `qwen` | **1234** | `http://qwen:8080/v1` | Primary llama.cpp CUDA · Qwen3.5-9B |
 | `open-webui` | **3000** | 8080 | Canonical chat UI |
+| `firefox` | **3010** | 3000 | linuxserver Firefox (lab browser) |
 | `sillytavern` | **8000** | 8000 | Character frontend + cards |
 | `searxng` | **8080** | 8080 | Private JSON search |
 | `mcpo` | **8001** | 8000 | MCP → OpenAPI |
@@ -91,6 +93,31 @@ Default path is **Qwen → Open WebUI**. Inside Docker use the service name, not
 | `mongo` | **27017** | 27017 | LibreChat |
 | `tabbyapi` | **5000** | 5000 | EXL3 — `--profile alternate-inference` |
 | `ollama` | **11435** | 11434 | GGUF — `--profile alternate-inference` |
+
+UNIFIED host homes stay **WebUI :3000**, **Qwen :1234**, **AnythingLLM :3002**. Firefox is the in-stack browser for those same homes (`3010:3000`).
+
+### Host bookmark bar
+
+Import [`browser/bookmarks.html`](browser/bookmarks.html) into Firefox (Bookmarks → Import and Backup → Import Bookmarks from HTML). Same list, host URLs:
+
+| Surface | Host URL |
+| ------- | -------- |
+| Open WebUI | http://localhost:3000/ |
+| Qwen llama.cpp | http://localhost:1234/ |
+| SillyTavern | http://localhost:8000/ |
+| MCPO `/docs` | http://localhost:8001/docs |
+| SearXNG | http://localhost:8080/ |
+| code-server | http://localhost:8443/ |
+| LibreChat | http://localhost:3080/ |
+| AnythingLLM | http://localhost:3002/ |
+| Lobe | http://localhost:3210/ |
+| n8n | http://localhost:5678/ |
+| Qdrant dashboard | http://localhost:6333/dashboard |
+| Chroma | http://localhost:8005/ |
+| Meilisearch | http://localhost:7700/ |
+| Firefox (this container) | http://localhost:3010/ |
+
+The linuxserver Firefox service opens Open WebUI as homepage (`FIREFOX_CLI` → `http://host.docker.internal:3000`) and pins the same surfaces on the in-container toolbar via `browser/policies.json`. Set `FIREFOX_USER` / `FIREFOX_PASSWORD` in `.env` (placeholders only in the public tree). Skip the container with `docker compose up -d --scale firefox=0` if you do not want it.
 
 Open WebUI on the unified stack:
 
@@ -320,12 +347,15 @@ docker exec -it tabby-tavern-tabbyapi-1 nvidia-smi || true
 
 Browser targets:
 
-* SillyTavern → http://localhost:8000
 * Open WebUI → http://localhost:3000
-* TabbyAPI → http://localhost:5000
-* Ollama (host) → http://localhost:11435
+* Qwen llama.cpp → http://localhost:1234
+* AnythingLLM → http://localhost:3002
+* Firefox → http://localhost:3010
+* SillyTavern → http://localhost:8000
 * SearXNG → http://localhost:8080
 * MCPO Swagger → http://localhost:8001/docs
+* TabbyAPI (alternate) → http://localhost:5000
+* Ollama (alternate, host) → http://localhost:11435
 
 ### 7) Point SillyTavern at TabbyAPI
 
@@ -403,11 +433,13 @@ If you OOM: lower `max_seq_len` / `cache_size`, use a smaller bpw EXL3, or stop 
 
 ```text
 tabby-tavern-stack/
-├── docker-compose.yml              # lab orchestration (6 services)
-├── docker-compose.starter.yml      # optional coding-tools overlay
+├── docker-compose.yml              # UNIFIED stack (Qwen primary + coding pack + firefox)
+├── docker-compose.starter.yml      # legacy coding-tools overlay (already folded into compose)
 ├── Dockerfile / Dockerfile.tabby   # TabbyAPI image (WSL2 libcuda fix)
 ├── start-stack.sh
 ├── load-model.sh
+├── browser/bookmarks.html          # Netscape host bookmark-bar import
+├── browser/policies.json           # Firefox container homepage + toolbar
 ├── cards/                          # SillyTavern character cards (PNG)
 ├── mcpo/config.json                # MCPO server map (placeholders)
 ├── mcp-servers/server.py           # FastMCP stack tools
@@ -421,9 +453,7 @@ tabby-tavern-stack/
 └── docs/                           # sell-sheet extras
 ```
 
-Compose service names (authoritative):
-
-`tabbyapi` · `sillytavern` · `ollama` · `open-webui` · `searxng` · `mcpo`
+Default compose services (authoritative): `qwen` · `open-webui` · `firefox` · `sillytavern` · `searxng` · `mcpo` · coding pack. Alternate inference: `tabbyapi` · `ollama` (`--profile alternate-inference`).
 
 ---
 
@@ -436,6 +466,7 @@ Compose service names (authoritative):
 | MCPO `--api-key` / `TABBYAPI_KEY` | compose + `mcpo/config.json` | Placeholders in public tree |
 | SillyTavern basic auth | `sillytavern_config/config.yaml` | Replace `YOUR_ST_*` placeholders |
 | SearXNG `secret_key` | `searxng_config/settings.yml` | Replace placeholder |
+| Firefox GUI basic auth | compose `FIREFOX_USER` / `FIREFOX_PASSWORD` | Placeholders in public tree |
 | Open WebUI DB | `openwebui_data/` | gitignored |
 | Ollama keys/models | host `~/.ollama` or `ollama_data/` | gitignored |
 
