@@ -24,6 +24,9 @@ tags:
 - nvidia
 - cuda
 - wsl2
+- taproot
+- llama-cpp
+- vscode
 - ubuntu
 - inference-stack
 - multi-service
@@ -31,9 +34,9 @@ pipeline_tag: text-generation
 library_name: exllama
 ---
 
-# Tabby-Tavern AI Stack
+# Tabby Tavern + Taproot
 
-**Complete containerized local AI infrastructure** for a private lab:
+**Shipped Tabby recipe** (currently stopped) plus **live Taproot** on the same 4070:
 
 | Layer | Software |
 | --------------------- | ----------------------------------- |
@@ -44,11 +47,34 @@ library_name: exllama
 | Private search | **SearXNG** |
 | Tooling / MCP | **MCPO** + FastMCP stack server |
 
-This is a **private-lab / portfolio** stack — production-*shaped*, not a multi-tenant SaaS product and not a hosted inference endpoint.
+This is a **private-lab / portfolio** stack. Production-*shaped*, not a multi-tenant SaaS product and not a hosted inference endpoint.
+
+> **Basically, you can learn AI Infrastructure in 21 days too!**
+
+## Live vs shipped (same RTX 4070, not one running stack)
+
+The services were **not fully merged**. Two compose projects, one GPU. Only Taproot is up.
+
+**Live now (verified):**
+
+- `qwen38-llama-server` — llama.cpp CUDA, Qwen3.5-9B UD-Q4_K_XL, host **:1234**, `n_ctx` 262144
+- `taproot-webui` — Open WebUI, host **:3001**, `OPENAI_API_BASE_URL=http://host.docker.internal:1234/v1`
+
+They sit on different Docker networks. The WebUI reaches llama through the host gateway, not a shared service name.
+
+**Tabby Tavern** is the older chat stack (SillyTavern, EXL3 / TabbyAPI :5000, Open WebUI :3000, Ollama :11435, SearXNG :8080, MCPO :8001). Compose still exists. All six containers are **stopped**. One 4070 cannot run Tabby GPU services and llama.cpp at the same time.
+
+**Coding starter pack** (`docker-compose.starter.yml`) is yaml only, not running. It wants `taproot_ai-network` but still names `ollama` / `tabbyapi`. `anythingllm` would collide with Taproot's host **:3001**.
+
+**dockroot** is source under the lab, not a deployed container: read-only Docker/MCP diagnostics (`discover.py`, `tavern_mcp.py`). Companion Spaces: [dockroot-mcp](https://huggingface.co/spaces/jpanasuk/dockroot-mcp) · [local-ai-stack-connectivity](https://huggingface.co/spaces/jpanasuk/local-ai-stack-connectivity)
+
+GitHub (one README, one DEVLOG): [jpanasuk-netizen/tabby-tavern-stack](https://github.com/jpanasuk-netizen/tabby-tavern-stack)
+
+Do not `compose up` Taproot's `qwen` service to "rename" the live llama container. That recreates it and dumps the 262k load.
 
 Lab baseline hardware: **NVIDIA GeForce RTX 4070** (Linux + Docker Compose + NVIDIA Container Toolkit, WSL2 Ubuntu).
 
-Release **v2.0.0** (Aug 2026) matches the live lab: MCPO is in compose, Open WebUI talks to both backends, SillyTavern cards ship in-tree, and the WSL2 EXL3 bring-up notes are in this card.
+Release **v2.0.0** documents the Tabby compose recipe (MCPO, dual backends, SillyTavern cards, WSL2 EXL3 notes). That recipe is **not** the live process list. Live is Taproot WebUI :3001 into llama.cpp :1234.
 
 | Surface | URL |
 | -------------------------- | ---------------------------------------------------------------------------------------------------------------------------------- |

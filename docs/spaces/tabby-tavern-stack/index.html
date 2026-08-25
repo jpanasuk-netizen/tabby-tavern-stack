@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tabby Tavern + Taproot — Live vs shipped (in-repo preview)</title>
+<meta name="description" content="Live now: Taproot :3001 into llama.cpp :1234. Tabby compose is stopped. Two compose files, not one running stack.">
+<link rel="stylesheet" href="tavern.css">
+</head>
+<body>
+
+<div class="banner">
+  <div class="badge-row">
+    <span class="badge">In-repo preview</span>
+    <span class="badge">Not an HF Space</span>
+    <span class="badge">RTX 4070</span>
+  </div>
+  <h1>LIVE IS TAPROOT.<br>TABBY IS STOPPED.</h1>
+  <p class="tagline"><b>Tabby</b> is local AI you can actually use (chat stack, currently stopped). <b>Taproot</b> is coding at home: <code>:3001</code> → <code>host.docker.internal:1234/v1</code> → <code>qwen38-llama-server</code>. Two compose files. Not one running stack.</p>
+  <p class="contact">LightBringer · WSL2 Ubuntu · NVIDIA RTX 4070 12 GB</p>
+  <div class="links">
+    <a href="https://huggingface.co/jpanasuk/tabby-tavern-stack">Model card</a>
+    <a class="ghost" href="https://huggingface.co/spaces/jpanasuk/tabby-tavern-sell-sheet">Sell sheet</a>
+  </div>
+</div>
+
+<div class="kicker-wrap">
+  <div class="kicker">
+    <p>Basically, you can learn AI Infrastructure in 21 days too!</p>
+  </div>
+</div>
+
+<div class="container">
+  <div class="stats-bar">
+    <div class="stat"><div class="num">2</div><div class="label">Live containers</div></div>
+    <div class="stat"><div class="num">6</div><div class="label">Tabby stopped</div></div>
+    <div class="stat"><div class="num">1</div><div class="label">GPU at a time</div></div>
+    <div class="stat"><div class="num">2</div><div class="label">Compose files</div></div>
+  </div>
+
+  <div class="section">
+    <h2>LIVE NOW</h2>
+    <hr>
+    <ul>
+      <li><b>qwen38-llama-server</b> — llama.cpp CUDA, Qwen3.5-9B UD-Q4_K_XL, host <code>:1234</code>, <code>n_ctx</code> 262144. HOLD this container. Do not compose up Taproot’s qwen service to rename it.</li>
+      <li><b>taproot-webui</b> — Open WebUI host <code>:3001</code>, <code>OPENAI_API_BASE_URL=http://host.docker.internal:1234/v1</code>.</li>
+    </ul>
+    <p>They sit on different Docker networks. WebUI reaches llama through the host gateway, not a shared service name.</p>
+  </div>
+
+  <div class="section">
+    <h2>SHIPPED, CURRENTLY STOPPED</h2>
+    <hr>
+    <p>Tabby Tavern six containers. Compose still exists. Ports unchanged. One 4070 cannot run Tabby GPU services and llama.cpp at the same time.</p>
+    <table class="ports">
+      <tr><th>Service</th><th>Host</th><th>Role</th></tr>
+      <tr><td>sillytavern</td><td>:8000</td><td>Character chat</td></tr>
+      <tr><td>open-webui</td><td>:3000</td><td>EXL3 + GGUF workspace</td></tr>
+      <tr><td>tabbyapi</td><td>:5000</td><td>EXL3 engine</td></tr>
+      <tr><td>ollama</td><td>:11435</td><td>GGUF engine</td></tr>
+      <tr><td>searxng</td><td>:8080</td><td>Private search</td></tr>
+      <tr><td>mcpo</td><td>:8001</td><td>MCP → OpenAPI</td></tr>
+    </table>
+  </div>
+
+  <div class="section">
+    <h2>NOT RUNNING / NOT A CONTAINER</h2>
+    <hr>
+    <p><code>docker-compose.starter.yml</code> is yaml only. It wants <code>taproot_ai-network</code> but still names <code>ollama</code> / <code>tabbyapi</code>. <code>anythingllm</code> would collide with Taproot host <code>:3001</code>.</p>
+    <p>dockroot is source under the lab (<code>discover.py</code>, <code>tavern_mcp.py</code>), not a deployed container. Companions: <a href="https://huggingface.co/spaces/jpanasuk/dockroot-mcp">dockroot-mcp</a> · <a href="https://huggingface.co/spaces/jpanasuk/local-ai-stack-connectivity">local-ai-stack-connectivity</a>.</p>
+  </div>
+</div>
+
+<div class="footer">
+  <p>In-repo preview only. Live pages: model card + sell-sheet Space.</p>
+</div>
+
+</body>
+</html>

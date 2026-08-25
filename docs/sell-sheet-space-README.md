@@ -1,27 +1,7 @@
----
-title: Tabby Tavern — Independent AI Lab
-emoji: 🏠
-colorFrom: blue
-colorTo: indigo
-sdk: static
-pinned: true
-license: mit
-short_description: v2.0.0 private AI lab — EXL3, cards, MCPO
-tags:
-  - portfolio
-  - local-ai
-  - docker
-  - private-ai
-  - mcp
-  - sillytavern
----
+The sell-sheet Space README now lives at:
 
-# Tabby Tavern — Independent AI Lab
+[`docs/spaces/tabby-tavern-sell-sheet/README.md`](spaces/tabby-tavern-sell-sheet/README.md)
 
-Static one-page for the **v2.0.0** stack: TabbyAPI EXL3, SillyTavern character cards, Open WebUI, Ollama, SearXNG, MCPO.
+Canonical one-pager: [`docs/spaces/tabby-tavern-sell-sheet/index.html`](spaces/tabby-tavern-sell-sheet/index.html)
 
-Open the **App** tab for the page.
-
-- Model card: https://huggingface.co/jpanasuk/tabby-tavern-stack
-- GitHub release: https://github.com/jpanasuk-netizen/tabby-tavern-stack/releases/tag/v2.0.0
-- Companions: [dockroot-mcp](https://huggingface.co/spaces/jpanasuk/dockroot-mcp) · [connectivity skill](https://huggingface.co/spaces/jpanasuk/local-ai-stack-connectivity)
+Upload steps: [`docs/spaces/UPLOAD.md`](spaces/UPLOAD.md)

@@ -2,14 +2,38 @@
 
 Engineering history for the containerized local AI lab. Public tree is sanitized — no live keys, no weights, no chat logs.
 
+> **Basically, you can learn AI Infrastructure in 21 days too!**
+
+Same GitHub repo, one README, one DEVLOG. Live Hugging Face surfaces: model card [`jpanasuk/tabby-tavern-stack`](https://huggingface.co/jpanasuk/tabby-tavern-stack) and sell-sheet Space [`jpanasuk/tabby-tavern-sell-sheet`](https://huggingface.co/spaces/jpanasuk/tabby-tavern-sell-sheet). Do not create `spaces/jpanasuk/tabby-tavern-stack`. Class files in `~/annie-scratch` stay out of this repo.
+
+## Live vs shipped (same RTX 4070, not one running stack)
+
+The services were **not fully merged**. Two compose projects, one GPU. Only Taproot is up.
+
+**Live now (verified on LightBringer):**
+
+- `qwen38-llama-server` — llama.cpp CUDA, Qwen3.5-9B UD-Q4_K_XL, host **:1234**, `n_ctx` 262144. **HOLD this container.** Do not `compose up` Taproot's qwen service to rename it.
+- `taproot-webui` — Open WebUI, host **:3001**, `OPENAI_API_BASE_URL=http://host.docker.internal:1234/v1`
+
+They sit on different Docker networks. The WebUI reaches llama through the host gateway, not a shared service name.
+
+**Shipped, currently stopped:** Tabby Tavern six containers — SillyTavern `:8000`, Open WebUI `:3000`, TabbyAPI `:5000`, Ollama `:11435`, SearXNG `:8080`, MCPO `:8001`. Compose still exists. Ports **unchanged**. One 4070 cannot run Tabby GPU services and llama.cpp at the same time.
+
+**Not running:** `docker-compose.starter.yml` is yaml only. It wants `taproot_ai-network` but still names `ollama` / `tabbyapi`. `anythingllm` would collide with Taproot host `:3001`.
+
+**Not a container:** dockroot is source under the lab (`discover.py`, `tavern_mcp.py`), not a deployed container. Companions: [dockroot-mcp](https://huggingface.co/spaces/jpanasuk/dockroot-mcp) · [local-ai-stack-connectivity](https://huggingface.co/spaces/jpanasuk/local-ai-stack-connectivity).
+
+**Tabby** = local AI you can actually use (chat stack, currently stopped).
+**Taproot** = coding at home, live path `:3001` → `host.docker.internal:1234/v1` → `qwen38-llama-server`.
+
+No Qwen3.5-9B llama.cpp tok/s is recorded here.
+
 ## Hardware baseline
 
-- GPU: NVIDIA GeForce RTX 4070 (12 GB)
-- Environment: WSL2 Ubuntu + Docker Compose with NVIDIA GPU passthrough
-- Primary inference path: TabbyAPI + EXL3 / ExLlamaV3
-- Secondary path: Ollama (GGUF)
-- Character frontend: SillyTavern (PNG character cards)
-- Tooling: MCPO + FastMCP stack server
+- Host: LightBringer — WSL2 Ubuntu
+- GPU: NVIDIA GeForce RTX 4070 (12 GB) — **one heavy engine at a time**
+- Tabby recipe (compose exists, containers stopped): TabbyAPI + EXL3 / ExLlamaV3, SillyTavern, Open WebUI `:3000`, Ollama, SearXNG, MCPO
+- Live path: llama.cpp on `:1234` + Taproot Open WebUI `:3001`
 
 ## Week 1 — Core integration
 
@@ -34,6 +58,8 @@ Engineering history for the containerized local AI lab. Public tree is sanitized
 ## Week 4 — WSL2 fresh install + MCPO (Aug 2026)
 
 Full from-scratch rebuild on clean WSL2 (same RTX 4070). Every fix is in the README WSL2 field notes.
+
+This week verified the **Tabby compose recipe** while Tabby owned the GPU. That is **not** the current live process list (Taproot owns the 4070 now).
 
 ### Issues hit and resolved
 
@@ -71,9 +97,9 @@ Full from-scratch rebuild on clean WSL2 (same RTX 4070). Every fix is in the REA
 
 - **In:** `mcpo` service (port 8001), Open WebUI dual-backend env, Ollama host 11435, character cards
 - **Out of core compose:** SearXNG Redis (SearXNG runs fine without it; JSON search still works)
-- Optional `docker-compose.starter.yml` overlay for extra coding tools (not required)
+- Optional `docker-compose.starter.yml` overlay for extra coding tools (not required, not running)
 
-### Final verified state (24/24 checks)
+### Final verified state (24/24 checks) — Tabby recipe, when Tabby owned the GPU
 
 - Six containers running, no restart loops
 - TabbyAPI: EXL3 model loaded, chat ~53 tok/s processing
@@ -86,10 +112,10 @@ Full from-scratch rebuild on clean WSL2 (same RTX 4070). Every fix is in the REA
 
 ## v2.0.0 public release (2026-08-25)
 
-- Hugging Face **model card** (this README YAML) brought in sync with the live lab
+- Hugging Face **model card** (this README YAML) documents the Tabby compose recipe (MCPO, dual backends, SillyTavern cards, WSL2 EXL3 notes)
 - GitHub first tagged release (`v2.0.0`)
 - Public `mcpo/config.json` no longer contains a live TabbyAPI key (placeholder only)
-- Cards, MCPO, WSL2 Dockerfile fix, and dual-backend Open WebUI are in the published compose
+- That recipe is **not** the live process list. Live is Taproot WebUI `:3001` into llama.cpp `:1234`.
 
 ## Open follow-ups
 
