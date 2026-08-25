@@ -43,8 +43,10 @@ flowchart TB
   N8N[n8n\n5678]
   Meili[meilisearch\n7700]
   PG[postgres + pgvector\n5432]
+  FF[firefox\nlinuxserver\n3000 internal]
   Dock[dockroot MCP\noptional diagnostics profile]
 
+  User -->|3010| FF
   User -->|3000| Web
   User -->|8000| Tavern
   User -->|8001| MCPO
@@ -80,6 +82,7 @@ flowchart TB
   Net --- N8N
   Net --- Meili
   Net --- PG
+  Net --- FF
 ```
 
 ## Host URLs
@@ -100,6 +103,7 @@ Qdrant REST           http://localhost:6333
 Qdrant gRPC           localhost:6334
 Chroma                http://localhost:8005
 Meilisearch           http://localhost:7700
+Firefox               http://localhost:3010
 Postgres              localhost:5432
 ```
 
@@ -147,6 +151,7 @@ Qwen3.5-9B
 | mongo | tabby-tavern-mongo | mongo:7 | 27017 | LibreChat database | running |
 | meilisearch | tabby-tavern-meilisearch | getmeili/meilisearch:latest | 7700 | full-text search | running; `/health` HTTP 200 |
 | postgres | tabby-tavern-postgres | pgvector/pgvector:pg16 | 5432 | Postgres + pgvector, intended Hermes memory backend | healthy |
+| firefox | tabby-tavern-firefox | lscr.io/linuxserver/firefox:latest | 3010 | lab browser (homepage Open WebUI) | default add-on; GUI basic auth from `.env` placeholders |
 | dockroot | tabby-tavern-dockroot | local/dockroot-mcp:unified | none | read-only Docker/MCP observability | optional; `diagnostics` profile |
 
 ## Inference profiles
@@ -257,10 +262,10 @@ docker compose -f /home/jpanasuk/tabby-tavern/docker-compose.yml config --quiet
 # passed
 
 docker compose -f /home/jpanasuk/tabby-tavern/docker-compose.yml ps
-# 15 default services created/running; qwen and postgres healthy
+# 16 default services created/running; qwen and postgres healthy
 
 docker network inspect tabby-tavern_ai-network
-# all 15 default services attached to one network
+# all 16 default services attached to one network
 
 curl http://localhost:1234/health
 # HTTP 200

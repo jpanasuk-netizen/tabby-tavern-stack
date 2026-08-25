@@ -1,0 +1,81 @@
+{
+  "policies": {
+    "DisplayBookmarksToolbar": "always",
+    "Homepage": {
+      "URL": "http://host.docker.internal:3000/",
+      "StartPage": "homepage"
+    },
+    "Bookmarks": [
+      {
+        "Title": "Open WebUI",
+        "URL": "http://host.docker.internal:3000/",
+        "Placement": "toolbar"
+      },
+      {
+        "Title": "Qwen llama.cpp",
+        "URL": "http://host.docker.internal:1234/",
+        "Placement": "toolbar"
+      },
+      {
+        "Title": "SillyTavern",
+        "URL": "http://host.docker.internal:8000/",
+        "Placement": "toolbar"
+      },
+      {
+        "Title": "MCPO /docs",
+        "URL": "http://host.docker.internal:8001/docs",
+        "Placement": "toolbar"
+      },
+      {
+        "Title": "SearXNG",
+        "URL": "http://host.docker.internal:8080/",
+        "Placement": "toolbar"
+      },
+      {
+        "Title": "code-server",
+        "URL": "http://host.docker.internal:8443/",
+        "Placement": "toolbar"
+      },
+      {
+        "Title": "LibreChat",
+        "URL": "http://host.docker.internal:3080/",
+        "Placement": "toolbar"
+      },
+      {
+        "Title": "AnythingLLM",
+        "URL": "http://host.docker.internal:3002/",
+        "Placement": "toolbar"
+      },
+      {
+        "Title": "Lobe",
+        "URL": "http://host.docker.internal:3210/",
+        "Placement": "toolbar"
+      },
+      {
+        "Title": "n8n",
+        "URL": "http://host.docker.internal:5678/",
+        "Placement": "toolbar"
+      },
+      {
+        "Title": "Qdrant dashboard",
+        "URL": "http://host.docker.internal:6333/dashboard",
+        "Placement": "toolbar"
+      },
+      {
+        "Title": "Chroma",
+        "URL": "http://host.docker.internal:8005/",
+        "Placement": "toolbar"
+      },
+      {
+        "Title": "Meilisearch",
+        "URL": "http://host.docker.internal:7700/",
+        "Placement": "toolbar"
+      },
+      {
+        "Title": "Firefox",
+        "URL": "http://host.docker.internal:3010/",
+        "Placement": "toolbar"
+      }
+    ]
+  }
+}

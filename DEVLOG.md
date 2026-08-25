@@ -26,6 +26,15 @@ Hermes session `20260825_002829` merged the running Taproot Qwen stack and Basec
 - Public tree sanitizes host model paths to `./models/...` and drops `external: true` so a stranger can `up` without those volume names pre-created.
 - Sell sheet rewritten from this live graph — not the old 6-service pitch and not the fake 21-service pitch.
 
+## Firefox lab browser (2026-08-25)
+
+Public tree matched to the live LightBringer add-on, sanitized:
+
+- Default service `firefox`: `lscr.io/linuxserver/firefox:latest`, container `tabby-tavern-firefox`, host **3010** → container 3000.
+- Homepage `FIREFOX_CLI` → Open WebUI via `host.docker.internal:3000`. Toolbar favorites from `browser/policies.json` (same UNIFIED host homes).
+- Host import file: `browser/bookmarks.html` (Netscape). No live passwords or lab `.env` values — `FIREFOX_USER` / `FIREFOX_PASSWORD` placeholders only.
+- Not included: treg-dashboard (personal). TabbyAPI/Ollama stay `--profile alternate-inference`. Qwen remains primary inference.
+
 ## Week 1 — Core integration
 
 - Consolidated TabbyAPI, SillyTavern, Open WebUI, Ollama, SearXNG into one compose file

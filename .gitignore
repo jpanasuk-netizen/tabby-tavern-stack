@@ -63,3 +63,7 @@ docker-compose.live.yml
 _sanitize_compose.py
 *.py~
 
+# Firefox container profile (cookies, cache, live session — not bookmarks.html)
+firefox_config/
+browser/config/
+
