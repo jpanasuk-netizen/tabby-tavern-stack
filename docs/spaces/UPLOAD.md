@@ -1,35 +1,39 @@
-# Hugging Face Space uploads
+# Hugging Face uploads — existing surfaces only
 
-Static family for Jeremy Panasuk (`jpanasuk`). Shared CSS: `docs/spaces/tavern.css`.
+Source of truth in this repo for the **two live Hugging Face surfaces**:
 
-**Do not confuse** the model card with the new Space:
+| Live surface | In-repo file | Hugging Face |
+| --- | --- | --- |
+| **Model card** | repo-root `README.md` | https://huggingface.co/jpanasuk/tabby-tavern-stack (`--repo-type model`) |
+| **Sell sheet Space** | `docs/spaces/tabby-tavern-sell-sheet/` | https://huggingface.co/spaces/jpanasuk/tabby-tavern-sell-sheet |
 
-| Surface | URL |
+Companions (also existing):
+
+| Space | In-repo folder |
 | --- | --- |
-| Model card (already exists) | https://huggingface.co/jpanasuk/tabby-tavern-stack |
-| **New Space** (static SDK) | https://huggingface.co/spaces/jpanasuk/tabby-tavern-stack |
-| Sell sheet Space (update) | https://huggingface.co/spaces/jpanasuk/tabby-tavern-sell-sheet |
-| Connectivity companion (fill App) | https://huggingface.co/spaces/jpanasuk/local-ai-stack-connectivity |
-| dockroot companion (restyle) | https://huggingface.co/spaces/jpanasuk/dockroot-mcp |
+| https://huggingface.co/spaces/jpanasuk/dockroot-mcp | `docs/spaces/dockroot-mcp/` |
+| https://huggingface.co/spaces/jpanasuk/local-ai-stack-connectivity | `docs/spaces/local-ai-stack-connectivity/` |
 
-This cloud environment had **no** `HF_TOKEN` / `huggingface_hub` login. Nothing was published from the agent. Run the commands below on a machine that is logged in as `jpanasuk`.
+**Do not create** `spaces/jpanasuk/tabby-tavern-stack`. That Space is unpublished and is **not** part of this lab. The model card slug and the sell-sheet Space are the public HTML/markdown.
+
+This cloud environment had **no** `HF_TOKEN`. Nothing was published from the agent until those commands run as `jpanasuk`.
 
 ```bash
 # one-time
 pipx install "huggingface_hub[cli]"
-hf auth login   # or: export HF_TOKEN=hf_...
+hf auth login   # or: export HF_TOKEN=hf_...  (write token for jpanasuk)
 
 ROOT="$(cd "$(dirname "$0")" && pwd)"   # docs/spaces
-cp "$ROOT/tavern.css" "$ROOT/tabby-tavern-stack/tavern.css"
+REPO="$(cd "$ROOT/../.." && pwd)"       # git root
 cp "$ROOT/tavern.css" "$ROOT/tabby-tavern-sell-sheet/tavern.css"
 cp "$ROOT/tavern.css" "$ROOT/local-ai-stack-connectivity/tavern.css"
 cp "$ROOT/tavern.css" "$ROOT/dockroot-mcp/tavern.css"
 
-# 1) CREATE the stack Space (does not exist yet; model repo is a different namespace)
-hf repo create jpanasuk/tabby-tavern-stack --type space --space-sdk static --exist-ok
-hf upload jpanasuk/tabby-tavern-stack "$ROOT/tabby-tavern-stack" . --repo-type space
+# 1) REQUIRED — live model card (this is why HF still shows Tabby-only until you run it)
+hf upload jpanasuk/tabby-tavern-stack "$REPO/README.md" README.md --repo-type model
+hf upload jpanasuk/tabby-tavern-stack "$REPO/DEVLOG.md" DEVLOG.md --repo-type model
 
-# 2) UPDATE sell sheet (replace App + README only)
+# 2) REQUIRED — live sell-sheet Space (App + Space README + CSS)
 hf upload jpanasuk/tabby-tavern-sell-sheet "$ROOT/tabby-tavern-sell-sheet/index.html" index.html --repo-type space
 hf upload jpanasuk/tabby-tavern-sell-sheet "$ROOT/tabby-tavern-sell-sheet/README.md" README.md --repo-type space
 hf upload jpanasuk/tabby-tavern-sell-sheet "$ROOT/tabby-tavern-sell-sheet/tavern.css" tavern.css --repo-type space
@@ -45,10 +49,4 @@ hf upload jpanasuk/dockroot-mcp "$ROOT/dockroot-mcp/README.md" README.md --repo-
 hf upload jpanasuk/dockroot-mcp "$ROOT/dockroot-mcp/tavern.css" tavern.css --repo-type space
 ```
 
-Optional: mirror `README.md` from GitHub to the **model card** (not the Space):
-
-```bash
-hf upload jpanasuk/tabby-tavern-stack README.md README.md --repo-type model
-```
-
-`short_description` on the new Space is ≤60 characters: Learn AI infra in 21 days — Tabby then Taproot. The Space is **not** live until these commands succeed. This environment has no HF token.
+Do **not** run `hf repo create … --type space` for `jpanasuk/tabby-tavern-stack`.

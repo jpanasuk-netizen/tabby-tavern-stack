@@ -12,6 +12,7 @@ tags:
 - open-webui
 - openwebui
 - ollama
+- taproot
 - llama-cpp
 - vscode
 - mcp
@@ -35,25 +36,24 @@ library_name: exllama
 
 # Tabby Tavern 2.0
 
-**Basically, you can learn AI Infrastructure in 21 days too.**
+**Basically, you can learn AI Infrastructure in 21 days too!**
 
-**Tabby** is local AI you can actually use. **Taproot** is the next step: a local coding desk, no internet required — llama.cpp 262k, VS Code/Continue, Grok, Hermes.
+**Tabby** is local AI you can actually use (SillyTavern / EXL3 / compose). **Taproot** is the next step: coding at home with no internet — llama.cpp `n_ctx` **262144** on **`:1234`**, Taproot WebUI **`:3001`**, VS Code + Continue, Grok, Hermes.
 
-One repo story: `tabby-tavern-stack`. One Space family. Both layers, one lab. Private IaaS on a workstation you own — production-*shaped*, not SaaS. The page teaches by showing the live stack. Proof is [`DEVLOG.md`](DEVLOG.md) **Week 4** (clean WSL2 rebuild on the same 4070) plus **v2.0 packaging** (2026-08-25). Hardware: **LightBringer**, WSL2 Ubuntu, **NVIDIA RTX 4070 12 GB**.
+One lab on one RTX 4070 (**LightBringer**, WSL2 Ubuntu). One GitHub repo (`tabby-tavern-stack`). One README. One DEVLOG. Private IaaS, production-*shaped*, not SaaS. The live stack is the lesson — not a 7-day claim and not a fake syllabus. Proof is [`DEVLOG.md`](DEVLOG.md) **Week 4** (clean WSL2 rebuild on the same 4070) plus **v2.0 packaging** (2026-08-25).
 
 | Layer | What runs |
 | --- | --- |
 | **Tabby** — local AI you can use | **TabbyAPI** `:5000` EXL3 + **SillyTavern** `:8000` + shipped **character cards** + **Open WebUI** `:3000` (Ollama **and** TabbyAPI `/v1`) + **Ollama** `:11435` + **SearXNG** `:8080` + **MCPO** `:8001` |
-| **Taproot** — local coding desk | **llama.cpp** `:1234` Qwen 9B `n_ctx` 262144 + Open WebUI `:3001` (`WEBUI_NAME=Taproot`) + Windows VS Code 1.134.0 + Remote-WSL + **Continue 2.0** → `:1234/v1` + **Grok** 1.0.5 + **Hermes** v0.20.0 |
+| **Taproot** — coding at home, no internet | **llama.cpp** `:1234` Qwen 9B `n_ctx` **262144** + **Taproot WebUI** `:3001` (`WEBUI_NAME=Taproot`) + Windows VS Code 1.134.0 + Remote-WSL + **Continue 2.0** → `:1234/v1` + **Grok** 1.0.5 + **Hermes** v0.20.0 |
 | Docker vision | `~/dockroot` helper + [dockroot-mcp](https://huggingface.co/spaces/jpanasuk/dockroot-mcp) Space |
 
-This GitHub tree ships the Tabby EXL3 compose (six services, YAML, cards, MCPO) and the lab card for the whole box. Taproot’s llama.cpp / Open WebUI `:3001` compose lives on the machine at `~/taproot` — same lab, same docs, not a second repo. Tabby compose **service names and ports stay Tabby** (`8000` / `3000` / `5000` / `11435` / `8080` / `8001`). Class work in `~/annie-scratch` stays out of this tree.
+This GitHub tree ships the Tabby EXL3 compose (six services, YAML, cards, MCPO) and this lab card for the whole box. Taproot’s llama.cpp / Taproot WebUI `:3001` compose lives on the machine at `~/taproot` — same lab, same docs. Tabby compose **service names and ports stay Tabby** (`8000` / `3000` / `5000` / `11435` / `8080` / `8001`). Class work in `~/annie-scratch` stays out of this tree.
 
 | Surface | URL |
 | -------------------------- | ---------------------------------------------------------------------------------------------------------------------------------- |
 | **GitHub (source of truth)** | [https://github.com/jpanasuk-netizen/tabby-tavern-stack](https://github.com/jpanasuk-netizen/tabby-tavern-stack) |
 | **This HF model card** | [https://huggingface.co/jpanasuk/tabby-tavern-stack](https://huggingface.co/jpanasuk/tabby-tavern-stack) |
-| **Lab tour Space** (static) | [https://huggingface.co/spaces/jpanasuk/tabby-tavern-stack](https://huggingface.co/spaces/jpanasuk/tabby-tavern-stack) |
 | **Sell sheet Space** | [https://huggingface.co/spaces/jpanasuk/tabby-tavern-sell-sheet](https://huggingface.co/spaces/jpanasuk/tabby-tavern-sell-sheet) |
 | **dockroot-mcp** | [https://huggingface.co/spaces/jpanasuk/dockroot-mcp](https://huggingface.co/spaces/jpanasuk/dockroot-mcp) |
 | **Connectivity skill** (44 recipes) | [https://huggingface.co/spaces/jpanasuk/local-ai-stack-connectivity](https://huggingface.co/spaces/jpanasuk/local-ai-stack-connectivity) |
@@ -61,7 +61,7 @@ This GitHub tree ships the Tabby EXL3 compose (six services, YAML, cards, MCPO) 
 | **Multi-agent prototype** | [https://github.com/jpanasuk-netizen/multi-agent-dungeon-crawler](https://github.com/jpanasuk-netizen/multi-agent-dungeon-crawler) |
 | **Author** | [https://huggingface.co/jpanasuk](https://huggingface.co/jpanasuk) · [@jpanasuk-netizen](https://github.com/jpanasuk-netizen) |
 
-The model card and the lab-tour Space share a slug in **different namespaces**. `/jpanasuk/tabby-tavern-stack` is this card. `/spaces/jpanasuk/tabby-tavern-stack` is the static tour.
+This file **is** the Hugging Face model card. Upload it to `jpanasuk/tabby-tavern-stack` with `--repo-type model` (see `docs/spaces/UPLOAD.md`). The live HTML one-pager is the [sell-sheet Space](https://huggingface.co/spaces/jpanasuk/tabby-tavern-sell-sheet).
 
 > **Weights are not included.** You download EXL3, GGUF, and GGUF-UD packs yourself.
 > **Secrets are not included.** Copy examples and generate your own keys.
@@ -115,9 +115,9 @@ SEARXNG_QUERY_URL=http://searxng:8080/search?q=<query>
 
 ---
 
-## Layer B — Taproot: local coding desk, no internet (`~/taproot`)
+## Layer B — Taproot: coding at home, no internet (`~/taproot`)
 
-The next step after Tabby. Compose project name **`taproot`**, file `/home/jpanasuk/taproot/docker-compose.yml`. Not copied into this git tree; do not paste it over `docker-compose.yml` here.
+The next step after Tabby. llama.cpp `n_ctx` **262144** on **`:1234`**, Taproot WebUI **`:3001`**, VS Code + Continue, Grok, Hermes. Compose project name **`taproot`**, file `/home/jpanasuk/taproot/docker-compose.yml`. Not copied into this git tree; do not paste it over `docker-compose.yml` here.
 
 | Piece | Live fact | Why that YAML exists |
 | --- | --- | --- |
@@ -498,7 +498,7 @@ Qwen3.5-9B llama.cpp tok/s is **not** published. Re-measure on your hardware.
 See [`DEVLOG.md`](DEVLOG.md):
 
 * Tabby compose consolidation + EXL3 + WSL2 `libcuda` + MCPO + cards
-* Taproot local coding desk (qwen38-agent lineage → taproot project: llama.cpp 262k, VS Code / Continue / Grok / Hermes)
+* Taproot coding-at-home path (qwen38-agent lineage → taproot project: llama.cpp `n_ctx` 262144, VS Code / Continue / Grok / Hermes)
 * VRAM last-call: one heavy engine on the 4070
 
 ---
@@ -567,7 +567,6 @@ llama.cpp `qwen38-llama-server` Up on `:1234`; Taproot WebUI Up on `:3001`; Cont
 | Project | Link |
 | --------------------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
 | Stack (this card) | https://huggingface.co/jpanasuk/tabby-tavern-stack |
-| Lab tour Space | https://huggingface.co/spaces/jpanasuk/tabby-tavern-stack |
 | Stack (GitHub) | https://github.com/jpanasuk-netizen/tabby-tavern-stack |
 | Sell sheet Space | https://huggingface.co/spaces/jpanasuk/tabby-tavern-sell-sheet |
 | dockroot-mcp | https://huggingface.co/spaces/jpanasuk/dockroot-mcp |

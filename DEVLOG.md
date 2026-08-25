@@ -2,7 +2,7 @@
 
 Engineering history for the Independent AI Lab on LightBringer. Public tree is sanitized — no live keys, no weights, no chat logs.
 
-**Tabby Tavern 2.0 is one lab:** **Tabby** (local AI you can actually use) then **Taproot** (the next step — local coding desk, no internet: llama.cpp 9B 262k :1234, WebUI :3001, Continue, Remote-WSL, Grok, Hermes), plus dockroot and connectivity. One README. One DEVLOG. One Space family. Tabby **service names and ports stay Tabby**. Class files in `~/annie-scratch` stay out of this repo.
+**Basically, you can learn AI Infrastructure in 21 days too!** Tabby Tavern 2.0 is one lab on LightBringer: **Tabby** (local AI you can actually use — SillyTavern / EXL3 / compose) then **Taproot** (the next step — coding at home with no internet: llama.cpp `n_ctx` 262144 on :1234, Taproot WebUI :3001, VS Code + Continue, Grok, Hermes), plus dockroot and connectivity. One README. One DEVLOG. Live HF surfaces: model card `jpanasuk/tabby-tavern-stack` and sell-sheet Space `jpanasuk/tabby-tavern-sell-sheet`. Tabby **service names and ports stay Tabby**. Class files in `~/annie-scratch` stay out of this repo.
 
 ## Hardware baseline
 
@@ -97,7 +97,7 @@ Full from-scratch rebuild on clean WSL2 (same RTX 4070). Every fix is in the REA
 
 GitHub README was stale vs the live box (it still read as if Tabby owned the GPU). **This snapshot wins.** Tabby compose was **not** rewritten and Tabby **service names/ports stay Tabby**. `~/annie-scratch` class files stay out of this repo.
 
-Tabby Tavern 2.0 is the LightBringer lab: Tabby you can actually use, then Taproot as the local coding desk (llama.cpp / Continue / Grok / Hermes), no internet required.
+Tabby Tavern 2.0 is the LightBringer lab: Tabby you can actually use, then Taproot as coding at home with no internet (llama.cpp `n_ctx` 262144 `:1234`, Taproot WebUI `:3001`, VS Code + Continue, Grok, Hermes).
 
 ### What is actually running (LightBringer)
 
@@ -120,9 +120,8 @@ No Qwen3.5-9B llama.cpp tok/s is recorded here.
 
 ### Public 2.0 packaging (same calendar day)
 
-- Public pitch: “Basically, you can learn AI Infrastructure in 21 days too.” Progression: **Tabby** = local AI you can actually use; **Taproot** = next step, local coding desk, no internet. Proof is the live stack plus Week 4’s from-scratch WSL2 rebuild — not a day-by-day syllabus.
-- Static HTML family under `docs/spaces/` (shared `tavern.css`): sell sheet, lab-tour Space, connectivity companion, dockroot companion. One family documents both layers.
-- Intended new Hugging Face **Space** `jpanasuk/tabby-tavern-stack` (static SDK) is distinct from the existing **model card** at `huggingface.co/jpanasuk/tabby-tavern-stack`. Upload commands: `docs/spaces/UPLOAD.md`. This environment has no HF token; the Space is not live until those commands run.
+- Public pitch (verbatim): “Basically, you can learn AI Infrastructure in 21 days too!” Progression: **Tabby** = local AI you can actually use; **Taproot** = next step, coding at home with no internet (llama.cpp `n_ctx` 262144 `:1234`, Taproot WebUI `:3001`, VS Code + Continue, Grok, Hermes). Proof is the live stack plus Week 4’s from-scratch WSL2 rebuild — not a 7-day claim and not a day-by-day syllabus.
+- Live Hugging Face surfaces to update (existing only — **do not create** `spaces/jpanasuk/tabby-tavern-stack`): **model card** `jpanasuk/tabby-tavern-stack` (this README) and **sell-sheet Space** `jpanasuk/tabby-tavern-sell-sheet`, plus companions dockroot-mcp and local-ai-stack-connectivity. Commands: `docs/spaces/UPLOAD.md`. This environment has no HF token until Jeremy logs in.
 
 ## Open follow-ups
 

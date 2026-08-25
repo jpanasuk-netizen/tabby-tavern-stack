@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Tabby Tavern 2.0 — Learn AI infrastructure in 21 days</title>
-<meta name="description" content="Basically, you can learn AI Infrastructure in 21 days too. Tabby is local AI you can actually use. Taproot is the next step: a local coding desk, no internet.">
+<meta name="description" content="Basically, you can learn AI Infrastructure in 21 days too! Tabby is local AI you can actually use. Taproot is coding at home with no internet — llama.cpp n_ctx 262144, Taproot WebUI, VS Code, Continue, Grok, Hermes.">
 <link rel="stylesheet" href="tavern.css">
 </head>
 <body>
@@ -17,18 +17,19 @@
     <span class="badge">RTX 4070</span>
   </div>
   <h1 class="hero-hook">BASICALLY, YOU CAN LEARN AI INFRASTRUCTURE IN 21 DAYS TOO!</h1>
-  <p class="tagline"><b>Tabby</b> is local AI you can actually use. <b>Taproot</b> is the next step: a local coding desk, no internet required — llama.cpp 262k, VS Code/Continue, Grok, Hermes. One lab. One repo. The live stack is the lesson. Private IaaS on a 4070. Production-shaped, not SaaS. Weights and live keys stay off the public tree.</p>
+  <p class="tagline"><b>Tabby</b> is local AI you can actually use (SillyTavern / EXL3 / compose). <b>Taproot</b> is the next step: coding at home with no internet — llama.cpp <code>n_ctx</code> <b>262144</b> on <code>:1234</code>, Taproot WebUI <code>:3001</code>, VS Code + Continue, Grok, Hermes. One lab on one 4070. One repo. The live stack is the lesson. Private IaaS. Production-shaped, not SaaS. Weights and live keys stay off the public tree.</p>
   <p class="contact">Jeremy Panasuk &nbsp;|&nbsp; LightBringer · WSL2 Ubuntu · RTX 4070 12 GB &nbsp;|&nbsp; jpanasuk@gmail.com &nbsp;|&nbsp; 715.970.0204</p>
   <div class="links">
     <a href="https://github.com/jpanasuk-netizen/tabby-tavern-stack">GitHub</a>
-    <a class="ghost" href="https://huggingface.co/spaces/jpanasuk/tabby-tavern-stack">Lab tour Space</a>
     <a class="ghost" href="https://huggingface.co/jpanasuk/tabby-tavern-stack">Model card</a>
+    <a class="ghost" href="https://huggingface.co/spaces/jpanasuk/dockroot-mcp">dockroot-mcp</a>
+    <a class="ghost" href="https://huggingface.co/spaces/jpanasuk/local-ai-stack-connectivity">Connectivity</a>
   </div>
 </div>
 
 <div class="kicker-wrap">
   <div class="kicker">
-    <p>TABBY: LOCAL AI YOU CAN USE. TAPROOT: LOCAL CODING DESK. NO INTERNET.</p>
+    <p>TABBY: LOCAL AI YOU CAN USE. TAPROOT: CODE AT HOME. NO INTERNET.</p>
   </div>
 </div>
 
@@ -48,12 +49,12 @@
       <div class="step">
         <div class="n">Step 1</div>
         <h3>Tabby</h3>
-        <p>Local AI you can actually use. Six-service EXL3 compose: TabbyAPI, SillyTavern + cards, Open WebUI <code>:3000</code>, Ollama, SearXNG, MCPO.</p>
+        <p>Local AI you can actually use. SillyTavern / EXL3 / six-service compose: TabbyAPI <code>:5000</code>, SillyTavern <code>:8000</code> + cards, Open WebUI <code>:3000</code>, Ollama <code>:11435</code>, SearXNG, MCPO.</p>
       </div>
       <div class="step">
         <div class="n">Next step</div>
         <h3>Taproot</h3>
-        <p>Local coding desk, no internet. llama.cpp Qwen 9B 262k on <code>:1234</code>, WebUI <code>:3001</code>, VS Code / Continue, Grok, Hermes.</p>
+        <p>Coding at home, no internet. llama.cpp <code>n_ctx</code> <b>262144</b> on <code>:1234</code>, Taproot WebUI <code>:3001</code>, VS Code + Continue, Grok, Hermes.</p>
       </div>
     </div>
   </div>
@@ -96,13 +97,15 @@
   </div>
 
   <div class="section">
-    <h2>TAPROOT — LOCAL CODING DESK</h2>
+    <h2>TAPROOT — CODING AT HOME, NO INTERNET</h2>
     <hr>
     <ul>
+      <li><b>llama.cpp</b> on <code>:1234</code> — Qwen3.5-9B UD-Q4_K_XL, <code>n_ctx</code> <b>262144</b>. Container <code>qwen38-llama-server</code> — <b>do not bounce it</b>.</li>
+      <li><b>Taproot WebUI</b> on <code>:3001</code> (<code>WEBUI_NAME=Taproot</code>) → <code>http://host.docker.internal:1234/v1</code>.</li>
       <li><b>Windows VS Code 1.134.0</b> + Remote-WSL 0.104.3 on <code>/home/jpanasuk/taproot</code>.</li>
       <li><b>Continue 2.0</b> → <code>http://127.0.0.1:1234/v1</code> (host process, host loopback). Config: <code>~/.continue/config.yaml</code>.</li>
       <li><b>Grok Build 1.0.5</b> at <code>~/.local/bin/grok</code>. <b>Hermes v0.20.0</b> at <code>~/.hermes/hermes-agent</code>.</li>
-      <li><b>Dockroot</b> helper at <code>~/dockroot</code> (<code>tavern.sh</code>, <code>tavern_mcp.py</code>, <code>discover.py</code>, <code>recipes.py</code>) plus the <a href="https://huggingface.co/spaces/jpanasuk/dockroot-mcp">dockroot-mcp</a> Space.</li>
+      <li><b>Dockroot</b> helper at <code>~/dockroot</code> plus the <a href="https://huggingface.co/spaces/jpanasuk/dockroot-mcp">dockroot-mcp</a> Space. Connectivity skill: <a href="https://huggingface.co/spaces/jpanasuk/local-ai-stack-connectivity">local-ai-stack-connectivity</a>.</li>
       <li>Linux snap VS Code on <code>~/annie-scratch</code> is <b>Annie++ class only</b> — not the lab, not this repo.</li>
     </ul>
   </div>
@@ -210,7 +213,7 @@
   </div>
 
   <div class="bottom-line">
-    <p><b>THE BOTTOM LINE.</b> Basically, you can learn AI Infrastructure in 21 days too. <b>Tabby</b> is local AI you can actually use. <b>Taproot</b> is the next step — local coding desk, no internet. One box you own. Production-shaped private IaaS, not SaaS. One GPU, last call.</p>
+    <p><b>THE BOTTOM LINE.</b> Basically, you can learn AI Infrastructure in 21 days too! <b>Tabby</b> is local AI you can actually use. <b>Taproot</b> is the next step — coding at home with no internet. One box you own. Production-shaped private IaaS, not SaaS. One GPU, last call.</p>
   </div>
 
   <div class="section">
@@ -219,7 +222,6 @@
     <div class="family">
       <a href="https://github.com/jpanasuk-netizen/tabby-tavern-stack">GitHub</a>
       <a href="https://huggingface.co/jpanasuk/tabby-tavern-stack">Model card</a>
-      <a href="https://huggingface.co/spaces/jpanasuk/tabby-tavern-stack">Lab tour Space</a>
       <a href="https://huggingface.co/spaces/jpanasuk/tabby-tavern-sell-sheet">This sell sheet</a>
       <a href="https://huggingface.co/spaces/jpanasuk/dockroot-mcp">dockroot-mcp</a>
       <a href="https://huggingface.co/spaces/jpanasuk/local-ai-stack-connectivity">Connectivity</a>

@@ -15,6 +15,6 @@ Part of **Tabby Tavern 2.0**. Read-only Docker MCP tools (`ps` / `logs` / `inspe
 
 This Space is documentation. It is not a live docker socket. On LightBringer the helper is not required to be running as a container.
 
-- Lab tour: https://huggingface.co/spaces/jpanasuk/tabby-tavern-stack
+- Sell sheet: https://huggingface.co/spaces/jpanasuk/tabby-tavern-sell-sheet
 - Connectivity: https://huggingface.co/spaces/jpanasuk/local-ai-stack-connectivity
 - Source: https://huggingface.co/jpanasuk/dockroot-mcp-source

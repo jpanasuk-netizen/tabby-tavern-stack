@@ -17,6 +17,6 @@ The connection rule: path is always `/v1`; inside Docker the host is the **servi
 
 Open the **App** tab. `SKILL.md` and `references/wiring-recipes.md` (if present) are the Hermes deep reference (44 recipes) and are not duplicated on the page.
 
-- Lab tour: https://huggingface.co/spaces/jpanasuk/tabby-tavern-stack
+- Sell sheet: https://huggingface.co/spaces/jpanasuk/tabby-tavern-sell-sheet
 - GitHub: https://github.com/jpanasuk-netizen/tabby-tavern-stack
 - dockroot-mcp: https://huggingface.co/spaces/jpanasuk/dockroot-mcp

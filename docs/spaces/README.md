@@ -1,16 +1,16 @@
-# Static Spaces (Tabby Tavern 2.0 family)
+# Static Spaces (Tabby Tavern 2.0)
 
-One repo story: `tabby-tavern-stack`. One Space family. **Tabby** (local AI you can actually use) and **Taproot** (next step: local coding desk, no internet) share these pages.
+**Tabby** (local AI you can actually use) and **Taproot** (next step: coding at home, no internet) share the same GitHub README, DEVLOG, model card, and sell-sheet Space.
 
-Shared tokens: [`tavern.css`](tavern.css). Copy that file next to each Space `index.html` before `hf upload` (already copied into each folder in this tree).
+Live Hugging Face surfaces:
 
-| Folder | Hugging Face | Role |
+| Folder / file | Hugging Face | Role |
 | --- | --- | --- |
-| `tabby-tavern-stack/` | **new** Space `jpanasuk/tabby-tavern-stack` | Lab tour of Tabby then Taproot |
-| `tabby-tavern-sell-sheet/` | Space `jpanasuk/tabby-tavern-sell-sheet` | One-pager for the same lab |
-| `local-ai-stack-connectivity/` | Space `jpanasuk/local-ai-stack-connectivity` | Companion page (`/v1` rule) |
-| `dockroot-mcp/` | Space `jpanasuk/dockroot-mcp` | Companion page (read-only docker vision) |
+| repo-root `README.md` | **model card** `jpanasuk/tabby-tavern-stack` | Lab card (Tabby then Taproot) |
+| `tabby-tavern-sell-sheet/` | Space `jpanasuk/tabby-tavern-sell-sheet` | Live HTML one-pager |
+| `local-ai-stack-connectivity/` | Space `jpanasuk/local-ai-stack-connectivity` | Companion (`/v1` rule) |
+| `dockroot-mcp/` | Space `jpanasuk/dockroot-mcp` | Companion (read-only docker vision) |
 
-The **model card** `https://huggingface.co/jpanasuk/tabby-tavern-stack` is not a Space. Do not upload these HTML files there.
+`tabby-tavern-stack/` in this folder is an **in-repo preview** of the same story. It is **not** a Hugging Face Space. Do not create `spaces/jpanasuk/tabby-tavern-stack`.
 
-Exact CLI: [`UPLOAD.md`](UPLOAD.md).
+Shared tokens: [`tavern.css`](tavern.css). Exact CLI: [`UPLOAD.md`](UPLOAD.md).
