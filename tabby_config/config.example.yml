@@ -1,8 +1,27 @@
-# Example TabbyAPI config — copy to config.yml and adjust.
-# DO NOT commit real admin passwords to a public fork without rotating them.
+# Copy to config.yml and set YOUR OWN keys before launch.
+#   cp tabby_config/config.example.yml tabby_config/config.yml
+# Never commit real keys.
+
 network:
   host: 0.0.0.0
   port: 5000
-# For a private lab, set a strong password and restrict network exposure.
-# The original lab used a simple shared credential so peer containers could connect;
-# treat that as a local-dev convenience, not a production posture.
+  disable_auth: false
+
+# Generate: python3 -c "import secrets; print(secrets.token_hex(32))"
+security:
+  admin_key: "REPLACE_WITH_LONG_RANDOM_ADMIN_KEY"
+  api_key: "REPLACE_WITH_LONG_RANDOM_API_KEY"
+
+developer:
+  disable_auth: false
+
+model:
+  model_dir: models
+  # MUST match a directory name under ./tabby_models/
+  # EXL2 directories will crash current TabbyAPI — EXL3 only.
+  model_name: Llama-3.1-8B-Instruct-exl3-6.0bpw
+  max_seq_len: 8192
+  cache_size: 8192
+  cache_8bit: true
+  rope_scale: 1.0
+  prompt_template: from_tokenizer_config

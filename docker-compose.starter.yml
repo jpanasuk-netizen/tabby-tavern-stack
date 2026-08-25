@@ -1,0 +1,218 @@
+# ═══════════════════════════════════════════════════════════════
+#  CODING STARTER PACK — 10 best-of-breed AI coding tools
+#  Every service in its own container, all on the AI network,
+#  all wired to the stack's Ollama (http://ollama:11434) and
+#  TabbyAPI (http://tabbyapi:5000/v1). They call each other by
+#  container name from anywhere on the network.
+#
+#  Usage:
+#    docker compose -f docker-compose.starter.yml up -d
+#
+#  Ports (host side): see per-service comment. All services are
+#  reachable on the ai-network by their container name.
+#
+#  NOTE: `name: tabby-tavern-starter` is pinned ON PURPOSE. It keeps the
+#  project/volume identity identical to the live stack so the
+#  running services' data volumes stay attached on
+#  recreate. Do not rename unless you first migrate those volumes.
+# ═══════════════════════════════════════════════════════════════
+
+name: tabby-tavern-starter
+
+networks:
+  ai-network:
+    external: true
+
+volumes:
+  code-server-data:
+  qdrant-data:
+  chroma-data:
+  n8n-data:
+  lobe-chat-data:
+  anythingllm-data:
+  librechat-data:
+  mongo-data:
+  meilisearch-data:
+  postgres_data:
+
+services:
+
+  # ── 1. THE IDE — VS Code in the browser ──
+  code-server:
+    image: codercom/code-server:latest
+    container_name: starter-code-server
+    restart: unless-stopped
+    networks: [ai-network]
+    ports:
+      - "8443:8080"              # browser IDE at http://localhost:8443
+    volumes:
+      - code-server-data:/home/coder/.local/share/code-server
+      - ${PWD:-.}/workspace:/home/coder/workspace   # your code lives here
+      # Continue.dev config — wired to the stack's Ollama (hermes3:70b +
+      # llama3.1:8b autocomplete). Edit ide-config/continue-config.json.
+      - ${PWD:-.}/ide-config/continue-config.json:/home/coder/.config/Continue/config.json
+    environment:
+      - PASSWORD=REPLACE_WITH_YOUR_STARTER_PASSWORD        # change me; login at the browser prompt
+    # Continue.dev + Tabby extensions pre-installed via entrypoint
+    # FIX 2026-08-09: the data volume is root-owned but code-server runs as
+    # 'coder' -> EACCES on coder-logs, extensions never install. Chown the
+    # volume to coder on boot before anything else.
+    user: root
+    entrypoint: >
+      /bin/sh -c "
+      chown -R coder:coder /home/coder 2>/dev/null;
+      su coder -c 'code-server --install-extension Continue.continue --force' 2>/dev/null;
+      su coder -c 'code-server --install-extension TabbyML.vscode-tabby --force' 2>/dev/null;
+      su coder -c 'code-server --install-extension coder.coder --force' 2>/dev/null;
+      exec su coder -c 'code-server --bind-addr 0.0.0.0:8080 --disable-telemetry'
+      "
+
+  # ── 2. (removed) tabby — self-hosted Copilot
+  # REMOVED 2026-08-09: tabby's bundled llama-server dlopens libcuda.so.1 at
+  # startup even with --device cpu (binary is CUDA-compiled), and the
+  # container has no NVIDIA libs. Verified: 'error while loading shared
+  # libraries: libcuda.so.1' → exit 127 crash-loop on 20260330 pin too.
+  # Would need --gpus all + CUDA libs — the 12GB card belongs to TabbyAPI.
+  # Completions alternative: point the code-server Tabby extension at a
+  # completion-capable model on the stack's own engines.
+  # Re-add when the tabby image ships a true CPU-only build.
+
+  # ── 3. VECTOR DB — code RAG backbone ──
+  qdrant:
+    image: qdrant/qdrant:latest
+    container_name: starter-qdrant
+    restart: unless-stopped
+    networks: [ai-network]
+    ports:
+      - "6333:6333"              # REST + gRPC
+      - "6334:6334"
+    volumes:
+      - qdrant-data:/qdrant/storage
+
+  # ── 4. VECTOR DB (lightweight) ──
+  chroma:
+    image: chromadb/chroma:latest
+    container_name: starter-chroma
+    restart: unless-stopped
+    networks: [ai-network]
+    ports:
+      - "8005:8000"
+    volumes:
+      - chroma-data:/chroma/chroma
+
+  # ── 5. WORKFLOW AUTOMATION ──
+  n8n:
+    image: n8nio/n8n:latest
+    container_name: starter-n8n
+    restart: unless-stopped
+    networks: [ai-network]
+    ports:
+      - "5678:5678"
+    volumes:
+      - n8n-data:/home/node/.n8n
+    environment:
+      - N8N_BASIC_AUTH_ACTIVE=false
+      - GENERIC_TIMEZONE=UTC
+
+  # ── 6. AI CHAT UI ──
+  lobe-chat:
+    image: lobehub/lobe-chat:latest
+    container_name: starter-lobe-chat
+    restart: unless-stopped
+    networks: [ai-network]
+    ports:
+      - "3210:3210"
+    volumes:
+      - lobe-chat-data:/app/data
+    environment:
+      - OPENAI_PROXY_URL=http://ollama:11434/v1   # wired to stack Ollama
+      - OPENAI_API_KEY=ollama
+
+  # ── 7. RAG WORKSPACE ──
+  anythingllm:
+    image: mintplexlabs/anythingllm:latest
+    container_name: starter-anythingllm
+    restart: unless-stopped
+    networks: [ai-network]
+    ports:
+      - "3001:3001"
+    volumes:
+      - anythingllm-data:/app/server/storage
+    environment:
+      - STORAGE_DIR=/app/server/storage
+      - OLLAMA_BASE_URL=http://ollama:11434       # wired to stack Ollama
+
+  # ── 8. MULTI-MODEL CHAT ──
+  librechat:
+    image: ghcr.io/danny-avila/librechat:latest
+    container_name: starter-librechat
+    restart: unless-stopped
+    depends_on:
+      - mongo
+    networks: [ai-network]
+    ports:
+      - "3080:3080"              # chat UI at http://localhost:3080
+    volumes:
+      - librechat-data:/app/librechat
+    environment:
+      - MONGO_URI=mongodb://mongo:27017/LibreChat
+      - JWT_SECRET=REPLACE_WITH_YOUR_JWT_SECRET   # required (JwtStrategy)
+      - OPENAI_API_KEY=ollama
+      - OPENAI_API_BASE=http://ollama:11434/v1    # wired to stack Ollama
+      - ALLOW_SOCIAL_LOGIN=true
+
+  # LibreChat's database (required — LibreChat is NOT self-contained)
+  mongo:
+    image: mongo:7
+    container_name: starter-mongo
+    restart: unless-stopped
+    networks: [ai-network]
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+
+  # ── 9. FULL-TEXT SEARCH ──
+  meilisearch:
+    image: getmeili/meilisearch:latest
+    container_name: starter-meilisearch
+    restart: unless-stopped
+    networks: [ai-network]
+    ports:
+      - "7700:7700"
+    volumes:
+      - meilisearch-data:/meili_data
+    environment:
+      - MEILI_MASTER_KEY=REPLACE_WITH_YOUR_MEILI_MASTER_KEY
+      - MEILI_ENV=development
+
+  # ── 10. (removed) flowise — no-code agent builder
+  # REMOVED 2026-08-09: flowiseai/flowise is BROKEN upstream (both 'latest'
+  # and 3.1.4 crash at boot with ERR_PACKAGE_PATH_NOT_EXPORTED —
+  # @langchain/langgraph-checkpoint requires './utils/uuid' which
+  # @langchain/core doesn't export). Verified on both tags. Ripped out
+  # rather than shipping a known-broken tool. Re-add when upstream fixes
+  # their dependency tree.
+
+  # ── 11. LONG-TERM MEMORY — Postgres + pgvector ──
+  # Hermes's pluggable memory backend: vector store for embeddings so the
+  # agent remembers across sessions. Point hermes at it with:
+  #   hermes memory configure --backend postgres --dsn "postgresql://hermes:CHANGEME@starter-postgres:5432/hermes"
+  postgres:
+    image: pgvector/pgvector:pg16
+    container_name: starter-postgres
+    restart: unless-stopped
+    networks: [ai-network]
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: hermes
+      POSTGRES_USER: hermes
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-changeme_strong_password}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U hermes -d hermes"]
+      interval: 10s
+      timeout: 5s
+      retries: 5

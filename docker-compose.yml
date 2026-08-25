@@ -1,121 +1,139 @@
 networks:
   ai-network:
     driver: bridge
+
 services:
   tabbyapi:
     image: local/tabbyapi:exl3-fixed
     container_name: tabby-tavern-tabbyapi-1
     restart: unless-stopped
     ports:
-    - 5000:5000
+      - "5000:5000"
     volumes:
-    - ./tabby_models:/app/models
-    - ./tabby_config/config.yml:/app/config.yml
-    # Optional tokens file (create locally; do not commit secrets)
-      # - ./tabby_config/api_tokens.yml:/app/api_tokens.yml
+      - ./tabby_models:/app/models
+      - ./tabby_config/config.yml:/app/config.yml
     environment:
-    - CUDA_VISIBLE_DEVICES=0
-    - CUDA_DEVICE_ORDER=PCI_BUS_ID
-    - NVIDIA_VISIBLE_DEVICES=all
-    - PYTORCH_CUDA_ALLOC_CONF=max_split_size_mb:128
-    - OMP_NUM_THREADS=8
-    - EXLLAMA_GPU_LAYERS=999
-    - EXLLAMA_KV_CACHE=q8_0
-    - EXLLAMA_FLASH_ATTENTION=1
+      - CUDA_VISIBLE_DEVICES=0
+      - CUDA_DEVICE_ORDER=PCI_BUS_ID
+      - NVIDIA_VISIBLE_DEVICES=all
+      - PYTORCH_CUDA_ALLOC_CONF=max_split_size_mb:128
+      - OMP_NUM_THREADS=8
+      - EXLLAMA_GPU_LAYERS=999
+      - EXLLAMA_KV_CACHE=q8_0
+      - EXLLAMA_FLASH_ATTENTION=1
     deploy:
       resources:
         reservations:
           devices:
-          - driver: nvidia
-            count: all
-            capabilities:
-            - gpu
-            - compute
-            - utility
+            - driver: nvidia
+              count: all
+              capabilities: [gpu, compute, utility]
     shm_size: 16g
     networks:
-    - ai-network
+      - ai-network
+
   sillytavern:
     image: ghcr.io/sillytavern/sillytavern:latest
     container_name: tabby-tavern-sillytavern-1
     restart: unless-stopped
     ports:
-    - 8000:8000
+      - "8000:8000"
     volumes:
-    - ./sillytavern_config:/home/node/app/config
-    - ./sillytavern_data:/home/node/app/data
+      - ./sillytavern_config:/home/node/app/config
+      - ./sillytavern_data:/home/node/app/data
+      - ./cards:/opt/cards:ro
     environment:
-    - WHITELIST_MODE=false
+      - WHITELIST_MODE=false
     networks:
-    - ai-network
+      - ai-network
+
   ollama:
     image: ollama/ollama:latest
     container_name: tabby-tavern-ollama-1
     restart: unless-stopped
+    # Host 11435 avoids colliding with a host-level `ollama serve` on 11434.
+    # Open WebUI still uses http://ollama:11434 on the compose network.
     ports:
-    - 11434:11434
-    volumes:
-    - ./ollama_data:/root/.ollama
+      - "11435:11434"
     environment:
-    - CUDA_VISIBLE_DEVICES=0
-    - CUDA_DEVICE_ORDER=PCI_BUS_ID
-    - NVIDIA_VISIBLE_DEVICES=all
-    - OMP_NUM_THREADS=8
-    - OLLAMA_FLASH_ATTENTION=1
-    - OLLAMA_KV_CACHE_TYPE=q8_0
-    - OLLAMA_NUM_PARALLEL=1
+      - CUDA_VISIBLE_DEVICES=0
+      - CUDA_DEVICE_ORDER=PCI_BUS_ID
+      - NVIDIA_VISIBLE_DEVICES=all
+      - OMP_NUM_THREADS=8
+      - OLLAMA_FLASH_ATTENTION=1
+      - OLLAMA_KV_CACHE_TYPE=q8_0
+      - OLLAMA_NUM_PARALLEL=1
+    volumes:
+      - ./ollama_data:/root/.ollama
     deploy:
       resources:
         reservations:
           devices:
-          - driver: nvidia
-            count: all
-            capabilities:
-            - gpu
-            - compute
-            - utility
+            - driver: nvidia
+              count: all
+              capabilities: [gpu, compute, utility]
     shm_size: 16g
     networks:
-    - ai-network
+      - ai-network
+
   open-webui:
     image: ghcr.io/open-webui/open-webui:main
     container_name: tabby-tavern-open-webui-1
     restart: unless-stopped
     ports:
-    - 3000:8080
+      - "3000:8080"
     volumes:
-    - ./openwebui_data:/app/backend/data
+      - ./openwebui_data:/app/backend/data
     environment:
-    - OLLAMA_BASE_URL=http://ollama:11434
+      - OLLAMA_BASE_URL=http://ollama:11434
+      - OPENAI_API_BASE_URL=http://tabbyapi:5000/v1
+      - OPENAI_API_KEY=REPLACE_WITH_YOUR_TABBY_API_KEY
+      - ENABLE_OPENAI_API=true
+      - ENABLE_RAG_WEB_SEARCH=true
+      - RAG_WEB_SEARCH_ENGINE=searxng
+      - SEARXNG_QUERY_URL=http://searxng:8080/search?q=<query>
+    depends_on:
+      - ollama
+      - tabbyapi
+      - searxng
     networks:
-    - ai-network
+      - ai-network
+
   searxng:
-    container_name: tabby-tavern-searxng-1
     image: docker.io/searxng/searxng:latest
+    container_name: tabby-tavern-searxng-1
     restart: unless-stopped
     ports:
-    - 8080:8080
+      - "8080:8080"
     volumes:
-    - ./searxng_config:/etc/searxng
+      - ./searxng_config:/etc/searxng
     environment:
-    - SEARXNG_BASE_URL=http://localhost:8080/
-    - INSTANCE_NAME=Tabby-Tavern-Search
-    - UWSGI_WORKERS=4
-    - UWSGI_THREADS=4
-    cap_drop:
-    - ALL
-    cap_add:
-    - CHOWN
-    - SETGID
-    - SETUID
+      - BASE_URL=http://localhost:8080/
+      - INSTANCE_NAME=Tabby-Tavern-Search
     networks:
-    - ai-network
-    depends_on:
-    - searxng-redis
-  searxng-redis:
-    container_name: tabby-tavern-searxng-redis-1
-    image: docker.io/library/redis:alpine
-    command: redis-server --save "" --appendonly "no"
+      - ai-network
+
+  mcpo:
+    image: ghcr.io/open-webui/mcpo:main
+    container_name: tabby-tavern-mcpo-1
     restart: unless-stopped
+    ports:
+      - "8001:8000"
+    volumes:
+      - ./mcpo/config.json:/app/config/config.json:ro
+      - ./mcp-servers:/opt/mcp-servers:ro
+    command:
+      - --host
+      - "0.0.0.0"
+      - --port
+      - "8000"
+      - --config
+      - /app/config/config.json
+      - --api-key
+      - "REPLACE_WITH_YOUR_MCPO_API_KEY"
+    depends_on:
+      - tabbyapi
+      - ollama
+      - searxng
     networks:
-    - ai-network
+      - ai-network

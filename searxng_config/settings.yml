@@ -6,3 +6,13 @@ use_default_settings: true
 server:
   secret_key: "YOUR_SEARXNG_SECRET_KEY_HERE"
   image_proxy: true
+  limiter: false
+  public_instance: false
+
+search:
+  safe_search: 0
+  autocomplete: ""
+  default_lang: "en"
+  formats:
+    - html
+    - json

@@ -6,19 +6,18 @@ sillytavern_data/content.log
 sillytavern_data/backups/
 sillytavern_data/_storage/
 sillytavern_data/_cache/
+sillytavern_data/_uploads/
+sillytavern_data/default-user/chats/
+sillytavern_data/default-user/group chats/
+sillytavern_data/default-user/settings.json
 
 # -- ST_Data alternate directory --
-st_data/default-user/secrets.json
-st_data/default-user/settings.json
-st_data/default-user/user/
-st_data/default-user/backups/
+st_data/
 
 # -- Model weights (too large for git) --
 tabby_models/*/
 models/*/
-config/Qwen2.5-14B-Instruct-exl2-4.25bpw/output-*.safetensors
-config/Llama-3.1-8B-Instruct-exl2-6.0bpw/output*.safetensors
-config/Meta-Llama-3.1-8B-Instruct-exl2-6.5bpw/output*.safetensors
+config/*/
 
 # -- HF download caches --
 */.cache/huggingface/
@@ -42,6 +41,7 @@ openwebui_data/cache/
 *.key
 *.pem
 secrets.json
+tabby_config/api_tokens.yml
 
 # -- OS files --
 .DS_Store
@@ -54,5 +54,7 @@ __pycache__/
 # -- Git subrepos --
 tabbyAPI-src/.git/
 
-# -- Keep .gitkeep files
+# -- Keep placeholders and cards --
 !**/.gitkeep
+!cards/**
+!sillytavern_data/default-user/characters/**
