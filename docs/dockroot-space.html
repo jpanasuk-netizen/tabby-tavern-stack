@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>dockroot-mcp — Virtual Docker Root for AI Agents</title>
+<style>
+  body { font-family: -apple-system, "Segoe UI", Roboto, sans-serif; margin: 0; background: #0f172a; color: #e2e8f0; line-height: 1.6; }
+  .wrap { max-width: 860px; margin: 0 auto; padding: 32px 20px 60px; }
+  h1 { font-size: clamp(1.7rem, 4vw, 2.2em); margin: 0.2em 0; background: linear-gradient(90deg,#818cf8,#22d3ee); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  h2 { margin-top: 2em; border-bottom: 1px solid #334155; padding-bottom: .3em; color: #a5b4fc; font-size: 1.15rem; }
+  h3 { color: #c7d2fe; margin: 1.2em 0 .4em; }
+  code, pre { background: #1e293b; border-radius: 6px; }
+  code { padding: 2px 6px; }
+  pre { padding: 14px; overflow-x: auto; }
+  table { border-collapse: collapse; width: 100%; margin: 1em 0; font-size: .88rem; }
+  th, td { border: 1px solid #334155; padding: 8px 12px; text-align: left; }
+  th { background: #1e293b; }
+  .badge { display: inline-block; background: #312e81; border: 1px solid #6366f1; border-radius: 20px; padding: 2px 12px; font-size: .8em; margin: 0 6px 8px 0; color:#c7d2fe; }
+  .sec { background: #111c33; border-left: 3px solid #22d3ee; padding: 14px 18px; border-radius: 0 8px 8px 0; margin: 1.2em 0; }
+  .warn { border-left-color: #f59e0b; }
+  a { color: #22d3ee; }
+  ul, ol { padding-left: 1.25em; }
+  .muted { opacity:.75; font-size:.85em; margin-top:3em; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <p><span class="badge">v2.0</span><span class="badge">MCP</span><span class="badge">read-only</span><span class="badge">Tabby Tavern companion</span></p>
+  <h1>dockroot-mcp</h1>
+  <p><strong>Virtual Docker Root for AI Agents.</strong> Read-only power over the compose stack — without host root. Companion to <a href="https://huggingface.co/jpanasuk/tabby-tavern-stack">Tabby Tavern v2.0.0</a>.</p>
+  <div class="sec">
+    <strong>docker_ps · docker_logs · docker_inspect · docker_stats · docker_networks</strong><br>
+    plus the tavern connectivity toolkit (status, self_check, wire, rediscover, models, chat).
+  </div>
+
+  <h2>Why this exists</h2>
+  <p>Agents get asked “why is Open WebUI broken?” Without docker access they invent commands. With dockroot they:</p>
+  <ol>
+    <li><strong>List</strong> containers (<code>docker_ps</code>)</li>
+    <li><strong>Read logs</strong> (<code>docker_logs</code>)</li>
+    <li><strong>Inspect</strong> env / mounts / health (<code>docker_inspect</code>)</li>
+    <li><strong>Watch</strong> CPU / memory (<code>docker_stats</code>)</li>
+    <li><strong>See</strong> networks (<code>docker_networks</code>)</li>
+  </ol>
+  <p>Then they answer from evidence. The fixer sees the box.</p>
+
+  <h2>Security model</h2>
+  <div class="sec warn">
+    <strong>Read-only by design.</strong> No start/stop/rm/exec. Diagnose, never destroy.<br>
+    <strong>Opt-in.</strong> No socket mount, no docker access — the server reports that honestly.<br>
+    <strong>Internal only.</strong> Socket access is still powerful. Do not publish this port.
+  </div>
+
+  <h2>Quick start</h2>
+  <pre>services:
+  dockroot:
+    image: jpanasuk/dockroot-mcp:latest
+    container_name: dockroot
+    restart: unless-stopped
+    networks: [ai-network]
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock</pre>
+
+  <h3>Hermes</h3>
+  <pre># ~/.hermes/config.yaml
+mcp_servers:
+  dockroot:
+    command: python3
+    args: ["/opt/dockroot/tavern_mcp.py"]</pre>
+
+  <h3>MCPO (Open WebUI / Tabby Tavern)</h3>
+  <pre>{
+  "mcpServers": {
+    "dockroot": { "command": "python3", "args": ["/opt/dockroot/tavern_mcp.py"] }
+  }
+}</pre>
+  <p>Tabby Tavern v2.0.0 already runs MCPO at <code>:8001</code> with the FastMCP stack tools. Dockroot is the optional “see the Docker daemon” add-on.</p>
+
+  <h2>Links</h2>
+  <p>
+    <a href="https://huggingface.co/jpanasuk/tabby-tavern-stack">Tabby Tavern stack</a> ·
+    <a href="https://huggingface.co/spaces/jpanasuk/tabby-tavern-sell-sheet">Sell sheet</a> ·
+    <a href="https://huggingface.co/spaces/jpanasuk/local-ai-stack-connectivity">Connectivity skill</a> ·
+    <a href="https://huggingface.co/jpanasuk/dockroot-mcp-source">Source</a> ·
+    <a href="https://hub.docker.com/r/jpanasuk/dockroot-mcp">Docker Hub</a>
+  </p>
+  <p class="muted">Jeremy Panasuk. Read-only docker vision for local AI labs. Hermes Agent by Nous Research under the hood.</p>
+</div>
+</body>
+</html>

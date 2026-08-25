@@ -3,10 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Tabby Tavern Stack — Private AI, Owned Outright</title>
+<title>Tabby Tavern v2.0.0 — Private AI lab stack</title>
+<meta name="description" content="Containerized private AI lab: TabbyAPI EXL3, SillyTavern character cards, Open WebUI, Ollama, SearXNG, MCPO. One docker compose on hardware you own.">
 <style>
   :root {
     --navy: #0B1F3A;
+    --navy-2: #12284a;
     --blue: #1F5FA8;
     --accent: #E8730C;
     --light: #EEF3F8;
@@ -14,72 +16,129 @@
     --green: #1E8E5A;
     --cream: #FFF7EC;
     --tag: #FFD9A8;
+    --ink: #0B1F3A;
+    --line: #d5e0ec;
   }
   * { margin: 0; padding: 0; box-sizing: border-box; }
   body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-    background: #f5f7fa;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background: #f4f7fb;
     color: var(--gray);
     line-height: 1.6;
     -webkit-font-smoothing: antialiased;
   }
+  a { color: var(--blue); }
+  code {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.86em;
+    background: #e8eef5;
+    padding: 1px 6px;
+    border-radius: 4px;
+  }
 
-  /* ---- BANNER ---- */
   .banner {
-    background: var(--navy);
+    background: linear-gradient(160deg, var(--navy) 0%, var(--navy-2) 55%, #16355f 100%);
     color: white;
     text-align: center;
-    padding: 40px 24px 36px;
+    padding: 48px 24px 40px;
+  }
+  .badge-row {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px;
+    margin-bottom: 16px;
+  }
+  .badge {
+    display: inline-block;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 5px 10px;
+    border-radius: 999px;
+    border: 1px solid rgba(255,217,168,0.45);
+    color: var(--tag);
+    background: rgba(255,255,255,0.06);
   }
   .banner h1 {
-    font-size: 2.2rem;
+    font-size: clamp(1.6rem, 4vw, 2.35rem);
     font-weight: 800;
-    letter-spacing: 1px;
+    letter-spacing: 0.04em;
     margin-bottom: 12px;
+    line-height: 1.15;
   }
   .banner .tagline {
     font-size: 1.05rem;
     color: var(--tag);
     max-width: 720px;
-    margin: 0 auto 10px;
-    line-height: 1.5;
+    margin: 0 auto 14px;
   }
-  .banner .contact {
-    font-size: 0.9rem;
+  .banner .contact { font-size: 0.9rem; color: var(--tag); opacity: 0.9; }
+  .banner .links {
+    margin-top: 16px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+  }
+  .banner .links a {
+    color: white;
+    text-decoration: none;
+    background: var(--accent);
+    font-weight: 700;
+    font-size: 0.85rem;
+    padding: 8px 14px;
+    border-radius: 6px;
+  }
+  .banner .links a.ghost {
+    background: transparent;
+    border: 1px solid rgba(255,217,168,0.5);
     color: var(--tag);
-    opacity: 0.85;
   }
 
-  /* ---- KICKER ---- */
   .kicker-wrap { padding: 0 24px; }
   .kicker {
-    background: var(--light);
+    background: white;
     border: 1.5px solid var(--blue);
     text-align: center;
     padding: 14px 20px;
     margin: -18px auto 0;
-    max-width: 820px;
-    border-radius: 6px;
+    max-width: 880px;
+    border-radius: 8px;
     position: relative;
     z-index: 1;
+    box-shadow: 0 8px 24px rgba(11,31,58,0.08);
   }
-  .kicker p {
-    font-size: 1.15rem;
-    font-weight: 700;
-    color: var(--navy);
+  .kicker p { font-size: 1.05rem; font-weight: 800; color: var(--navy); }
+
+  .container { max-width: 880px; margin: 0 auto; padding: 28px 24px 24px; }
+
+  .stats-bar {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    background: var(--navy);
+    color: white;
+    border-radius: 10px;
+    padding: 18px 12px;
+    margin: 8px 0 28px;
+  }
+  @media (min-width: 640px) {
+    .stats-bar { grid-template-columns: repeat(4, 1fr); }
+  }
+  .stat { text-align: center; }
+  .stat .num { font-size: 1.7rem; font-weight: 800; color: var(--accent); }
+  .stat .label {
+    font-size: 0.72rem;
+    color: var(--tag);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
   }
 
-  /* ---- MAIN CONTAINER ---- */
-  .container {
-    max-width: 820px;
-    margin: 0 auto;
-    padding: 28px 24px 60px;
-  }
-
-  /* ---- SECTIONS ---- */
-  .section { margin-bottom: 28px; }
+  .section { margin-bottom: 30px; }
   .section h2 {
-    font-size: 1.3rem;
+    font-size: 1.22rem;
     font-weight: 800;
     color: var(--navy);
     margin-bottom: 4px;
@@ -88,21 +147,15 @@
     content: "\25B6";
     color: var(--accent);
     margin-right: 8px;
-    font-size: 0.85rem;
+    font-size: 0.8rem;
   }
   .section hr {
     border: none;
     border-top: 1.5px solid var(--blue);
     margin-bottom: 12px;
   }
-  .section p {
-    font-size: 0.95rem;
-    margin-bottom: 10px;
-  }
-  .section ul {
-    list-style: none;
-    padding: 0;
-  }
+  .section p { font-size: 0.95rem; margin-bottom: 10px; }
+  .section ul { list-style: none; }
   .section ul li {
     font-size: 0.93rem;
     padding: 5px 0 5px 22px;
@@ -112,11 +165,58 @@
     content: "\2022";
     position: absolute;
     left: 4px;
-    top: 0;
     color: var(--blue);
     font-weight: bold;
   }
   .section ul li b { color: var(--navy); }
+
+  .cap-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 12px;
+    margin-top: 16px;
+  }
+  @media (min-width: 640px) { .cap-grid { grid-template-columns: 1fr 1fr; } }
+  @media (min-width: 900px) { .cap-grid { grid-template-columns: 1fr 1fr 1fr; } }
+  .cap-card {
+    border: 1.5px solid var(--line);
+    border-radius: 10px;
+    padding: 14px 14px 12px;
+    background: white;
+    min-height: 132px;
+  }
+  .cap-card h3 {
+    font-size: 0.78rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 6px;
+  }
+  .cap-card p { font-size: 0.84rem; margin: 0; line-height: 1.45; }
+  .cap-card p b { color: var(--navy); }
+  .cap-card.port { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 0.72rem; color: var(--accent); font-weight: 700; margin-bottom: 6px; }
+  .c1 { border-top: 3px solid var(--blue); }
+  .c1 h3 { color: var(--blue); }
+  .c2 { border-top: 3px solid var(--accent); }
+  .c2 h3 { color: var(--accent); }
+  .c3 { border-top: 3px solid var(--green); }
+  .c3 h3 { color: var(--green); }
+  .c4 { border-top: 3px solid #6C3FA8; }
+  .c4 h3 { color: #6C3FA8; }
+  .c5 { border-top: 3px solid #0E8E8E; }
+  .c5 h3 { color: #0E8E8E; }
+  .c6 { border-top: 3px solid #C0392B; }
+  .c6 h3 { color: #C0392B; }
+
+  .note {
+    background: var(--cream);
+    border: 1px solid #f0d2a8;
+    border-radius: 8px;
+    padding: 12px 14px;
+    font-size: 0.88rem;
+    margin-top: 14px;
+  }
+  .note b { color: var(--navy); }
 
   .quote {
     font-style: italic;
@@ -127,25 +227,16 @@
     font-size: 0.92rem;
   }
 
-  /* ---- PRICING ---- */
   .pricing-header {
     background: var(--navy);
     color: white;
     text-align: center;
-    padding: 30px 24px;
-    border-radius: 8px 8px 0 0;
+    padding: 28px 24px;
+    border-radius: 10px 10px 0 0;
   }
-  .pricing-header h2 {
-    font-size: 1.8rem;
-    font-weight: 800;
-    color: white;
-  }
+  .pricing-header h2 { font-size: 1.6rem; font-weight: 800; color: white; }
   .pricing-header h2::before { display: none; }
-  .pricing-header p {
-    color: var(--tag);
-    font-size: 0.95rem;
-    margin-top: 8px;
-  }
+  .pricing-header p { color: var(--tag); font-size: 0.95rem; margin-top: 8px; }
 
   .tiers {
     display: grid;
@@ -153,241 +244,209 @@
     gap: 16px;
     margin-top: 16px;
   }
-  @media (min-width: 768px) {
-    .tiers { grid-template-columns: repeat(3, 1fr); }
-  }
-
+  @media (min-width: 768px) { .tiers { grid-template-columns: repeat(3, 1fr); } }
   .tier-card {
     border: 2px solid;
-    border-radius: 8px;
+    border-radius: 10px;
     padding: 20px 16px;
     text-align: center;
+    background: white;
   }
   .tier-card.blue { border-color: var(--blue); background: var(--light); }
   .tier-card.accent { border-color: var(--accent); background: var(--cream); }
   .tier-card.green { border-color: var(--green); background: #EAF7F0; }
+  .tier-card h3 { font-size: 1.0rem; font-weight: 800; color: var(--navy); margin-bottom: 6px; }
+  .tier-card .price { font-size: 1.55rem; font-weight: 800; color: var(--accent); }
+  .tier-card .price-sub { font-size: 0.78rem; margin-bottom: 8px; }
+  .tier-card .who { font-style: italic; font-size: 0.82rem; margin-bottom: 12px; min-height: 42px; }
+  .tier-card ul { list-style: none; text-align: left; }
+  .tier-card ul li { font-size: 0.85rem; padding: 3px 0 3px 16px; position: relative; }
+  .tier-card ul li::before { content: "\2022"; position: absolute; left: 2px; color: var(--navy); }
 
-  .tier-card h3 {
-    font-size: 1.05rem;
-    font-weight: 800;
-    color: var(--navy);
-    margin-bottom: 6px;
-  }
-  .tier-card .price {
-    font-size: 1.6rem;
-    font-weight: 800;
-    color: var(--accent);
-  }
-  .tier-card .price-sub {
-    font-size: 0.78rem;
-    color: var(--gray);
-    margin-bottom: 8px;
-  }
-  .tier-card .who {
-    font-style: italic;
-    font-size: 0.82rem;
-    color: var(--gray);
-    margin-bottom: 12px;
-    min-height: 40px;
-  }
-  .tier-card ul {
-    list-style: none;
-    padding: 0;
-    text-align: left;
-  }
-  .tier-card ul li {
-    font-size: 0.85rem;
-    padding: 3px 0 3px 16px;
-    position: relative;
-  }
-  .tier-card ul li::before {
-    content: "\2022";
-    position: absolute;
-    left: 2px;
-    color: inherit;
-  }
-
-  /* ---- BOTTOM LINE ---- */
   .bottom-line {
-    background: var(--light);
+    background: white;
     border-top: 2px solid var(--accent);
     border-bottom: 2px solid var(--accent);
     padding: 18px 20px;
-    margin: 24px 0;
+    margin: 24px 0 8px;
     border-radius: 4px;
   }
-  .bottom-line p {
-    font-size: 0.93rem;
-    color: var(--gray);
-  }
+  .bottom-line p { font-size: 0.93rem; }
   .bottom-line b { color: var(--navy); }
 
-  /* ---- FOOTER ---- */
   .footer {
     text-align: center;
-    padding: 20px 24px 40px;
+    padding: 16px 24px 40px;
     font-size: 0.82rem;
-    color: var(--gray);
   }
-  .footer a {
-    color: var(--blue);
-    text-decoration: underline;
-  }
-  .footer .refs {
-    margin-top: 8px;
-    opacity: 0.8;
-  }
-
-  /* ---- DOWNLOAD BUTTON ---- */
-  .download-bar {
-    text-align: center;
-    padding: 16px;
-  }
-  .download-bar a {
-    display: inline-block;
-    background: var(--accent);
-    color: white;
-    font-weight: 700;
-    font-size: 0.95rem;
-    padding: 10px 28px;
-    border-radius: 6px;
-    text-decoration: none;
-    transition: opacity 0.2s;
-  }
-  .download-bar a:hover { opacity: 0.88; }
+  .footer .refs { margin-top: 8px; opacity: 0.85; }
 </style>
 </head>
 <body>
 
-<!-- BANNER -->
 <div class="banner">
-  <h1>PRIVATE AI, OWNED OUTRIGHT.</h1>
-  <p class="tagline">A self-hosted AI development environment your business controls &mdash; no cloud keys, no telemetry, no per-seat fees.</p>
+  <div class="badge-row">
+    <span class="badge">v2.0.0</span>
+    <span class="badge">Docker Compose</span>
+    <span class="badge">EXL3</span>
+    <span class="badge">RTX 4070 lab</span>
+  </div>
+  <h1>PRIVATE AI, ON HARDWARE YOU OWN.</h1>
+  <p class="tagline">Six-service local lab: TabbyAPI EXL3, SillyTavern character cards, Open WebUI, Ollama, SearXNG, and MCPO. One compose file. No cloud keys in the published tree. No hosted inference.</p>
   <p class="contact">Tabby Tavern Stack &nbsp;|&nbsp; Jeremy Panasuk &nbsp;|&nbsp; jpanasuk@gmail.com &nbsp;|&nbsp; 715.970.0204</p>
+  <div class="links">
+    <a href="https://huggingface.co/jpanasuk/tabby-tavern-stack">Model card</a>
+    <a class="ghost" href="https://github.com/jpanasuk-netizen/tabby-tavern-stack/releases/tag/v2.0.0">GitHub v2.0.0</a>
+  </div>
 </div>
 
-<!-- KICKER -->
 <div class="kicker-wrap">
   <div class="kicker">
-    <p>YOU DON'T NEED ANOTHER SUBSCRIPTION. YOU NEED YOUR OWN AI.</p>
+    <p>THE LIVE LAB IS THE PRODUCT. v2.0.0 MATCHES WHAT ACTUALLY RUNS.</p>
   </div>
 </div>
 
 <div class="container">
+  <div class="stats-bar">
+    <div class="stat"><div class="num">6</div><div class="label">Core services</div></div>
+    <div class="stat"><div class="num">7</div><div class="label">MCPO tools</div></div>
+    <div class="stat"><div class="num">~53</div><div class="label">tok/s EXL3 lab</div></div>
+    <div class="stat"><div class="num">1</div><div class="label">docker compose up</div></div>
+  </div>
 
-  <!-- THE PROBLEM -->
   <div class="section">
     <h2>THE PROBLEM</h2>
     <hr>
-    <p>Every month your team pays for code assistants, chat subscriptions, and API credits &mdash; and every prompt, snippet, and internal pattern leaves your building. You're renting infrastructure you could own. Meanwhile your competitors are training AI on your data, your compliance team is nervous, and your per-seat costs keep climbing as AI becomes core to every role.</p>
+    <p>Chat, search, and inference are rented as separate SaaS products. Prompts leave the network. Keys rot. A 12 GB workstation can already run a private stack &mdash; if someone will compose it, document the failure modes, and ship character cards plus tools instead of a slide deck.</p>
   </div>
 
-  <!-- THE SOLUTION -->
   <div class="section">
-    <h2>THE SOLUTION &mdash; THE TABBY TAVERN STACK</h2>
+    <h2>THE SOLUTION &mdash; TABBY TAVERN v2.0.0</h2>
     <hr>
-    <p>A complete, containerized AI development environment installed on hardware <b>you</b> control. One deployment brings up AI code completion, private chat, local LLM inference, web search, and tool integration &mdash; all inside your network. Published, documented, and battle-tested on Hugging Face: <a href="https://huggingface.co/jpanasuk/tabby-tavern-stack" style="color:var(--blue);">huggingface.co/jpanasuk/tabby-tavern-stack</a>.</p>
+    <p>A containerized private lab on Linux or Windows WSL2. Published as a Hugging Face <b>model card</b> and a tagged GitHub release. Weights and live keys stay off the public tree. You download EXL3/GGUF yourself and generate your own API keys.</p>
+
+    <div class="cap-grid">
+      <div class="cap-card c1">
+        <div class="port">:5000</div>
+        <h3>TabbyAPI · EXL3</h3>
+        <p><b>ExLlamaV3</b> inference. Llama-3.1-8B 6.0bpw on a 12 GB RTX 4070 with <code>cache_8bit</code>. EXL2 will not load on current TabbyAPI.</p>
+      </div>
+      <div class="cap-card c2">
+        <div class="port">:8000</div>
+        <h3>SillyTavern + cards</h3>
+        <p>Character frontend. v2.0.0 ships PNG <b>character cards</b> under <code>cards/</code> &mdash; import <code>default_Seraphina.png</code>.</p>
+      </div>
+      <div class="cap-card c3">
+        <div class="port">:3000</div>
+        <h3>Open WebUI</h3>
+        <p>General workspace wired to <b>both</b> Ollama and TabbyAPI (<code>/v1</code>), plus SearXNG RAG search.</p>
+      </div>
+      <div class="cap-card c4">
+        <div class="port">:11435</div>
+        <h3>Ollama · GGUF</h3>
+        <p>Secondary backend. Host port remapped so a host <code>ollama serve</code> on 11434 does not collide. Flash-attn + q8 KV.</p>
+      </div>
+      <div class="cap-card c5">
+        <div class="port">:8080</div>
+        <h3>SearXNG</h3>
+        <p>Private metasearch with <b>JSON</b> enabled for MCPO and Open WebUI RAG. No tracking SaaS.</p>
+      </div>
+      <div class="cap-card c6">
+        <div class="port">:8001</div>
+        <h3>MCPO · FastMCP</h3>
+        <p>Seven stack tools as OpenAPI: list/chat TabbyAPI and Ollama, pull models, health, SearXNG search. Docs at <code>/docs</code>.</p>
+      </div>
+    </div>
+
+    <div class="note">
+      <b>Optional overlay, not core:</b> <code>docker-compose.starter.yml</code> can add a browser IDE, vector DBs, and extra chat UIs on the same <code>ai-network</code>. It is not required to run the six-service lab, and it is not counted in the “6” above.
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>WHAT THE LAB ACTUALLY MEASURED</h2>
+    <hr>
     <ul>
-      <li><b>Code Completion &amp; AI Pair-Programming</b> &mdash; Tabby-powered Copilot alternative that lives on your network. VS Code, JetBrains, Vim ready.</li>
-      <li><b>Private Chat &amp; Knowledge Work</b> &mdash; Open WebUI and SillyTavern front-ends for drafting, research, summarization &mdash; with no third-party logging.</li>
-      <li><b>Hardware-Optimized Inference</b> &mdash; EXL3-quantized models running on consumer GPUs (RTX-class), tuned for 40+ tokens/second response.</li>
-      <li><b>Web Search &amp; Tooling</b> &mdash; SearXNG private search engine plus Model Context Protocol integration for tool-use actions (files, commands, APIs).</li>
-      <li><b>Docker-First &amp; Reboot-Proof</b> &mdash; docker-compose orchestration with health checks, persistent volumes, and automatic startup. Survives outages.</li>
+      <li><b>EXL3 chat</b> on Llama-3.1-8B Instruct 6.0bpw, RTX 4070: ~53 tok/s processing in the 24/24 check pass.</li>
+      <li><b>VRAM:</b> ~8 GB for that EXL3 pack + 8-bit cache; ~4 GB left for a small GGUF if you keep both loaded.</li>
+      <li><b>Decode telemetry</b> in <a href="https://github.com/jpanasuk-netizen/local_grid_suite">local_grid_suite</a>: ~27× uplift after GPU routing on that run series. Single-box lab numbers, not a product SLA.</li>
     </ul>
   </div>
 
-  <!-- WHAT THIS MEANS -->
   <div class="section">
-    <h2>WHAT THIS MEANS FOR YOUR BUSINESS</h2>
+    <h2>WHAT THIS MEANS</h2>
     <hr>
     <ul>
-      <li><b>Kill per-seat AI fees:</b> one install replaces $30&ndash;$60/user/month subscriptions. Breakeven on a 20-person team: under 4 months.</li>
-      <li><b>Data stays home:</b> no vendor training on your code. Attorney-client privileged documents, patient notes, proprietary IP &mdash; never leave the building.</li>
-      <li><b>Latency that feels local:</b> sub-100ms completions beats any cloud round-trip. Your developers stay in flow.</li>
-      <li><b>Zero vendor lock-in:</b> model weights, configs, and full documentation are yours. You own it forever, or we maintain it for you.</li>
+      <li><b>Own the path:</b> compose, Dockerfiles, configs, character cards, and MCP tools are in the public repo. Weights you download. Keys you generate.</li>
+      <li><b>Data stays on the box:</b> chat UIs, search, and inference never require a cloud API for the core loop.</li>
+      <li><b>WSL2 is documented, not hand-waved:</b> NVIDIA toolkit repo line, <code>libcuda.so</code> linker fix, EXL2-dropped error, host-Ollama port clash.</li>
+      <li><b>Cards are first-class:</b> SillyTavern PNG cards ship in-tree. Import them; do not commit chats or secrets.</li>
     </ul>
   </div>
 
-  <!-- WHO DELIVERS IT -->
   <div class="section">
     <h2>WHO DELIVERS IT</h2>
     <hr>
-    <p>Built by Jeremy Panasuk &mdash; 22+ years of enterprise data &amp; infrastructure delivered to JPMorgan Chase, PepsiCo, Federal Reserve, Navy Federal, BNY Mellon, Micron, Toyota, and Harvard. $2M+ program management. 19/20 crisis accounts rescued. This isn't a weekend project: it's the same rigor applied to Fortune 100 engagements, packaged for your business.</p>
+    <p>Jeremy Panasuk &mdash; enterprise data / platform background (Kohl's Informatica: PowerCenter Grid/HA, AIX&rarr;commodity Cisco/IBM, DQ/MDM POCs, ~$2M software; also named work at Dawn, MF Global, BNY, Micron, NFCU, Mercedes, Smith &amp; Nephew). Independent local-AI systems year from Aug 2024: this Docker lab, decode telemetry, multi-agent prototypes.</p>
     <p class="quote">"You sent one of the best that Informatica has to offer in Jeremy." &mdash; MF Global Infrastructure</p>
   </div>
+</div>
 
-</div><!-- /container -->
-
-<!-- PRICING -->
 <div class="container" style="padding-top:0;">
   <div class="pricing-header">
     <h2>OFFERS &amp; ENGAGEMENTS</h2>
-    <p>Three ways to get your private AI stack live. All include 30 days of email support post-deployment.</p>
+    <p>Three ways to get a private lab live. All include 30 days of email support post-deployment.</p>
   </div>
-
   <div class="tiers">
-    <!-- Tier 1 -->
     <div class="tier-card blue">
       <h3>SINGLE-GPU INSTALL</h3>
       <div class="price">$12,500</div>
       <div class="price-sub">one-time</div>
-      <div class="who">Small teams (up to ~15 users), one office, one GPU system.</div>
+      <div class="who">One office, one RTX-class box, the six-service v2.0.0 stack.</div>
       <ul>
-        <li>Tabby-Tavern stack deployed on your hardware</li>
-        <li>Code completion, private chat, AI search</li>
-        <li>Hardware spec + procurement guidance</li>
-        <li>Security hardening &amp; network isolation</li>
-        <li>Half-day team onboarding session</li>
+        <li>TabbyAPI EXL3 + Ollama + UIs deployed on your hardware</li>
+        <li>Character cards imported; MCPO tools live</li>
+        <li>Hardware spec + WSL2/Linux bring-up</li>
+        <li>Placeholder keys replaced with yours</li>
+        <li>Half-day onboarding</li>
       </ul>
     </div>
-
-    <!-- Tier 2 -->
     <div class="tier-card accent">
       <h3>PRODUCTION DEPLOYMENT</h3>
       <div class="price">$25,000</div>
       <div class="price-sub">one-time</div>
-      <div class="who">Mid-size orgs (15&ndash;100 users), high-availability, monitored.</div>
+      <div class="who">Hardened lab: auth, backups, monitoring, optional overlay.</div>
       <ul>
         <li>Everything in Single-GPU Install</li>
-        <li>Redundant inference nodes + failover</li>
-        <li>User auth, role-based access, audit logs</li>
-        <li>Monitoring, alerts, automated backups</li>
-        <li>Full-day training + doc library for your team</li>
+        <li>Bind-localhost / reverse-proxy guidance</li>
+        <li>User auth, backups, health checks</li>
+        <li>Optional starter overlay (IDE / RAG DBs)</li>
+        <li>Full-day training + runbook</li>
       </ul>
     </div>
-
-    <!-- Tier 3 -->
     <div class="tier-card green">
       <h3>MANAGED PRIVATE AI</h3>
       <div class="price">$3,500<span style="font-size:0.7em;">/mo</span></div>
       <div class="price-sub">ongoing</div>
-      <div class="who">Ongoing care: we run your stack so yours never thinks about it.</div>
+      <div class="who">We keep the lab current so your team uses it, not babysits it.</div>
       <ul>
         <li>Everything in Production Deployment</li>
-        <li>24&times;7 monitoring &amp; incident response</li>
-        <li>Model upgrades, retunes &amp; new quantization packs</li>
-        <li>Quarterly health checks &amp; performance reports</li>
-        <li>Priority phone + Slack/Teams response, 4hr SLA</li>
+        <li>Model pack updates and EXL3 retunes</li>
+        <li>Quarterly health + VRAM reports</li>
+        <li>New compose services as the lab grows</li>
+        <li>Priority phone / Slack, 4hr SLA</li>
       </ul>
     </div>
   </div>
 
-  <!-- BOTTOM LINE -->
   <div class="bottom-line">
-    <p><b>THE BOTTOM LINE.</b> A 20-person shop paying $50/user/mo for AI subscriptions spends $12,000/year &mdash; forever. A single installed private stack pays for itself in the first year, then it's just yours. If your data can't leave the building, or your bill can't keep growing, this is the out.</p>
+    <p><b>THE BOTTOM LINE.</b> This is a private-lab stack, production-shaped, not a multi-tenant SaaS. If the requirement is “run EXL3 + GGUF + character chat + search + MCP tools on a box we own,” v2.0.0 is the tree that matches the running lab.</p>
   </div>
-
-  <!-- DOWNLOAD PDF -->
-  <div class="download-bar">
-    <a href="Tabby_Tavern_Sell_Sheet.pdf" download>Download PDF Version</a>
-  </div>
-
 </div>
 
-<!-- FOOTER -->
 <div class="footer">
-  <p>Jeremy Panasuk &nbsp;&bull;&nbsp; jpanasuk@gmail.com &nbsp;&bull;&nbsp; 715.970.0204 &nbsp;&bull;&nbsp; <a href="https://huggingface.co/jpanasuk/tabby-tavern-stack">huggingface.co/jpanasuk/tabby-tavern-stack</a> &nbsp;&bull;&nbsp; <a href="https://github.com/jpanasuk-netizen">github.com/jpanasuk-netizen</a></p>
-  <p class="refs">References available on request &mdash; Fortune 100 delivery record and customer testimonials on file.</p>
+  <p>Jeremy Panasuk &nbsp;&bull;&nbsp; jpanasuk@gmail.com &nbsp;&bull;&nbsp; 715.970.0204 &nbsp;&bull;&nbsp; <a href="https://huggingface.co/jpanasuk/tabby-tavern-stack">huggingface.co/jpanasuk/tabby-tavern-stack</a> &nbsp;&bull;&nbsp; <a href="https://github.com/jpanasuk-netizen/tabby-tavern-stack/releases/tag/v2.0.0">GitHub v2.0.0</a></p>
+  <p class="refs">Companion spaces: <a href="https://huggingface.co/spaces/jpanasuk/dockroot-mcp">dockroot-mcp</a> · <a href="https://huggingface.co/spaces/jpanasuk/local-ai-stack-connectivity">stack connectivity skill</a></p>
 </div>
 
 </body>
