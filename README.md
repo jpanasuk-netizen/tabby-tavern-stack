@@ -12,9 +12,6 @@ tags:
 - open-webui
 - openwebui
 - ollama
-- taproot
-- llama-cpp
-- vscode
 - mcp
 - model-context-protocol
 - mcpo
@@ -27,6 +24,9 @@ tags:
 - nvidia
 - cuda
 - wsl2
+- taproot
+- llama-cpp
+- vscode
 - ubuntu
 - inference-stack
 - multi-service
@@ -34,72 +34,77 @@ pipeline_tag: text-generation
 library_name: exllama
 ---
 
-# Tabby Tavern 2.0
+# Tabby Tavern + Taproot
 
-**Basically, you can learn AI Infrastructure in 21 days too!**
+**Shipped Tabby recipe** (currently stopped) plus **live Taproot** on the same 4070:
 
-**Tabby** is local AI you can actually use (SillyTavern / EXL3 / compose). **Taproot** is the next step: coding at home with no internet — llama.cpp `n_ctx` **262144** on **`:1234`**, Taproot WebUI **`:3001`**, VS Code + Continue, Grok, Hermes.
+| Layer | Software |
+| --------------------- | ----------------------------------- |
+| High-perf inference | **TabbyAPI** + **EXL3 / ExLlamaV3** |
+| Character chat UI | **SillyTavern** (+ shipped **character cards**) |
+| General LLM workspace | **Open WebUI** (Ollama **and** TabbyAPI) |
+| GGUF backend | **Ollama** |
+| Private search | **SearXNG** |
+| Tooling / MCP | **MCPO** + FastMCP stack server |
 
-One lab on one RTX 4070 (**LightBringer**, WSL2 Ubuntu). One GitHub repo (`tabby-tavern-stack`). One README. One DEVLOG. Private IaaS, production-*shaped*, not SaaS. The live stack is the lesson — not a 7-day claim and not a fake syllabus. Proof is [`DEVLOG.md`](DEVLOG.md) **Week 4** (clean WSL2 rebuild on the same 4070) plus **v2.0 packaging** (2026-08-25).
+This is a **private-lab / portfolio** stack. Production-*shaped*, not a multi-tenant SaaS product and not a hosted inference endpoint.
 
-| Layer | What runs |
-| --- | --- |
-| **Tabby** — local AI you can use | **TabbyAPI** `:5000` EXL3 + **SillyTavern** `:8000` + shipped **character cards** + **Open WebUI** `:3000` (Ollama **and** TabbyAPI `/v1`) + **Ollama** `:11435` + **SearXNG** `:8080` + **MCPO** `:8001` |
-| **Taproot** — coding at home, no internet | **llama.cpp** `:1234` Qwen 9B `n_ctx` **262144** + **Taproot WebUI** `:3001` (`WEBUI_NAME=Taproot`) + Windows VS Code 1.134.0 + Remote-WSL + **Continue 2.0** → `:1234/v1` + **Grok** 1.0.5 + **Hermes** v0.20.0 |
-| Docker vision | `~/dockroot` helper + [dockroot-mcp](https://huggingface.co/spaces/jpanasuk/dockroot-mcp) Space |
+> **Basically, you can learn AI Infrastructure in 21 days too!**
 
-This GitHub tree ships the Tabby EXL3 compose (six services, YAML, cards, MCPO) and this lab card for the whole box. Taproot’s llama.cpp / Taproot WebUI `:3001` compose lives on the machine at `~/taproot` — same lab, same docs. Tabby compose **service names and ports stay Tabby** (`8000` / `3000` / `5000` / `11435` / `8080` / `8001`). Class work in `~/annie-scratch` stays out of this tree.
+## Live vs shipped (same RTX 4070, not one running stack)
+
+The services were **not fully merged**. Two compose projects, one GPU. Only Taproot is up.
+
+**Live now (verified):**
+
+- `qwen38-llama-server` — llama.cpp CUDA, Qwen3.5-9B UD-Q4_K_XL, host **:1234**, `n_ctx` 262144
+- `taproot-webui` — Open WebUI, host **:3001**, `OPENAI_API_BASE_URL=http://host.docker.internal:1234/v1`
+
+They sit on different Docker networks. The WebUI reaches llama through the host gateway, not a shared service name.
+
+**Tabby Tavern** is the older chat stack (SillyTavern, EXL3 / TabbyAPI :5000, Open WebUI :3000, Ollama :11435, SearXNG :8080, MCPO :8001). Compose still exists. All six containers are **stopped**. One 4070 cannot run Tabby GPU services and llama.cpp at the same time.
+
+**Coding starter pack** (`docker-compose.starter.yml`) is yaml only, not running. It wants `taproot_ai-network` but still names `ollama` / `tabbyapi`. `anythingllm` would collide with Taproot's host **:3001**.
+
+**dockroot** is source under the lab, not a deployed container: read-only Docker/MCP diagnostics (`discover.py`, `tavern_mcp.py`). Companion Spaces: [dockroot-mcp](https://huggingface.co/spaces/jpanasuk/dockroot-mcp) · [local-ai-stack-connectivity](https://huggingface.co/spaces/jpanasuk/local-ai-stack-connectivity)
+
+GitHub (one README, one DEVLOG): [jpanasuk-netizen/tabby-tavern-stack](https://github.com/jpanasuk-netizen/tabby-tavern-stack)
+
+Do not `compose up` Taproot's `qwen` service to "rename" the live llama container. That recreates it and dumps the 262k load.
+
+Lab baseline hardware: **NVIDIA GeForce RTX 4070** (Linux + Docker Compose + NVIDIA Container Toolkit, WSL2 Ubuntu).
+
+Release **v2.0.0** documents the Tabby compose recipe (MCPO, dual backends, SillyTavern cards, WSL2 EXL3 notes). That recipe is **not** the live process list. Live is Taproot WebUI :3001 into llama.cpp :1234.
 
 | Surface | URL |
 | -------------------------- | ---------------------------------------------------------------------------------------------------------------------------------- |
-| **GitHub (source of truth)** | [https://github.com/jpanasuk-netizen/tabby-tavern-stack](https://github.com/jpanasuk-netizen/tabby-tavern-stack) |
-| **This HF model card** | [https://huggingface.co/jpanasuk/tabby-tavern-stack](https://huggingface.co/jpanasuk/tabby-tavern-stack) |
-| **Sell sheet Space** | [https://huggingface.co/spaces/jpanasuk/tabby-tavern-sell-sheet](https://huggingface.co/spaces/jpanasuk/tabby-tavern-sell-sheet) |
-| **dockroot-mcp** | [https://huggingface.co/spaces/jpanasuk/dockroot-mcp](https://huggingface.co/spaces/jpanasuk/dockroot-mcp) |
-| **Connectivity skill** (44 recipes) | [https://huggingface.co/spaces/jpanasuk/local-ai-stack-connectivity](https://huggingface.co/spaces/jpanasuk/local-ai-stack-connectivity) |
+| **This HF card** | [https://huggingface.co/jpanasuk/tabby-tavern-stack](https://huggingface.co/jpanasuk/tabby-tavern-stack) |
+| **GitHub source of truth** | [https://github.com/jpanasuk-netizen/tabby-tavern-stack](https://github.com/jpanasuk-netizen/tabby-tavern-stack) |
+| **Sell sheet (Space)** | [https://huggingface.co/spaces/jpanasuk/tabby-tavern-sell-sheet](https://huggingface.co/spaces/jpanasuk/tabby-tavern-sell-sheet) |
 | **Telemetry / benchmarks** | [https://github.com/jpanasuk-netizen/local_grid_suite](https://github.com/jpanasuk-netizen/local_grid_suite) |
 | **Multi-agent prototype** | [https://github.com/jpanasuk-netizen/multi-agent-dungeon-crawler](https://github.com/jpanasuk-netizen/multi-agent-dungeon-crawler) |
 | **Author** | [https://huggingface.co/jpanasuk](https://huggingface.co/jpanasuk) · [@jpanasuk-netizen](https://github.com/jpanasuk-netizen) |
 
-This file **is** the Hugging Face model card. Upload it to `jpanasuk/tabby-tavern-stack` with `--repo-type model` (see `docs/spaces/UPLOAD.md`). The live HTML one-pager is the [sell-sheet Space](https://huggingface.co/spaces/jpanasuk/tabby-tavern-sell-sheet).
-
-> **Weights are not included.** You download EXL3, GGUF, and GGUF-UD packs yourself.
+> **Weights are not included.** You download EXL3 and/or GGUF models yourself.
 > **Secrets are not included.** Copy examples and generate your own keys.
 > **Character cards are included.** Import the PNGs under `cards/` into SillyTavern.
-> **Class work is not included.** `~/annie-scratch` is an Annie++ Python class tree. Mentioned only so it is not confused with the lab.
 
 ---
 
-## Live lab (2026-08-25) — this snapshot wins
-
-One GPU. Two heavy engines will **stall CUDA** instead of erroring. Today llama.cpp owns the card; the Tabby GPU path is parked.
-
-| Fact | Detail |
-| --- | --- |
-| GPU owner | llama.cpp container **`qwen38-llama-server`** on **:1234** — healthy; **do not bounce / recreate it** |
-| VRAM | **11450 / 12282 MiB** with llama resident. Xwayland ~3.6 GB when the desktop is up |
-| Tabby compose | Names/ports restored. All Tabby GPU containers **Exited** (~17 h), `restart=no` |
-| Last call | Do **not** start TabbyAPI / Ollama while llama is on the 4070. Do not kill grok / hermes / llama to “clean tavern” |
-| Desk | Continue 2.0 → `http://127.0.0.1:1234/v1`. Grok 1.0.5. Hermes v0.20.0 |
-
-Full notes: [`DEVLOG.md`](DEVLOG.md) § 2026-08-25.
-
----
-
-## Layer A — Tabby: local AI you can actually use
-
-Six services on bridge `ai-network`. **Do not rename these ports or service names.**
+## Service ports (compose defaults)
 
 | Compose service | Container name (default) | Host port | In-container | Role |
 | --------------- | ------------------------------ | ------------ | ------------ | ------------------------------- |
-| `sillytavern` | `tabby-tavern-sillytavern-1` | **8000** | 8000 | Character frontend |
-| `open-webui` | `tabby-tavern-open-webui-1` | **3000** | 8080 | EXL3 + GGUF workspace |
-| `tabbyapi` | `tabby-tavern-tabbyapi-1` | **5000** | 5000 | EXL3 / ExLlamaV3 |
-| `ollama` | `tabby-tavern-ollama-1` | **11435** | 11434 | GGUF (host remap) |
+| `sillytavern` | `tabby-tavern-sillytavern-1` | **8000** | 8000 | Chat / character frontend |
+| `open-webui` | `tabby-tavern-open-webui-1` | **3000** | 8080 | General LLM workspace |
+| `tabbyapi` | `tabby-tavern-tabbyapi-1` | **5000** | 5000 | EXL3 high-performance inference |
+| `ollama` | `tabby-tavern-ollama-1` | **11435** | 11434 | GGUF model backend (host remap) |
 | `searxng` | `tabby-tavern-searxng-1` | **8080** | 8080 | Private metasearch |
-| `mcpo` | `tabby-tavern-mcpo-1` | **8001** | 8000 | MCP → OpenAPI |
+| `mcpo` | `tabby-tavern-mcpo-1` | **8001** | 8000 | MCP → OpenAPI proxy |
 
-Ollama is published on **11435** so a host-level `ollama serve` on 11434 does not collide. Open WebUI still reaches it at `http://ollama:11434` on `ai-network`.
+Ollama is published on **11435** so a host-level `ollama serve` on 11434 does not collide. Open WebUI still reaches it on the compose network at `http://ollama:11434`.
+
+Open WebUI is wired to **both** backends:
 
 ```yaml
 OLLAMA_BASE_URL=http://ollama:11434
@@ -111,107 +116,7 @@ RAG_WEB_SEARCH_ENGINE=searxng
 SEARXNG_QUERY_URL=http://searxng:8080/search?q=<query>
 ```
 
-`tabby-tavern_ai-network` was **removed** from the llama.cpp side so Tabby and Taproot cannot both grab the 4070. Same lab; they do not share a Docker network.
-
----
-
-## Layer B — Taproot: coding at home, no internet (`~/taproot`)
-
-The next step after Tabby. llama.cpp `n_ctx` **262144** on **`:1234`**, Taproot WebUI **`:3001`**, VS Code + Continue, Grok, Hermes. Compose project name **`taproot`**, file `/home/jpanasuk/taproot/docker-compose.yml`. Not copied into this git tree; do not paste it over `docker-compose.yml` here.
-
-| Piece | Live fact | Why that YAML exists |
-| --- | --- | --- |
-| llama.cpp server | Host **`0.0.0.0:1234→8080`**, image `ghcr.io/ggml-org/llama.cpp:server-cuda`, Qwen3.5-9B **UD-Q4_K_XL**, `n_ctx` **262144** | 262k context on a 12 GB card needs the llama.cpp server path, not TabbyAPI EXL3 8k |
-| Container name | Still **`qwen38-llama-server`**. YAML wants `taproot-qwen`. **Not recreated.** | Recreating would bounce the live server. Leave it. |
-| Open WebUI | **`taproot-webui` :3001**, `WEBUI_NAME=Taproot`, data `/home/jpanasuk/taproot/open-webui-data` | Separate from Tabby Open WebUI **:3000** so the two UIs do not share a DB |
-| Engine URL | `OPENAI_API_BASE_URL=http://host.docker.internal:1234/v1` | WebUI is in Docker; llama is published on the host. `localhost` inside the container is the wrong box. Path is `/v1`, not `/v1/chat/completions` |
-| Lineage | `/home/jpanasuk/qwen38-agent/docker-compose.yml` (27B then 9B 262k) | Live llama started from this lineage before the taproot project name |
-
-**Do not** `docker compose up` that llama service from this Tabby repo. It is already up.
-
-No Qwen3.5-9B tok/s is published (not measured in this tree).
-
----
-
-## Layer C — the Taproot desk (VS Code, Continue, Grok, Hermes)
-
-| Tool | Where | Why |
-| --- | --- | --- |
-| Windows VS Code **1.134.0** + Remote-WSL **0.104.3** | `/home/jpanasuk/taproot` | Local coding desk for the 262k engine |
-| Continue **2.0** | `~/.continue/config.yaml` → `http://127.0.0.1:1234/v1` Qwen3.5-9B | Continue runs on the host, so the host loopback port, not `host.docker.internal` |
-| Grok Build **1.0.5** | `~/.local/bin/grok` | Host CLI for the lab |
-| Hermes **v0.20.0** | `~/.hermes/hermes-agent` | Agent runtime; loads the connectivity skill |
-| Linux snap VS Code **1.134.0** | `~/annie-scratch` | **Annie++ Python class only.** Not the lab. Not this repo. Do not copy class files here. |
-
-VS Code is the Taproot desk, not a Tabby container. `docker-compose.starter.yml`’s browser IDE is an optional overlay, not how LightBringer is driven.
-
----
-
-## Layer D — MCP and connectivity
-
-- **MCPO** in Tabby compose: FastMCP `mcp-servers/server.py`, seven tools under `/host-master/`, python `/app/.venv/bin/python3`. Empty `mcpServers` crashes MCPO.
-- **Dockroot** on the box: `~/dockroot` (`tavern.sh`, `tavern_mcp.py`, `discover.py`, `recipes.py`) — local recipe helper, **not** running as a container right now. Space: [dockroot-mcp](https://huggingface.co/spaces/jpanasuk/dockroot-mcp) (read-only docker vision).
-- **Connection rule** + 44 recipes: [local-ai-stack-connectivity](https://huggingface.co/spaces/jpanasuk/local-ai-stack-connectivity). Path is always `/v1`. Inside Docker, host is the **service name**, not `localhost`. Continue on the host uses `127.0.0.1:1234/v1`. Taproot WebUI uses `host.docker.internal:1234/v1`.
-
----
-
-## Custom YAML — why each change exists
-
-Public example keys only. Never commit live secrets.
-
-### TabbyAPI (`tabby_config/config.example.yml`)
-
-```yaml
-model:
-  model_dir: models
-  model_name: Llama-3.1-8B-Instruct-exl3-6.0bpw
-  max_seq_len: 8192
-  cache_size: 8192
-  cache_8bit: true
-```
-
-| Change | Why |
-| --- | --- |
-| EXL3 directory name, not EXL2 | Current TabbyAPI dropped ExLlamaV2. EXL2 crashes on load. |
-| `model_dir: models` + compose mount `./tabby_models → /app/models` | `model_name` is a folder under that mount |
-| Compose `./tabby_config/config.yml → /app/config.yml` | Otherwise TabbyAPI never sees the host YAML |
-| `cache_8bit` + 8192 seq/cache | 12 GB card: ~8 GB for 6.0bpw EXL3, ~4 GB left |
-| Generated `api_key` / `admin_key` | Same key in Open WebUI, MCPO, SillyTavern |
-
-`Dockerfile.tabby` also `ln -sf /usr/local/cuda-12.8/compat/libcuda.so` so Triton/exllamav3 can `-lcuda` on WSL2. `shm_size: 16g`, CUDA device order, flash-attn / KV flags.
-
-### Open WebUI `:3000` (Tabby compose)
-
-Dual backend so the UI can use EXL3 **and** GGUF. `OLLAMA_BASE_URL=http://ollama:11434` **and** `OPENAI_API_BASE_URL=http://tabbyapi:5000/v1`.
-
-### Ollama
-
-Host map `11435:11434` because host `ollama serve` already owns 11434. In-network name stays `ollama:11434`.
-
-### SillyTavern (`sillytavern_config/config.yaml`)
-
-`browserLaunch.enabled: false` (no browser inside Docker). `basicAuthMode: true` — ST **refuses** `0.0.0.0` without auth. Cards under `cards/` are first-class.
-
-### SearXNG (`searxng_config/settings.yml`)
-
-`search.formats`: **html and json**. JSON is required for MCPO `searxng_search` and Open WebUI RAG. HTML-only was the default and starved both.
-
-### MCPO (`mcpo/config.json`)
-
-`command: /app/.venv/bin/python3` (that venv has `mcp`). Tools under `/host-master/`. Empty `mcpServers: {}` crashes the proxy.
-
-### NVIDIA Container Toolkit
-
-`deb …/noble main` is a **malformed** apt line. Flat `amd64 /` repo line works.
-
-### Taproot compose + Continue
-
-| Change | Why |
-| --- | --- |
-| `OPENAI_API_BASE_URL=http://host.docker.internal:1234/v1` | WebUI container → host-published llama |
-| Continue `http://127.0.0.1:1234/v1` | Continue is a host process |
-| Separate `:3001` + `WEBUI_NAME=Taproot` + own data dir | Do not smash Tabby Open WebUI `:3000` chats |
-| Networks not shared | Two GPU engines on one 4070 must not discover each other and both allocate |
+All services share the bridge network `ai-network`.
 
 ---
 
@@ -223,8 +128,8 @@ Host map `11435:11434` because host `ollama serve` already owns 11434. In-networ
 * **GPU:** NVIDIA GPU with recent drivers (lab used RTX 4070)
 * **Docker:** Docker Engine + **Compose plugin** (`docker compose version`)
 * **NVIDIA Container Toolkit** (required for GPU passthrough into containers)
-* **Disk:** room for Docker images **plus** model weights (EXL3 8B class is often tens of GB; GGUF / UD-Q4_K_XL varies)
-* **RAM / VRAM:** **one heavy GPU owner at a time** on 12 GB
+* **Disk:** room for Docker images **plus** model weights (EXL3 8B class is often tens of GB; GGUF varies by quant)
+* **RAM / VRAM:** 8B-class EXL3 fits a 12 GB class card with headroom when KV/cache is tuned; larger models need more VRAM
 
 ### One-time NVIDIA Container Toolkit check
 
@@ -234,7 +139,7 @@ nvidia-smi
 docker run --rm --gpus all nvidia/cuda:12.4.1-base-ubuntu22.04 nvidia-smi
 ```
 
-If `nvidia-smi` works on the host but fails in Docker, fix the toolkit / Docker daemon GPU runtime **before** bringing GPU containers up.
+If `nvidia-smi` works on the host but fails in Docker, fix the toolkit / Docker daemon GPU runtime **before** bringing the stack up.
 
 ### Optional host tools
 
@@ -245,11 +150,9 @@ pipx install "huggingface_hub[cli]"
 
 ---
 
-## Cold start (Tabby compose in this repo)
+## Cold start (stranger path)
 
-Prefer cloning **GitHub**. This HF repo is the public **model card** + sanitized mirror.
-
-If llama.cpp already owns the 4070, **do not** `docker compose up` TabbyAPI/Ollama until you have freed VRAM. Do not recreate `qwen38-llama-server` to “make room.”
+Prefer cloning **GitHub** for day-to-day work. This HF repo is the public **model card** + sanitized mirror of the same layout.
 
 ### 0) Clone
 
@@ -258,7 +161,7 @@ git clone https://github.com/jpanasuk-netizen/tabby-tavern-stack.git
 cd tabby-tavern-stack
 ```
 
-Alternate (HF **model** mirror — same public layout, may lag GitHub):
+Alternate (HF mirror — same public layout, may lag GitHub):
 
 ```bash
 git lfs install   # only if you later pull large assets; weights still not shipped
@@ -278,7 +181,13 @@ docker build -f Dockerfile.tabby -t local/tabbyapi:exl3-fixed .
 
 ### 2A) Download an EXL3 model for TabbyAPI
 
-Weights go under `tabby_models/` (gitignored). Compose mounts `./tabby_models → /app/models`. `model_name` is a **directory name under that mount**.
+Weights go under `tabby_models/` (gitignored). Compose mounts:
+
+```text
+./tabby_models  →  /app/models   (inside tabbyapi)
+```
+
+TabbyAPI `model_name` is a **directory name under that mount**.
 
 ```bash
 mkdir -p tabby_models
@@ -290,20 +199,46 @@ huggingface-cli download turboderp/Llama-3.1-8B-Instruct-exl3 \
 ls -la tabby_models/Llama-3.1-8B-Instruct-exl3-6.0bpw | head
 ```
 
-**EXL2 will not load.** Use EXL3 quants only.
+**EXL2 will not load.** Current TabbyAPI dropped the ExLlamaV2 backend. Use EXL3 quants only.
 
 ### 2B) Configure TabbyAPI (required before first launch)
 
 ```bash
 cp -n tabby_config/config.example.yml tabby_config/config.yml
+```
+
+Generate real keys and paste them in:
+
+```bash
 python3 -c "import secrets; print('admin_key:', secrets.token_hex(32)); print('api_key:  ', secrets.token_hex(32))"
 ```
 
-Paste keys; set `model_name` to the folder you downloaded. Put the same `api_key` in Open WebUI `OPENAI_API_KEY`, `mcpo/config.json` `TABBYAPI_KEY`, and SillyTavern.
+Set `model_name` to the folder you downloaded. For a 12 GB card the lab uses:
+
+```yaml
+model:
+  model_dir: models
+  model_name: Llama-3.1-8B-Instruct-exl3-6.0bpw
+  max_seq_len: 8192
+  cache_size: 8192
+  cache_8bit: true
+```
+
+Compose always mounts:
+
+```text
+./tabby_config/config.yml  →  /app/config.yml
+```
+
+Put the same `api_key` in:
+
+* `open-webui` `OPENAI_API_KEY`
+* `mcpo/config.json` `TABBYAPI_KEY`
+* SillyTavern API settings
 
 ### 2C) Ollama / GGUF path (secondary backend)
 
-After the Tabby stack is up **and allowed to own the GPU**:
+After the stack is up:
 
 ```bash
 docker exec -it tabby-tavern-ollama-1 ollama pull llama3.1:8b
@@ -311,63 +246,113 @@ docker exec -it tabby-tavern-ollama-1 ollama list
 docker exec -it tabby-tavern-ollama-1 ollama run llama3.1:8b "Say hello in one sentence."
 ```
 
-Lab measurement: ~8 GB VRAM for Llama-3.1-8B EXL3 6.0bpw + 8-bit cache, ~4 GB left for a small GGUF. Do not add llama.cpp as a third GPU tenant.
+You can run **TabbyAPI (EXL3)** and **Ollama (GGUF)** together; on a 12 GB card load one heavy model at a time unless you know your headroom. Lab measurement: ~8 GB VRAM for Llama-3.1-8B EXL3 6.0bpw + 8-bit cache, ~4 GB left for a small GGUF.
 
 ### 3) Frontend / search secrets (placeholders only)
 
 **SillyTavern** (`sillytavern_config/config.yaml`):
 
 * Default listen port **8000**
-* `browserLaunch.enabled: false`
-* `basicAuthMode: true` — ST refuses `0.0.0.0` without auth
-* Replace `YOUR_ST_USERNAME_HERE` / `YOUR_ST_PASSWORD_HERE`
+* `browserLaunch.enabled: false` (no browser inside Docker)
+* `basicAuthMode: true` — ST refuses to start on `0.0.0.0` without auth
+* Replace:
 
-**SearXNG** (`searxng_config/settings.yml`): `secret_key` placeholder + `search.formats: [html, json]`.
+```yaml
+basicAuthUser:
+  username: "YOUR_ST_USERNAME_HERE"
+  password: "YOUR_ST_PASSWORD_HERE"
+```
+
+**SearXNG** (`searxng_config/settings.yml`):
+
+```yaml
+use_default_settings: true
+server:
+  secret_key: "YOUR_SEARXNG_SECRET_KEY_HERE"
+  image_proxy: true
+search:
+  formats:
+    - html
+    - json
+```
+
+JSON format is required for MCPO `searxng_search` and Open WebUI RAG.
 
 ### 4) Character cards (SillyTavern)
 
+This release ships Tavern **character cards** under `cards/`:
+
 | File | What it is |
 | --------------------------------------------- | -------------------------------- |
-| `cards/default_Seraphina.png` | SillyTavern PNG character card |
-| `cards/Seraphina/*.png` | Expression sprites |
+| `cards/default_Seraphina.png` | SillyTavern PNG character card (embedded spec) |
+| `cards/Seraphina/*.png` | Expression sprites used by the card |
 | `cards/README.md` | Import notes |
 
+**Use the cards:**
+
 1. Start SillyTavern → http://localhost:8000
-2. Characters → Import → `cards/default_Seraphina.png`
-3. Copy `cards/Seraphina/` into `sillytavern_data/default-user/characters/Seraphina/` if sprites do not import
+2. Characters → Import → pick `cards/default_Seraphina.png`
+3. Copy `cards/Seraphina/` into SillyTavern's character expressions folder if the importer does not pull sprites automatically (`sillytavern_data/default-user/characters/Seraphina/`)
 
-Do not commit chats, `secrets.json`, or live API keys.
+Do not commit chats, `secrets.json`, or live API keys from a running data directory.
 
-### 5) Launch Tabby compose
+### 5) Launch
 
 ```bash
 docker compose up -d
 docker compose ps
 ```
 
-Or `./start-stack.sh`. That script only orchestrates **this** compose file. It does not start llama.cpp.
+Or:
 
-### 6) Health checks (Tabby services)
+```bash
+chmod +x start-stack.sh load-model.sh
+./start-stack.sh
+```
+
+### 6) Health checks (every service)
 
 ```bash
 docker compose ps
+docker compose logs --tail=80 tabbyapi
+docker compose logs --tail=40 ollama
+docker compose logs --tail=40 sillytavern
+docker compose logs --tail=40 open-webui
+docker compose logs --tail=40 searxng
+docker compose logs --tail=40 mcpo
+
 curl -sS -o /dev/null -w "sillytavern  %{http_code}\n" http://127.0.0.1:8000/ || true
 curl -sS -o /dev/null -w "open-webui   %{http_code}\n" http://127.0.0.1:3000/ || true
 curl -sS -o /dev/null -w "tabbyapi     %{http_code}\n" http://127.0.0.1:5000/ || true
 curl -sS -o /dev/null -w "ollama       %{http_code}\n" http://127.0.0.1:11435/ || true
 curl -sS -o /dev/null -w "searxng      %{http_code}\n" http://127.0.0.1:8080/ || true
 curl -sS -o /dev/null -w "mcpo         %{http_code}\n" http://127.0.0.1:8001/docs || true
+
+docker exec -it tabby-tavern-tabbyapi-1 nvidia-smi || true
 ```
 
-Browser (Tabby layer): SillyTavern `:8000` · Open WebUI `:3000` · TabbyAPI `:5000` · Ollama `:11435` · SearXNG `:8080` · MCPO `:8001/docs`
+Browser targets:
 
-Taproot (already live on LightBringer): llama.cpp `:1234` · Taproot Open WebUI `:3001`
+* SillyTavern → http://localhost:8000
+* Open WebUI → http://localhost:3000
+* TabbyAPI → http://localhost:5000
+* Ollama (host) → http://localhost:11435
+* SearXNG → http://localhost:8080
+* MCPO Swagger → http://localhost:8001/docs
 
 ### 7) Point SillyTavern at TabbyAPI
 
-* API type: OpenAI-compatible / TabbyAPI
+In SillyTavern API settings:
+
+* API type: **OpenAI-compatible** / TabbyAPI
 * Endpoint: `http://tabbyapi:5000/v1` from another container, or `http://127.0.0.1:5000/v1` from the host
-* API key: `api_key` in `tabby_config/config.yml`
+* API key: the `api_key` in `tabby_config/config.yml`
+
+If ST cannot reach TabbyAPI, check:
+
+1. Both containers on `ai-network`
+2. Keys match
+3. TabbyAPI finished loading the EXL3 model (`docker compose logs -f tabbyapi`)
 
 ### 8) Switch / reload TabbyAPI model
 
@@ -381,6 +366,8 @@ docker compose logs -f tabbyapi
 
 ## MCPO (MCP → OpenAPI)
 
+MCPO (`ghcr.io/open-webui/mcpo:main`) launches MCP servers as subprocesses and exposes their tools as OpenAPI HTTP endpoints.
+
 `mcp-servers/server.py` is a **FastMCP** server (not raw JSON-RPC) with 7 tools:
 
 | Tool | Description |
@@ -390,14 +377,22 @@ docker compose logs -f tabbyapi
 | `list_ollama_models` | List GGUF models in Ollama |
 | `ollama_pull_model` | Pull a model into Ollama |
 | `ollama_chat` | Chat with an Ollama model |
-| `get_stack_status` | Health check Tabby services |
+| `get_stack_status` | Health check all services |
 | `searxng_search` | Web search via SearXNG (JSON) |
 
-`mcp-servers/tavern_mcp.py` is the connectivity toolkit (`status`, `self_check`, `wire`, `models`, `chat`). Wire it only if you also ship `discover.py` next to it.
+Config notes:
+
+* `mcpo/config.json` must call `/app/.venv/bin/python3` (MCPO image venv has `mcp`)
+* Env: `TABBYAPI_URL`, `OLLAMA_URL`, `TABBYAPI_KEY` (placeholder in public tree)
+* Tools are served under `/host-master/` (server name in config)
+* Empty `"mcpServers": {}` **crashes** MCPO — keep at least one entry
+* Set `--api-key` in compose (public tree uses `REPLACE_WITH_YOUR_MCPO_API_KEY`)
+
+A second server, `mcp-servers/tavern_mcp.py`, is the lab connectivity toolkit (`status`, `self_check`, `wire`, `models`, `chat`). Wire it only if you also ship `discover.py` next to it.
 
 ---
 
-## GPU / compose tuning (Tabby layer)
+## GPU / compose tuning (what the lab actually ships)
 
 | Setting | Value | Why |
 | --------------------------------------- | ----------------------- | ---------------------------------------- |
@@ -413,7 +408,7 @@ docker compose logs -f tabbyapi
 | `OLLAMA_KV_CACHE_TYPE` | `q8_0` | Ollama KV quant |
 | TabbyAPI `cache_8bit` | `true` | Halves KV VRAM on 12 GB cards |
 
-If llama.cpp is already resident, **leave Tabby GPU services down**.
+If you OOM: lower `max_seq_len` / `cache_size`, use a smaller bpw EXL3, or stop Ollama models while TabbyAPI holds a large model.
 
 ---
 
@@ -421,23 +416,27 @@ If llama.cpp is already resident, **leave Tabby GPU services down**.
 
 ```text
 tabby-tavern-stack/
-├── docker-compose.yml              # Tabby layer (6 services) — names/ports stay Tabby
-├── docker-compose.starter.yml      # optional overlay (not the live VS Code desk)
+├── docker-compose.yml              # lab orchestration (6 services)
+├── docker-compose.starter.yml      # optional coding-tools overlay
 ├── Dockerfile / Dockerfile.tabby   # TabbyAPI image (WSL2 libcuda fix)
-├── start-stack.sh                  # Tabby compose only
+├── start-stack.sh
+├── load-model.sh
 ├── cards/                          # SillyTavern character cards (PNG)
-├── mcpo/config.json
-├── mcp-servers/server.py
+├── mcpo/config.json                # MCPO server map (placeholders)
+├── mcp-servers/server.py           # FastMCP stack tools
 ├── tabby_config/config.example.yml
 ├── sillytavern_config/config.yaml
 ├── searxng_config/settings.yml
+├── tabby_models/                   # EXL3 weights (gitignored contents)
 ├── SECURITY.md
 ├── DEVLOG.md
 ├── LICENSE
-└── docs/spaces/                    # sell sheet + Space HTML (whole-lab story)
+└── docs/                           # sell-sheet extras
 ```
 
-On the live machine (not in this tree): `~/taproot/docker-compose.yml`, `~/qwen38-agent/`, `~/dockroot/`, `~/.continue/config.yaml`, `~/.local/bin/grok`, `~/.hermes/hermes-agent`. `~/annie-scratch` is class-only.
+Compose service names (authoritative):
+
+`tabbyapi` · `sillytavern` · `ollama` · `open-webui` · `searxng` · `mcpo`
 
 ---
 
@@ -446,14 +445,23 @@ On the live machine (not in this tree): `~/taproot/docker-compose.yml`, `~/qwen3
 | Secret / file | Where | Rule |
 | -------------------------------- | ---------------------------- | ------------------------------------------- |
 | TabbyAPI `admin_key` / `api_key` | `tabby_config/config.yml` | Generate yourself; never commit live values |
-| Open WebUI `OPENAI_API_KEY` | Tabby compose env | Same value as TabbyAPI `api_key` |
+| Open WebUI `OPENAI_API_KEY` | compose env | Same value as TabbyAPI `api_key` |
 | MCPO `--api-key` / `TABBYAPI_KEY` | compose + `mcpo/config.json` | Placeholders in public tree |
 | SillyTavern basic auth | `sillytavern_config/config.yaml` | Replace `YOUR_ST_*` placeholders |
 | SearXNG `secret_key` | `searxng_config/settings.yml` | Replace placeholder |
-| Open WebUI DBs | `openwebui_data/` and `~/taproot/open-webui-data` | gitignored / off this tree |
-| Continue | `~/.continue/config.yaml` | Host file; no live keys in this repo |
+| Open WebUI DB | `openwebui_data/` | gitignored |
+| Ollama keys/models | host `~/.ollama` or `ollama_data/` | gitignored |
 
-**Private-lab defaults are intentional.** Read [`SECURITY.md`](SECURITY.md). Treat any key that ever appeared in an older public revision as burned.
+**Private-lab defaults are intentional.** This is not hardened multi-tenant hosting.
+
+Before any LAN/WAN exposure:
+
+1. Replace every placeholder credential
+2. Prefer binding host ports to `127.0.0.1`
+3. Put a reverse proxy + TLS in front if you leave the machine
+4. Read [`SECURITY.md`](SECURITY.md)
+
+Older public revisions of this mirror contained lab convenience keys (including a TabbyAPI key in `mcpo/config.json`). **Treat any key you ever saw in a public file as burned** and rotate it.
 
 ---
 
@@ -465,12 +473,12 @@ On the live machine (not in this tree): `~/taproot/docker-compose.yml`, `~/qwen3
 | TabbyAPI: `exl2` backend no longer supported | Pointed at an EXL2 directory | Download an EXL3 revision instead |
 | `/usr/bin/ld: cannot find -lcuda` | WSL2 CUDA libs not on linker path | Use the patched `Dockerfile.tabby` in this repo |
 | TabbyAPI cannot find model | `model_name` ≠ folder under `tabby_models/` | Align names; confirm mount |
-| CUDA “stalls forever” bringing Tabby up | llama.cpp already on the 4070 | Leave Tabby GPU down; do not bounce llama |
-| Continue cannot reach the model | Wrong host/path | Host Continue → `http://127.0.0.1:1234/v1` |
-| Taproot WebUI cannot reach llama | Used `localhost` inside the container | `http://host.docker.internal:1234/v1` |
-| Recreated llama container | `docker compose up` on taproot yaml | Do not; live name is `qwen38-llama-server` |
-| Host port 11434 in use | Host Ollama already running | Keep Tabby map `11435:11434` |
-| SearXNG 500s / no JSON | Placeholder secret or HTML-only formats | Set secret; add `json` |
+| CUDA / GPU errors in container | Toolkit missing | Fix NVIDIA Container Toolkit first |
+| OOM during load | Model + KV + dual backends too large | Smaller quant; `cache_8bit`; unload Ollama |
+| ST cannot talk to TabbyAPI | Auth/network mismatch | Same network; matching API key; wait for load |
+| Open WebUI shows no models | Ollama empty or URL wrong | `ollama pull`; confirm `OLLAMA_BASE_URL` |
+| Host port 11434 in use | Host Ollama already running | Keep compose map `11435:11434` |
+| SearXNG 500s / no JSON | Placeholder secret or HTML-only formats | Set secret; add `json` to `search.formats` |
 | MCPO crash: no mcpServers | Empty config | Keep at least one server entry |
 | SillyTavern refuses to start | Listen 0.0.0.0 with no auth | Keep `basicAuthMode: true` |
 | NVIDIA apt `Malformed entry` | Wrong toolkit repo line | See WSL2 notes below |
@@ -479,7 +487,7 @@ On the live machine (not in this tree): `~/taproot/docker-compose.yml`, `~/qwen3
 
 ## Measured lab results (defensible only)
 
-Numbers from [`local_grid_suite`](https://github.com/jpanasuk-netizen/local_grid_suite) plus the Tabby 24/24 compose pass. **Single-box lab runs — not a product SLA.**
+Numbers from checked-in sample telemetry in [`local_grid_suite`](https://github.com/jpanasuk-netizen/local_grid_suite) (`benchmarks/sample_hardware_runs.json`). **Single-box lab runs — not a product SLA.**
 
 | Stage | Model | Decode tok/s |
 | ---------- | ----------------- | --------------- |
@@ -487,31 +495,44 @@ Numbers from [`local_grid_suite`](https://github.com/jpanasuk-netizen/local_grid
 | GPU-routed | `qwen-gpu:latest` | **29.7 – 39.3** |
 | Stabilized | `qwen-gpu:latest` | **37.47** |
 
-Warm stream suite on `qwen3:8b`: **~76 tok/s**. WSL2 EXL3 chat (Llama-3.1-8B-Instruct 6.0bpw): **~53 tok/s** in the 24/24 check pass.
+→ **~27× decode uplift** on that run series after GPU routing / tuning.
 
-Qwen3.5-9B llama.cpp tok/s is **not** published. Re-measure on your hardware.
+Warm stream suite on `qwen3:8b`: **~76 tok/s** (400-token runs).
+
+WSL2 EXL3 chat (Llama-3.1-8B-Instruct 6.0bpw, RTX 4070): **~53 tok/s** processing in the verified 24/24 check pass.
+
+Re-measure on your hardware. Do not advertise these as guaranteed throughput.
 
 ---
 
 ## Engineering notes
 
-See [`DEVLOG.md`](DEVLOG.md):
+See [`DEVLOG.md`](DEVLOG.md) for the build log:
 
-* Tabby compose consolidation + EXL3 + WSL2 `libcuda` + MCPO + cards
-* Taproot coding-at-home path (qwen38-agent lineage → taproot project: llama.cpp `n_ctx` 262144, VS Code / Continue / Grok / Hermes)
-* VRAM last-call: one heavy engine on the 4070
+* Compose consolidation (TabbyAPI + ST + Open WebUI + Ollama + SearXNG + MCPO)
+* EXL3 adoption; EXL2 dropped upstream
+* GPU env tuning (`shm_size`, flash-attn / KV cache, `cache_8bit`)
+* Container-to-TabbyAPI auth / whitelist fixes
+* WSL2 NVIDIA toolkit + `libcuda.so` linker fix
+* MCPO FastMCP server (7 tools verified)
+* Character cards shipped in `cards/`
 
 ---
 
 ## Optional coding starter overlay
 
-`docker-compose.starter.yml` is **optional** (browser IDE, vector DBs, n8n). Not required. Not Taproot. Expects `ai-network` to exist. Change every placeholder password before `up`.
+`docker-compose.starter.yml` is an **optional** overlay (browser IDE, vector DBs, n8n, extra chat UIs). It is **not** required for the core six-service lab. It expects the core stack network `ai-network` to already exist. Change every placeholder password before `up`.
+
+```bash
+docker compose up -d
+docker compose -f docker-compose.starter.yml up -d
+```
 
 ---
 
 ## WSL2 field notes — fresh-install lessons (Aug 2026)
 
-A from-scratch rebuild on clean WSL2 (same RTX 4070). Additive to the cold-start guide.
+A from-scratch rebuild on a clean WSL2 Ubuntu environment (same RTX 4070). Additive to the cold-start guide.
 
 ### EXL2 vs EXL3 — TabbyAPI dropped EXL2 support
 
@@ -523,7 +544,7 @@ Use EXL3 quants only (`turboderp/Llama-3.1-8B-Instruct-exl3` branches 2.0–8.0 
 
 ### NVIDIA Container Toolkit repo URL
 
-The `deb .../noble main` line is **wrong** (apt: `Malformed entry (Component)`). Flat structure:
+The `deb .../noble main` line is **wrong** for this repo (apt: `Malformed entry (Component)`). NVIDIA uses a flat structure:
 
 ```bash
 curl -fsSL https://nvidia.github.io/libnvidia-container/gpgkey \
@@ -540,7 +561,7 @@ sudo systemctl restart docker
 
 ### libcuda.so not found inside TabbyAPI on WSL2
 
-Even with `torch.cuda.is_available() == True`, model load can fail with `cannot find -lcuda`:
+Even with `torch.cuda.is_available() == True`, model load can fail with `cannot find -lcuda`. The patched Dockerfile in this repo creates:
 
 ```dockerfile
 RUN ln -sf /usr/local/cuda-12.8/compat/libcuda.so /usr/lib/x86_64-linux-gnu/libcuda.so && ldconfig
@@ -550,15 +571,11 @@ Triton “not supported, roll back to CPU” warnings are **cosmetic** — exlla
 
 ### Port conflict when host Ollama is already running
 
-Tabby compose maps `11435:11434`. Open WebUI still uses `http://ollama:11434` internally.
+Compose maps `11435:11434`. Open WebUI still uses `http://ollama:11434` internally.
 
-### Verified working state (Tabby compose path)
+### Verified working state
 
-24/24 checks when Tabby owns the GPU: six containers, EXL3 chat, Ollama `llama3.1:8b`, Open WebUI dual backend, SillyTavern with cards, SearXNG JSON, MCPO 7 tools, ~8 GB / 12 GB VRAM.
-
-### Verified working state (Taproot path, 2026-08-25)
-
-llama.cpp `qwen38-llama-server` Up on `:1234`; Taproot WebUI Up on `:3001`; Continue on host `:1234/v1`; Tabby GPU path Exited; VRAM 11450 / 12282 MiB.
+After the v2.0.0 tree: 24/24 checks passing on the lab box — six containers, EXL3 chat, Ollama `llama3.1:8b`, Open WebUI dual backend, SillyTavern with cards, SearXNG JSON, MCPO 7 tools, ~8 GB / 12 GB VRAM.
 
 ---
 
@@ -569,8 +586,6 @@ llama.cpp `qwen38-llama-server` Up on `:1234`; Taproot WebUI Up on `:3001`; Cont
 | Stack (this card) | https://huggingface.co/jpanasuk/tabby-tavern-stack |
 | Stack (GitHub) | https://github.com/jpanasuk-netizen/tabby-tavern-stack |
 | Sell sheet Space | https://huggingface.co/spaces/jpanasuk/tabby-tavern-sell-sheet |
-| dockroot-mcp | https://huggingface.co/spaces/jpanasuk/dockroot-mcp |
-| Connectivity skill | https://huggingface.co/spaces/jpanasuk/local-ai-stack-connectivity |
 | Local Grid Suite | https://github.com/jpanasuk-netizen/local_grid_suite |
 | Multi-agent prototype | https://github.com/jpanasuk-netizen/multi-agent-dungeon-crawler |
 | Collection | https://huggingface.co/collections/jpanasuk/independent-ai-lab-spine-6a727803ed9c6d16164f5130 |

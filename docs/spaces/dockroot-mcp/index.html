@@ -16,7 +16,7 @@
     <span class="badge">Tabby Tavern 2.0</span>
   </div>
   <h1>dockroot-mcp</h1>
-  <p class="tagline">Virtual docker root for the Independent AI Lab. Read-only power over compose — without host root. Part of Tabby Tavern 2.0: Tabby you can use, then Taproot (llama.cpp 262k, Taproot WebUI, VS Code + Continue, Grok, Hermes), plus MCPO’s seven stack tools.</p>
+  <p class="tagline">Virtual docker root for diagnostics. Read-only. dockroot is <b>source</b> (<code>discover.py</code>, <code>tavern_mcp.py</code>), not a deployed container. Tabby compose is stopped; Taproot is live on :3001 / :1234.</p>
   <div class="links">
     <a href="https://huggingface.co/spaces/jpanasuk/tabby-tavern-sell-sheet">Sell sheet</a>
     <a class="ghost" href="https://huggingface.co/jpanasuk/tabby-tavern-stack">Model card</a>
@@ -34,7 +34,7 @@
   <div class="section">
     <h2>WHY THIS EXISTS</h2>
     <hr>
-    <p>Agents get asked “why is Open WebUI broken?” Without docker access they invent commands. With dockroot they list containers, read logs, inspect env/mounts, watch CPU/memory, and see networks — then answer from evidence. That matters on LightBringer, where Tabby and Taproot both live in the lab and must not both grab the 4070.</p>
+    <p>Agents get asked “why is Open WebUI broken?” Without docker access they invent commands. With dockroot they list containers, read logs, inspect env/mounts, watch CPU/memory, and see networks — then answer from evidence. That matters on LightBringer: Tabby GPU services and llama.cpp must not both grab the 4070.</p>
     <div class="rule">
       <strong>Tools:</strong> <code>docker_ps</code> · <code>docker_logs</code> · <code>docker_inspect</code> · <code>docker_stats</code> · <code>docker_networks</code>
       plus the tavern connectivity toolkit (<code>status</code>, <code>self_check</code>, <code>wire</code>, <code>rediscover</code>, <code>models</code>, <code>chat</code>).
@@ -52,7 +52,7 @@
   <div class="section">
     <h2>ON LIGHTBRINGER</h2>
     <hr>
-    <p>Tabby Tavern 2.0 already runs <b>MCPO</b> at <code>:8001</code> with FastMCP tools for TabbyAPI / Ollama / SearXNG. Dockroot is the “see the Docker daemon” layer — a different job.</p>
+    <p>Tabby compose <b>includes</b> MCPO at <code>:8001</code> (FastMCP tools for TabbyAPI / Ollama / SearXNG). Those six containers are <b>stopped</b> while llama.cpp owns the 4070. Dockroot is source, not a running container — a different job from MCPO.</p>
     <div class="note">
       <b>Live lab (2026-08-25).</b> <code>~/dockroot</code> is a local recipe helper (<code>tavern.sh</code>, <code>tavern_mcp.py</code>, <code>discover.py</code>, <code>recipes.py</code>). It is <b>not</b> running as a container right now. This Space documents it; it is not a live docker socket. Do not bounce <code>qwen38-llama-server</code> from an agent with write access — dockroot stays read-only on purpose.
     </div>

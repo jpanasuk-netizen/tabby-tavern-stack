@@ -2,14 +2,12 @@
 
 **Do not create** https://huggingface.co/spaces/jpanasuk/tabby-tavern-stack
 
-This folder is a local HTML preview of the same Tabby-then-Taproot story. The **live** surfaces are:
+Live surfaces:
 
-- Model card: https://huggingface.co/jpanasuk/tabby-tavern-stack  (repo-root `README.md`)
+- Model card: https://huggingface.co/jpanasuk/tabby-tavern-stack
 - Sell sheet: https://huggingface.co/spaces/jpanasuk/tabby-tavern-sell-sheet
-- Companions: [dockroot-mcp](https://huggingface.co/spaces/jpanasuk/dockroot-mcp) · [connectivity](https://huggingface.co/spaces/jpanasuk/local-ai-stack-connectivity)
 
-**Basically, you can learn AI Infrastructure in 21 days too!**
+**Live now:** Taproot — `:3001` → `host.docker.internal:1234/v1` → `qwen38-llama-server`.
+**Shipped, stopped:** Tabby six-service compose. Ports unchanged.
 
-**Tabby** is local AI you can actually use. **Taproot** is the next step: coding at home with no internet — llama.cpp `n_ctx` 262144 on `:1234`, Taproot WebUI `:3001`, VS Code + Continue, Grok, Hermes.
-
-Open `index.html` locally. Upload path: [`../UPLOAD.md`](../UPLOAD.md).
+> **Basically, you can learn AI Infrastructure in 21 days too!**

@@ -1,10 +1,10 @@
 # Tabby Tavern stack v2.0.0
 
-First tagged release of the live lab tree. Hugging Face model card, GitHub, and this tag are aligned.
+First tagged release of the **Tabby compose recipe**. Hugging Face model card, GitHub, and this tag document that recipe.
 
-Tabby Tavern 2.0 is the **Independent AI Lab** on LightBringer: **Tabby** (six-service EXL3 compose in this repo — local AI you can actually use) then **Taproot** (the next step: coding at home with no internet — llama.cpp `n_ctx` 262144 at `~/taproot` `:1234`, Taproot WebUI :3001, VS Code + Continue, Grok, Hermes). Same README, same DEVLOG. Live HF: model card + sell-sheet Space. Tabby service names/ports stay Tabby. See README / DEVLOG (2026-08-25).
+**Live vs shipped:** Taproot is up (`qwen38-llama-server` `:1234`, `taproot-webui` `:3001`). Tabby’s six containers are **stopped**. Two compose files, not one running stack. See README / DEVLOG.
 
-## What's in the stack now
+## What's in the Tabby recipe (shipped, currently stopped)
 
 - TabbyAPI EXL3 (ExLlamaV3) on `local/tabbyapi:exl3-fixed`
 - SillyTavern with **character cards** shipped under `cards/`
@@ -16,7 +16,7 @@ Tabby Tavern 2.0 is the **Independent AI Lab** on LightBringer: **Tabby** (six-s
 ## Docs
 
 - Hugging Face **model card** is `README.md` (YAML frontmatter)
-- `DEVLOG.md` covers WSL2 EXL2→EXL3, NVIDIA toolkit repo line, `libcuda.so` symlink, 12 GB `cache_8bit` tuning
+- `DEVLOG.md` covers WSL2 EXL2→EXL3, NVIDIA toolkit repo line, `libcuda.so` symlink, 12 GB `cache_8bit` tuning, and live vs shipped topology
 - `SECURITY.md` — rotate any key that ever appeared in an older public revision
 
 ## Not included
