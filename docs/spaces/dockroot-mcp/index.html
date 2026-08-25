@@ -4,21 +4,21 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>dockroot-mcp — read-only docker vision</title>
-<meta name="description" content="Companion to Tabby Tavern 2.0: read-only MCP docker tools. Diagnose the stack without host root.">
+<meta name="description" content="Tabby Tavern 2.0 docker vision: read-only MCP tools plus the local ~/dockroot helper on LightBringer.">
 <link rel="stylesheet" href="tavern.css">
 </head>
 <body>
 
 <div class="banner">
   <div class="badge-row">
-    <span class="badge">Companion</span>
-    <span class="badge">MCP</span>
+    <span class="badge">Lab MCP</span>
     <span class="badge">Read-only</span>
+    <span class="badge">Tabby Tavern 2.0</span>
   </div>
   <h1>dockroot-mcp</h1>
-  <p class="tagline">Virtual docker root for AI agents. Read-only power over a compose stack — without host root. Companion to Tabby Tavern 2.0, not a Tabby service.</p>
+  <p class="tagline">Virtual docker root for the Independent AI Lab. Read-only power over compose — without host root. Part of Tabby Tavern 2.0, alongside MCPO’s seven stack tools.</p>
   <div class="links">
-    <a href="https://huggingface.co/spaces/jpanasuk/tabby-tavern-stack">Tabby lab tour</a>
+    <a href="https://huggingface.co/spaces/jpanasuk/tabby-tavern-stack">Lab tour</a>
     <a class="ghost" href="https://huggingface.co/spaces/jpanasuk/local-ai-stack-connectivity">Connectivity skill</a>
   </div>
 </div>
@@ -33,7 +33,7 @@
   <div class="section">
     <h2>WHY THIS EXISTS</h2>
     <hr>
-    <p>Agents get asked “why is Open WebUI broken?” Without docker access they invent commands. With dockroot they list containers, read logs, inspect env/mounts, watch CPU/memory, and see networks — then answer from evidence.</p>
+    <p>Agents get asked “why is Open WebUI broken?” Without docker access they invent commands. With dockroot they list containers, read logs, inspect env/mounts, watch CPU/memory, and see networks — then answer from evidence. That matters on LightBringer, where Tabby compose and llama.cpp are both the lab and must not both grab the 4070.</p>
     <div class="rule">
       <strong>Tools:</strong> <code>docker_ps</code> · <code>docker_logs</code> · <code>docker_inspect</code> · <code>docker_stats</code> · <code>docker_networks</code>
       plus the tavern connectivity toolkit (<code>status</code>, <code>self_check</code>, <code>wire</code>, <code>rediscover</code>, <code>models</code>, <code>chat</code>).
@@ -49,12 +49,11 @@
   </div>
 
   <div class="section">
-    <h2>HOW IT RELATES TO TABBY</h2>
+    <h2>ON LIGHTBRINGER</h2>
     <hr>
-    <p>Tabby Tavern 2.0 already runs <b>MCPO</b> at <code>:8001</code> with FastMCP stack tools. Dockroot is the optional “see the Docker daemon” add-on — a different job than MCPO’s TabbyAPI/Ollama/SearXNG tools.</p>
-    <div class="neighbor">
-      <h3>Live lab note (2026-08-25)</h3>
-      <p>On LightBringer, <code>~/dockroot</code> is a local recipe/MCP helper (<code>tavern.sh</code>, <code>tavern_mcp.py</code>, <code>discover.py</code>, <code>recipes.py</code>). It is <b>not</b> running as a container right now. This Space documents the companion; it is not a live docker socket.</p>
+    <p>Tabby Tavern 2.0 already runs <b>MCPO</b> at <code>:8001</code> with FastMCP tools for TabbyAPI / Ollama / SearXNG. Dockroot is the “see the Docker daemon” layer — a different job.</p>
+    <div class="note">
+      <b>Live lab (2026-08-25).</b> <code>~/dockroot</code> is a local recipe helper (<code>tavern.sh</code>, <code>tavern_mcp.py</code>, <code>discover.py</code>, <code>recipes.py</code>). It is <b>not</b> running as a container right now. This Space documents it; it is not a live docker socket. Do not bounce <code>qwen38-llama-server</code> from an agent with write access — dockroot stays read-only on purpose.
     </div>
   </div>
 
@@ -76,7 +75,7 @@
     <h2>FAMILY</h2>
     <hr>
     <div class="family">
-      <a href="https://github.com/jpanasuk-netizen/tabby-tavern-stack">Tabby GitHub</a>
+      <a href="https://github.com/jpanasuk-netizen/tabby-tavern-stack">GitHub</a>
       <a href="https://huggingface.co/spaces/jpanasuk/tabby-tavern-stack">Lab tour</a>
       <a href="https://huggingface.co/spaces/jpanasuk/tabby-tavern-sell-sheet">Sell sheet</a>
       <a href="https://huggingface.co/spaces/jpanasuk/local-ai-stack-connectivity">Connectivity</a>
@@ -87,8 +86,8 @@
 </div>
 
 <div class="footer">
-  <p>Jeremy Panasuk · read-only docker vision for local AI labs</p>
-  <p class="refs">Companion. Not duplicated from the Tabby README.</p>
+  <p>Jeremy Panasuk · read-only docker vision for the Independent AI Lab</p>
+  <p class="refs">Part of Tabby Tavern 2.0. Not duplicated from the README.</p>
 </div>
 
 </body>

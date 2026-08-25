@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Tabby Tavern 2.0 — Private AI lab stack</title>
-<meta name="description" content="Tabby Tavern 2.0: six-service EXL3 compose lab with SillyTavern cards, Open WebUI, Ollama, SearXNG, and MCPO. Independent private lab — not SaaS.">
+<title>Tabby Tavern 2.0 — Independent AI Lab</title>
+<meta name="description" content="Tabby Tavern 2.0 is the Independent AI Lab on LightBringer: EXL3 character path, llama.cpp 262k operator desk, VS Code/Continue/Grok/Hermes, and MCP.">
 <link rel="stylesheet" href="tavern.css">
 </head>
 <body>
@@ -12,13 +12,13 @@
 <div class="banner">
   <div class="badge-row">
     <span class="badge">Tabby Tavern 2.0</span>
-    <span class="badge">Six-service compose</span>
-    <span class="badge">EXL3</span>
-    <span class="badge">RTX 4070 lab</span>
+    <span class="badge">Independent AI Lab</span>
+    <span class="badge">EXL3 + 262k</span>
+    <span class="badge">RTX 4070</span>
   </div>
   <h1>PRIVATE AI.<br>ON HARDWARE YOU OWN.</h1>
-  <p class="tagline">Tabby Tavern 2.0 is the six-service compose lab: TabbyAPI EXL3, SillyTavern character cards, Open WebUI, Ollama, SearXNG, and MCPO. The YAML work is the product. Weights and live keys stay off the public tree.</p>
-  <p class="contact">Jeremy Panasuk &nbsp;|&nbsp; jpanasuk@gmail.com &nbsp;|&nbsp; 715.970.0204</p>
+  <p class="tagline">Tabby Tavern 2.0 is the whole LightBringer lab: EXL3 character inference, llama.cpp 262k operator desk, VS Code / Continue / Grok / Hermes, and MCP. The YAML work is the product. Weights and live keys stay off the public tree.</p>
+  <p class="contact">Jeremy Panasuk &nbsp;|&nbsp; LightBringer · WSL2 Ubuntu · RTX 4070 12 GB &nbsp;|&nbsp; jpanasuk@gmail.com &nbsp;|&nbsp; 715.970.0204</p>
   <div class="links">
     <a href="https://github.com/jpanasuk-netizen/tabby-tavern-stack">GitHub</a>
     <a class="ghost" href="https://huggingface.co/spaces/jpanasuk/tabby-tavern-stack">Lab tour Space</a>
@@ -28,74 +28,82 @@
 
 <div class="kicker-wrap">
   <div class="kicker">
-    <p>TABBY IS ITS OWN STACK. THE LIVE LAB MATCHES THIS TREE — WHEN THE GPU IS FREE.</p>
+    <p>ONE LAB. EXL3 CHARACTERS. 262K OPERATOR DESK. ONE 4070 — LAST CALL.</p>
   </div>
 </div>
 
 <div class="container">
   <div class="stats-bar">
-    <div class="stat"><div class="num">6</div><div class="label">Core services</div></div>
-    <div class="stat"><div class="num">7</div><div class="label">MCP tools</div></div>
+    <div class="stat"><div class="num">2</div><div class="label">GPU paths</div></div>
+    <div class="stat"><div class="num">262k</div><div class="label">llama.cpp ctx</div></div>
+    <div class="stat"><div class="num">7</div><div class="label">MCPO tools</div></div>
     <div class="stat"><div class="num">~53</div><div class="label">tok/s EXL3 lab</div></div>
-    <div class="stat"><div class="num">24/24</div><div class="label">compose checks</div></div>
   </div>
 
   <div class="section">
     <h2>WHAT IT IS</h2>
     <hr>
-    <p>A containerized private lab on Linux or Windows WSL2. Production-<i>shaped</i>, not a multi-tenant SaaS, not a hosted inference endpoint. Published as a tagged GitHub tree, a Hugging Face <b>model card</b>, and a static lab-tour Space.</p>
+    <p>A private lab on Linux / WSL2. Production-<i>shaped</i>, not SaaS, not a hosted endpoint. Published as a GitHub tree, a Hugging Face <b>model card</b>, and a static lab-tour Space. Tabby compose names and ports stay Tabby. The operator desk is first-class — not a footnote.</p>
     <div class="cap-grid">
       <div class="cap-card c1">
         <div class="port">:5000</div>
         <h3>TabbyAPI · EXL3</h3>
-        <p><b>ExLlamaV3</b> inference. Llama-3.1-8B 6.0bpw on a 12 GB RTX 4070 with <code>cache_8bit</code>. Current TabbyAPI dropped EXL2.</p>
+        <p>Character inference. Llama-3.1-8B 6.0bpw, <code>cache_8bit</code>. Current TabbyAPI dropped EXL2.</p>
       </div>
       <div class="cap-card c2">
         <div class="port">:8000</div>
         <h3>SillyTavern + cards</h3>
-        <p>Character frontend. PNG <b>character cards</b> ship under <code>cards/</code> — import <code>default_Seraphina.png</code>.</p>
+        <p>PNG <b>character cards</b> under <code>cards/</code>. <code>basicAuthMode</code> required to listen on <code>0.0.0.0</code>.</p>
       </div>
       <div class="cap-card c3">
         <div class="port">:3000</div>
         <h3>Open WebUI</h3>
-        <p>General workspace wired to <b>both</b> Ollama and TabbyAPI (<code>/v1</code>), plus SearXNG RAG search.</p>
+        <p>Wired to <b>both</b> Ollama and TabbyAPI (<code>/v1</code>), plus SearXNG RAG. Distinct from :3001.</p>
       </div>
       <div class="cap-card c4">
         <div class="port">:11435</div>
         <h3>Ollama · GGUF</h3>
-        <p>Secondary backend. Host remap so a host <code>ollama serve</code> on 11434 does not collide.</p>
+        <p>Host remap so host <code>ollama serve</code> on 11434 does not collide.</p>
       </div>
       <div class="cap-card c5">
-        <div class="port">:8080</div>
-        <h3>SearXNG</h3>
-        <p>Private metasearch with <b>JSON</b> enabled for MCPO and Open WebUI RAG. No tracking SaaS.</p>
+        <div class="port">:1234</div>
+        <h3>llama.cpp · 262k</h3>
+        <p>Qwen3.5-9B UD-Q4_K_XL. Container <code>qwen38-llama-server</code> — <b>do not bounce it</b>.</p>
       </div>
       <div class="cap-card c6">
-        <div class="port">:8001</div>
-        <h3>MCPO · FastMCP</h3>
-        <p>Seven stack tools as OpenAPI: list/chat TabbyAPI and Ollama, pull, health, SearXNG. Docs at <code>/docs</code>.</p>
+        <div class="port">:3001</div>
+        <h3>Operator WebUI</h3>
+        <p><code>WEBUI_NAME=Taproot</code>. <code>OPENAI_API_BASE_URL=http://host.docker.internal:1234/v1</code>.</p>
       </div>
     </div>
-    <div class="note">
-      <b>Optional overlay, not core:</b> <code>docker-compose.starter.yml</code> can add a browser IDE, vector DBs, and extra chat UIs on <code>ai-network</code>. It is not required, and it is not counted in the “6”.
-    </div>
+  </div>
+
+  <div class="section">
+    <h2>OPERATOR DESK</h2>
+    <hr>
+    <ul>
+      <li><b>Windows VS Code 1.134.0</b> + Remote-WSL 0.104.3 on <code>/home/jpanasuk/taproot</code>.</li>
+      <li><b>Continue 2.0</b> → <code>http://127.0.0.1:1234/v1</code> (host process, host loopback). Config: <code>~/.continue/config.yaml</code>.</li>
+      <li><b>Grok Build 1.0.5</b> at <code>~/.local/bin/grok</code>. <b>Hermes v0.20.0</b> at <code>~/.hermes/hermes-agent</code>.</li>
+      <li><b>Dockroot</b> helper at <code>~/dockroot</code> (<code>tavern.sh</code>, <code>tavern_mcp.py</code>, <code>discover.py</code>, <code>recipes.py</code>) plus the <a href="https://huggingface.co/spaces/jpanasuk/dockroot-mcp">dockroot-mcp</a> Space.</li>
+      <li>Linux snap VS Code on <code>~/annie-scratch</code> is <b>Annie++ class only</b> — not the lab, not this repo.</li>
+    </ul>
   </div>
 
   <div class="section">
     <h2>WHY THE YAML WORK MATTERS</h2>
     <hr>
-    <p>Default images do not compose themselves. These are the pitfalls this lab actually hit — the keys below are from the public example files, never live secrets.</p>
+    <p>Default images do not compose themselves. Public example keys only — never live secrets.</p>
     <ul>
-      <li><b>EXL3 only.</b> <code>model_name: Llama-3.1-8B-Instruct-exl3-6.0bpw</code> under <code>model_dir: models</code>. EXL2 crashes current TabbyAPI.</li>
-      <li><b>12 GB KV.</b> <code>max_seq_len: 8192</code>, <code>cache_size: 8192</code>, <code>cache_8bit: true</code>. ~8 GB used, ~4 GB left.</li>
-      <li><b>Mount the file TabbyAPI reads.</b> Compose maps <code>./tabby_config/config.yml → /app/config.yml</code>. Generate <code>api_key</code> / <code>admin_key</code>.</li>
-      <li><b>WSL2 linker.</b> <code>shm_size: 16g</code>, CUDA device order, flash-attn / KV flags, and a <code>libcuda.so</code> symlink from <code>cuda-12.8/compat</code> so Triton/exllamav3 can <code>-lcuda</code>.</li>
-      <li><b>Open WebUI dual backend.</b> <code>OLLAMA_BASE_URL=http://ollama:11434</code> <b>and</b> <code>OPENAI_API_BASE_URL=http://tabbyapi:5000/v1</code>.</li>
-      <li><b>Ollama host 11435:11434</b> so host Ollama on 11434 does not collide. In-network name stays <code>ollama:11434</code>.</li>
-      <li><b>SillyTavern</b> <code>browserLaunch.enabled: false</code> and <code>basicAuthMode: true</code> — ST refuses <code>0.0.0.0</code> without auth.</li>
-      <li><b>SearXNG</b> <code>search.formats</code> must list <code>html</code> <b>and</b> <code>json</code> or MCPO + RAG starve.</li>
-      <li><b>MCPO</b> FastMCP <code>mcp-servers/server.py</code>, seven tools under <code>/host-master/</code>, python from <code>/app/.venv/bin/python3</code>. Empty <code>mcpServers</code> crashes MCPO.</li>
-      <li><b>NVIDIA toolkit apt.</b> The noble <code>main</code> line is malformed; the flat <code>amd64 /</code> repo line works.</li>
+      <li><b>EXL3 only</b> · <code>cache_8bit</code> · mount <code>config.yml → /app/config.yml</code> · <code>libcuda.so</code> from <code>cuda-12.8/compat</code> so WSL2 can <code>-lcuda</code>.</li>
+      <li><b>Open WebUI :3000</b> dual backend: <code>http://ollama:11434</code> <b>and</b> <code>http://tabbyapi:5000/v1</code>.</li>
+      <li><b>Ollama 11435:11434</b> so host Ollama keeps 11434. In-network name stays <code>ollama:11434</code>.</li>
+      <li><b>SillyTavern</b> <code>browserLaunch.enabled: false</code>, <code>basicAuthMode: true</code> (ST refuses <code>0.0.0.0</code> without auth).</li>
+      <li><b>SearXNG</b> <code>search.formats: html + json</code> or MCPO + RAG starve.</li>
+      <li><b>MCPO</b> FastMCP seven tools under <code>/host-master/</code>, python <code>/app/.venv/bin/python3</code>. Empty <code>mcpServers</code> crashes it.</li>
+      <li><b>NVIDIA toolkit apt</b> noble <code>main</code> line is malformed; flat <code>amd64 /</code> works.</li>
+      <li><b>Operator WebUI</b> uses <code>host.docker.internal:1234/v1</code> because llama is published on the host. Continue uses <code>127.0.0.1</code> because Continue is on the host.</li>
+      <li><b>Networks split</b> — <code>tabby-tavern_ai-network</code> removed from the llama side so two GPU engines cannot both allocate.</li>
     </ul>
   </div>
 
@@ -103,45 +111,29 @@
     <h2>PORTS · VRAM LAST CALL · MCP</h2>
     <hr>
     <table class="ports">
-      <tr><th>Service</th><th>Host</th><th>Role</th></tr>
+      <tr><th>Layer</th><th>Host</th><th>Role</th></tr>
       <tr><td>sillytavern</td><td>:8000</td><td>Character chat</td></tr>
-      <tr><td>open-webui</td><td>:3000</td><td>Tabby workspace</td></tr>
+      <tr><td>open-webui</td><td>:3000</td><td>EXL3 + GGUF workspace</td></tr>
       <tr><td>tabbyapi</td><td>:5000</td><td>EXL3 engine</td></tr>
       <tr><td>ollama</td><td>:11435</td><td>GGUF engine</td></tr>
       <tr><td>searxng</td><td>:8080</td><td>Private search</td></tr>
       <tr><td>mcpo</td><td>:8001</td><td>MCP → OpenAPI</td></tr>
+      <tr><td>llama.cpp</td><td>:1234</td><td>Qwen3.5-9B 262k</td></tr>
+      <tr><td>operator WebUI</td><td>:3001</td><td>Long-context workspace</td></tr>
     </table>
     <div class="vram">
-      <b>VRAM last call (12 GB RTX 4070).</b> TabbyAPI / Ollama are the character-EXL3 / GGUF GPU path. Leave that compose down while llama.cpp is serving. Two heavy engines on 12 GB stall CUDA instead of erroring. Lab snapshot 2026-08-25: llama resident at 11450 / 12282 MiB; Tabby containers Exited, <code>restart=no</code>. Do not bounce the live llama.cpp server to “clean tavern.”
+      <b>VRAM last call (12 GB RTX 4070).</b> Lab snapshot 2026-08-25: llama resident at <b>11450 / 12282 MiB</b>. TabbyAPI / Ollama stay down while llama is serving. Two heavy engines stall CUDA instead of erroring. Xwayland ~3.6 GB when the desktop is up. Do not kill grok / hermes / llama to “clean tavern.” Do not recreate <code>qwen38-llama-server</code>.
     </div>
-    <p style="margin-top:12px;">MCP in this product is <b>MCPO</b> in compose (seven FastMCP tools). <a href="https://huggingface.co/spaces/jpanasuk/dockroot-mcp">dockroot-mcp</a> is the companion: read-only docker vision (<code>ps</code> / <code>logs</code> / <code>inspect</code> / <code>stats</code> / <code>networks</code>). On the live box it is a local helper under <code>~/dockroot</code>, not a running container.</p>
-  </div>
-
-  <div class="section">
-    <h2>SAME MACHINE, DIFFERENT STACK</h2>
-    <hr>
-    <div class="neighbor">
-      <h3>Taproot — not Tabby, not this repo</h3>
-      <p>On LightBringer (WSL2 Ubuntu), a <b>separate</b> compose project named <code>taproot</code> currently holds the GPU: llama.cpp server <code>qwen38-llama-server</code> on <b>:1234</b> (Qwen3.5-9B, <code>n_ctx</code> 262144) and Taproot Open WebUI on <b>:3001</b>. Networks were split on purpose — Tabby’s <code>ai-network</code> is not shared with Taproot.</p>
-      <p>VS Code is how the human drives the lab, not a Tabby container: Linux snap 1.134.0 for class work, Windows VS Code + Remote-WSL on the Taproot tree, Continue pointed at <code>http://127.0.0.1:1234/v1</code>. Grok Build and Hermes live on the host. No Qwen3.5-9B tok/s is published here because it was not measured in this tree.</p>
-    </div>
-  </div>
-
-  <div class="section">
-    <h2>THE /v1 RULE</h2>
-    <hr>
-    <div class="rule">
-      <strong>Connection rule</strong> (from the <a href="https://huggingface.co/spaces/jpanasuk/local-ai-stack-connectivity">connectivity companion</a>): path is always <code>/v1</code>. Inside Docker, host is the <b>service name</b>, not <code>localhost</code>. Tabby Open WebUI → <code>http://tabbyapi:5000/v1</code>. Host Continue → <code>http://127.0.0.1:1234/v1</code>. Do not paste <code>/v1/chat/completions</code> into a base URL.
-    </div>
+    <p style="margin-top:12px;"><b>MCPO</b> (seven tools) plus <a href="https://huggingface.co/spaces/jpanasuk/dockroot-mcp">dockroot-mcp</a> (read-only docker vision) plus the <a href="https://huggingface.co/spaces/jpanasuk/local-ai-stack-connectivity">/v1 connectivity skill</a> (44 recipes). Path is always <code>/v1</code>; inside Docker the host is the service name, not <code>localhost</code>.</p>
   </div>
 
   <div class="section">
     <h2>WHAT THE LAB MEASURED</h2>
     <hr>
     <ul>
-      <li><b>EXL3 chat</b> on Llama-3.1-8B Instruct 6.0bpw, RTX 4070: ~53 tok/s processing in the 24/24 check pass.</li>
-      <li><b>VRAM (Tabby path):</b> ~8 GB for that EXL3 pack + 8-bit cache; ~4 GB left for a small GGUF if you keep both loaded.</li>
-      <li><b>Ollama qwen3:8b</b> in <a href="https://github.com/jpanasuk-netizen/local_grid_suite">local_grid_suite</a>: baseline 1.39 tok/s · GPU-routed 29.7–39.3 · stabilized 37.47 · warm stream ~76 tok/s. Single-box lab numbers, not a product SLA.</li>
+      <li><b>EXL3 chat</b> Llama-3.1-8B Instruct 6.0bpw: ~53 tok/s in the 24/24 Tabby compose pass. ~8 GB VRAM for that pack + 8-bit cache.</li>
+      <li><b>Ollama qwen3:8b</b> in <a href="https://github.com/jpanasuk-netizen/local_grid_suite">local_grid_suite</a>: 1.39 → 29.7–39.3 → 37.47 tok/s; warm stream ~76 tok/s. Lab numbers, not an SLA.</li>
+      <li>Qwen3.5-9B llama.cpp tok/s is <b>not</b> published (not measured here).</li>
     </ul>
   </div>
 
@@ -163,10 +155,10 @@
       <h3>SINGLE-GPU INSTALL</h3>
       <div class="price">$12,500</div>
       <div class="price-sub">one-time</div>
-      <div class="who">One office, one RTX-class box, the six-service Tabby Tavern 2.0 stack.</div>
+      <div class="who">One office, one RTX-class box, the full lab: EXL3 compose + operator desk.</div>
       <ul>
-        <li>TabbyAPI EXL3 + Ollama + UIs on your hardware</li>
-        <li>Character cards imported; MCPO tools live</li>
+        <li>TabbyAPI EXL3 + llama.cpp path + UIs on your hardware</li>
+        <li>Character cards; Continue / VS Code wiring</li>
         <li>Hardware spec + WSL2/Linux bring-up</li>
         <li>Placeholder keys replaced with yours</li>
         <li>Half-day onboarding</li>
@@ -176,7 +168,7 @@
       <h3>PRODUCTION DEPLOYMENT</h3>
       <div class="price">$25,000</div>
       <div class="price-sub">one-time</div>
-      <div class="who">Hardened lab: auth, backups, monitoring, optional overlay.</div>
+      <div class="who">Hardened lab: auth, backups, monitoring, VRAM policy.</div>
       <ul>
         <li>Everything in Single-GPU Install</li>
         <li>Bind-localhost / reverse-proxy guidance</li>
@@ -192,7 +184,7 @@
       <div class="who">We keep the lab current so your team uses it, not babysits it.</div>
       <ul>
         <li>Everything in Production Deployment</li>
-        <li>Model pack updates and EXL3 retunes</li>
+        <li>Model pack updates and EXL3 / GGUF retunes</li>
         <li>Quarterly health + VRAM reports</li>
         <li>New compose services as the lab grows</li>
         <li>Priority phone / Slack, 4hr SLA</li>
@@ -201,7 +193,7 @@
   </div>
 
   <div class="bottom-line">
-    <p><b>THE BOTTOM LINE.</b> Tabby Tavern 2.0 is a private-lab compose stack — production-shaped, not SaaS. If the requirement is EXL3 + GGUF + character chat + search + MCP tools on a box you own, this is the tree. Taproot’s llama.cpp desk is a neighbor on the same GPU, documented so you do not mix them.</p>
+    <p><b>THE BOTTOM LINE.</b> Tabby Tavern 2.0 is the Independent AI Lab — EXL3 characters, 262k llama.cpp desk, VS Code/Continue/Grok/Hermes, MCP — on a box you own. Production-shaped, not SaaS. One GPU, last call.</p>
   </div>
 
   <div class="section">
@@ -223,7 +215,7 @@
 
 <div class="footer">
   <p>Jeremy Panasuk &nbsp;•&nbsp; jpanasuk@gmail.com &nbsp;•&nbsp; 715.970.0204</p>
-  <p class="refs">No live keys. No weights. Character cards are first-class. MIT.</p>
+  <p class="refs">No live keys. No weights. No invented Qwen3.5-9B tok/s. MIT.</p>
 </div>
 
 </body>

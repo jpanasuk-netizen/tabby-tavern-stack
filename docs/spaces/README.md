@@ -4,8 +4,8 @@ Shared tokens: [`tavern.css`](tavern.css). Copy that file next to each Space `in
 
 | Folder | Hugging Face | Role |
 | --- | --- | --- |
-| `tabby-tavern-stack/` | **new** Space `jpanasuk/tabby-tavern-stack` | Slightly longer lab tour |
-| `tabby-tavern-sell-sheet/` | Space `jpanasuk/tabby-tavern-sell-sheet` | One-pager |
+| `tabby-tavern-stack/` | **new** Space `jpanasuk/tabby-tavern-stack` | Lab tour of the whole Independent AI Lab |
+| `tabby-tavern-sell-sheet/` | Space `jpanasuk/tabby-tavern-sell-sheet` | One-pager for the full lab |
 | `local-ai-stack-connectivity/` | Space `jpanasuk/local-ai-stack-connectivity` | Companion page (`/v1` rule) |
 | `dockroot-mcp/` | Space `jpanasuk/dockroot-mcp` | Companion page (read-only docker vision) |
 

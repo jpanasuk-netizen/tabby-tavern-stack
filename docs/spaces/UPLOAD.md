@@ -51,4 +51,4 @@ Optional: mirror `README.md` from GitHub to the **model card** (not the Space):
 hf upload jpanasuk/tabby-tavern-stack README.md README.md --repo-type model
 ```
 
-`short_description` on the new Space is ≤60 characters and covers EXL3 compose plus the llama.cpp neighbor without merging the brands.
+`short_description` on the new Space is ≤60 characters: Independent AI lab — EXL3 compose + llama.cpp 262k desk. The Space is **not** live until these commands succeed. This environment has no HF token.

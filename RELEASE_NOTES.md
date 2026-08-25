@@ -2,7 +2,7 @@
 
 First tagged release of the live lab tree. Hugging Face model card, GitHub, and this tag are aligned.
 
-Tabby Tavern 2.0 is the **six-service compose** in this repo. Taproot (llama.cpp + WebUI :3001) is a separate project on the same machine — see README / DEVLOG (2026-08-25). Do not mix the brands.
+Tabby Tavern 2.0 is the **Independent AI Lab** on LightBringer: six-service EXL3 compose in this repo **and** the llama.cpp 262k operator desk (`~/taproot`, WebUI :3001, Continue, Grok, Hermes). Tabby service names/ports stay Tabby. See README / DEVLOG (2026-08-25).
 
 ## What's in the stack now
 

@@ -4,21 +4,21 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Local AI stack connectivity — the /v1 rule</title>
-<meta name="description" content="Companion to Tabby Tavern 2.0: the connection rule for wiring OpenAI-compatible UIs to local engines. Not a live service.">
+<meta name="description" content="Tabby Tavern 2.0 connectivity skill: the /v1 rule for wiring EXL3 compose, llama.cpp 262k, Continue, and MCP. 44 recipes.">
 <link rel="stylesheet" href="tavern.css">
 </head>
 <body>
 
 <div class="banner">
   <div class="badge-row">
-    <span class="badge">Companion</span>
-    <span class="badge">Hermes skill</span>
-    <span class="badge">Not a live service</span>
+    <span class="badge">Lab skill</span>
+    <span class="badge">44 recipes</span>
+    <span class="badge">Not a live gateway</span>
   </div>
   <h1>THE /v1 RULE</h1>
-  <p class="tagline">A verified playbook for wiring Docker inference engines, chat UIs, search, and MCP gateways. Distilled from the Tabby Tavern lab — not theory, not a running gateway.</p>
+  <p class="tagline">How Tabby Tavern 2.0 wires engines, UIs, and MCP on LightBringer. Distilled from the live lab — not theory.</p>
   <div class="links">
-    <a href="https://huggingface.co/spaces/jpanasuk/tabby-tavern-stack">Tabby lab tour</a>
+    <a href="https://huggingface.co/spaces/jpanasuk/tabby-tavern-stack">Lab tour</a>
     <a class="ghost" href="https://huggingface.co/spaces/jpanasuk/dockroot-mcp">dockroot-mcp</a>
   </div>
 </div>
@@ -37,26 +37,26 @@
       <strong>Wire any OpenAI-compatible UI to an engine:</strong>
       <ol>
         <li><b>Path is always <code>/v1</code></b> → <code>http://&lt;host&gt;:&lt;port&gt;/v1</code>. Never <code>/api/v1</code>. Never put <code>/v1/chat/completions</code> in the base URL.</li>
-        <li><b>Host is the in-network service name, not localhost.</b> Inside Docker, <code>localhost</code> is the container you are in.</li>
-        <li><b>Model is the exact served id</b> (ask <code>/v1/models</code>), not the word “ollama” or “llama.”</li>
+        <li><b>Host is the in-network service name, not localhost</b> — when the caller is itself a container.</li>
+        <li><b>Host is loopback</b> when the caller is on the host (Continue, a browser, Grok).</li>
+        <li><b>Model is the exact served id</b> (ask <code>/v1/models</code>).</li>
         <li>If the engine has auth, pass its API key. Do not “fix” a 401 by changing the host.</li>
       </ol>
     </div>
   </div>
 
   <div class="section">
-    <h2>HOW THE LAB ACTUALLY WIRES</h2>
+    <h2>HOW LIGHTBRINGER ACTUALLY WIRES</h2>
     <hr>
     <table class="ports">
       <tr><th>Caller</th><th>Base URL</th><th>Why</th></tr>
-      <tr><td>Tabby Open WebUI → TabbyAPI</td><td><code>http://tabbyapi:5000/v1</code></td><td>Same compose network <code>ai-network</code></td></tr>
+      <tr><td>Tabby Open WebUI :3000 → TabbyAPI</td><td><code>http://tabbyapi:5000/v1</code></td><td>Same compose network <code>ai-network</code></td></tr>
       <tr><td>Tabby Open WebUI → Ollama</td><td><code>http://ollama:11434</code></td><td>In-container port, not host 11435</td></tr>
-      <tr><td>Host browser / Continue</td><td><code>http://127.0.0.1:&lt;published&gt;/v1</code></td><td>You are on the host</td></tr>
-      <tr><td>Taproot WebUI → llama.cpp</td><td><code>http://host.docker.internal:1234/v1</code></td><td>Different compose project; not Tabby</td></tr>
+      <tr><td>Operator WebUI :3001 → llama.cpp</td><td><code>http://host.docker.internal:1234/v1</code></td><td>WebUI in Docker; llama published on the host</td></tr>
+      <tr><td>Continue 2.0 (host)</td><td><code>http://127.0.0.1:1234/v1</code></td><td>Continue is not in a container</td></tr>
     </table>
-    <div class="neighbor">
-      <h3>Two stacks, two networks</h3>
-      <p>Tabby Tavern 2.0 and Taproot do <b>not</b> share a Docker network. Do not point Tabby Open WebUI (<code>:3000</code>) at llama.cpp, and do not point Taproot WebUI (<code>:3001</code>) at TabbyAPI. Continue on the host talks to <code>http://127.0.0.1:1234/v1</code> because Continue is not inside either compose.</p>
+    <div class="note">
+      <b>Two GPU compose projects, one lab.</b> They do not share a Docker network on purpose — two heavy engines on a 12 GB card stall CUDA instead of erroring. Tabby Open WebUI (:3000) talks to TabbyAPI/Ollama. Operator WebUI (:3001) talks to llama.cpp. Continue talks to llama.cpp on loopback.
     </div>
   </div>
 
@@ -64,23 +64,24 @@
     <h2>PITFALLS ALREADY PAID FOR</h2>
     <hr>
     <ul>
-      <li>Two heavy engines on a 12 GB card: the second CUDA alloc can <b>block forever</b> instead of erroring. Free VRAM first. Tabby GPU stays down while llama.cpp is resident.</li>
-      <li>Ollama global 64K context → huge KV cache → 8B weights pushed to CPU. Use flash-attn + <code>q8_0</code> KV instead.</li>
-      <li>TabbyAPI current images dropped EXL2. Point <code>model_name</code> at an EXL3 directory.</li>
-      <li>Empty MCPO <code>mcpServers: {}</code> crashes the proxy. Keep at least one server.</li>
+      <li>Two heavy engines on a 12 GB card: the second CUDA alloc can <b>block forever</b>. Tabby GPU stays down while llama.cpp is resident.</li>
+      <li>Ollama global 64K context → huge KV cache → 8B weights pushed to CPU. Use flash-attn + <code>q8_0</code> KV.</li>
+      <li>TabbyAPI dropped EXL2. Point <code>model_name</code> at an EXL3 directory.</li>
+      <li>Empty MCPO <code>mcpServers: {}</code> crashes the proxy.</li>
       <li>SillyTavern refuses <code>0.0.0.0</code> without <code>basicAuthMode: true</code>.</li>
-      <li>SearXNG defaults to HTML-only; MCPO + Open WebUI RAG need <code>json</code> in <code>search.formats</code>.</li>
+      <li>SearXNG defaults to HTML-only; MCPO + RAG need <code>json</code>.</li>
+      <li>Recreating the llama service bounces the live <code>qwen38-llama-server</code> (yaml wants <code>taproot-qwen</code>).</li>
     </ul>
   </div>
 
   <div class="section">
     <h2>WHAT’S IN THIS SPACE</h2>
     <hr>
-    <p>This page is the App. The Hermes skill files (if present next to it) are the deep reference — not duplicated here:</p>
+    <p>This page is the App. The Hermes skill files (if present next to it) are the deep reference — 44 wiring recipes, not duplicated here:</p>
     <table class="ports">
       <tr><th>File</th><th>What it is</th></tr>
       <tr><td><code>SKILL.md</code></td><td>Full skill: connection rule, discovery, wiring workflow, pitfalls</td></tr>
-      <tr><td><code>references/wiring-recipes.md</code></td><td>Per-service recipes — config location, keys, one-line fix, verify step</td></tr>
+      <tr><td><code>references/wiring-recipes.md</code></td><td>44 recipes — config location, keys, one-line fix, verify step</td></tr>
     </table>
     <pre>mkdir -p ~/.hermes/skills/mlops/local-ai-stack-connectivity
 cp SKILL.md ~/.hermes/skills/mlops/local-ai-stack-connectivity/
@@ -91,7 +92,7 @@ cp -r references ~/.hermes/skills/mlops/local-ai-stack-connectivity/</pre>
     <h2>FAMILY</h2>
     <hr>
     <div class="family">
-      <a href="https://github.com/jpanasuk-netizen/tabby-tavern-stack">Tabby GitHub</a>
+      <a href="https://github.com/jpanasuk-netizen/tabby-tavern-stack">GitHub</a>
       <a href="https://huggingface.co/spaces/jpanasuk/tabby-tavern-stack">Lab tour</a>
       <a href="https://huggingface.co/spaces/jpanasuk/tabby-tavern-sell-sheet">Sell sheet</a>
       <a href="https://huggingface.co/spaces/jpanasuk/dockroot-mcp">dockroot-mcp</a>
@@ -102,7 +103,7 @@ cp -r references ~/.hermes/skills/mlops/local-ai-stack-connectivity/</pre>
 
 <div class="footer">
   <p>Jeremy Panasuk · Apache-2.0 skill · Hermes Agent by Nous Research</p>
-  <p class="refs">Companion page. Not a live MCP or inference service.</p>
+  <p class="refs">Part of Tabby Tavern 2.0. Not a live MCP or inference service.</p>
 </div>
 
 </body>

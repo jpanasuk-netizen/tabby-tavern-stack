@@ -6,17 +6,17 @@ colorTo: purple
 sdk: static
 pinned: false
 license: apache-2.0
-short_description: The /v1 rule for wiring local AI Docker stacks
+short_description: The /v1 rule for the Independent AI Lab (44 recipes)
 ---
 
 # Local AI Stack Connectivity
 
-Companion **page** for Tabby Tavern 2.0 — not a live service.
+Part of **Tabby Tavern 2.0** — not a live service.
 
-The connection rule: path is always `/v1`; inside Docker the host is the **service name**, not `localhost`.
+The connection rule: path is always `/v1`; inside Docker the host is the **service name**, not `localhost`. On the host, Continue uses `http://127.0.0.1:1234/v1`. Operator WebUI uses `http://host.docker.internal:1234/v1`.
 
-Open the **App** tab. `SKILL.md` and `references/wiring-recipes.md` (if present in this Space) are the Hermes deep reference and are not duplicated on the page.
+Open the **App** tab. `SKILL.md` and `references/wiring-recipes.md` (if present) are the Hermes deep reference (44 recipes) and are not duplicated on the page.
 
-- Tabby lab tour: https://huggingface.co/spaces/jpanasuk/tabby-tavern-stack
-- Tabby GitHub: https://github.com/jpanasuk-netizen/tabby-tavern-stack
+- Lab tour: https://huggingface.co/spaces/jpanasuk/tabby-tavern-stack
+- GitHub: https://github.com/jpanasuk-netizen/tabby-tavern-stack
 - dockroot-mcp: https://huggingface.co/spaces/jpanasuk/dockroot-mcp

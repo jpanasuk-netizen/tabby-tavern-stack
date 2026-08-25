@@ -6,12 +6,13 @@ colorTo: orange
 sdk: static
 pinned: true
 license: mit
-short_description: EXL3 TabbyAPI compose; llama.cpp is a neighbor stack
+short_description: Independent AI lab — EXL3 compose + llama.cpp 262k desk
 tags:
   - docker
   - local-ai
   - tabbyapi
   - sillytavern
+  - llama-cpp
   - mcp
   - exl3
   - private-ai
@@ -20,7 +21,7 @@ tags:
 
 # Tabby Tavern 2.0 (Space)
 
-Static **lab tour** for the Tabby Tavern compose stack.
+Static **lab tour** for the Independent AI Lab on LightBringer: EXL3 Tabby compose, llama.cpp 262k operator desk, VS Code / Continue / Grok / Hermes, and MCP.
 
 This Space is **not** the model card. The model card (same slug, no `/spaces/`) is:
 
@@ -32,4 +33,4 @@ Open the **App** tab for the page.
 - Sell sheet: https://huggingface.co/spaces/jpanasuk/tabby-tavern-sell-sheet
 - Companions: [dockroot-mcp](https://huggingface.co/spaces/jpanasuk/dockroot-mcp) · [connectivity](https://huggingface.co/spaces/jpanasuk/local-ai-stack-connectivity)
 
-Taproot (llama.cpp Qwen3.5-9B on :1234, WebUI :3001) is a **separate** lab project on the same machine. It is linked from the tour, not absorbed into Tabby.
+Tabby compose service names and ports stay Tabby. The llama.cpp desk is first-class in the story; its compose lives on the machine at `~/taproot` and is not copied into this git tree.

@@ -6,7 +6,7 @@ colorTo: indigo
 sdk: static
 pinned: true
 license: mit
-short_description: Private EXL3 compose lab — cards, MCPO, six services
+short_description: Independent AI lab — EXL3, llama.cpp 262k, MCP, VS Code
 tags:
   - portfolio
   - local-ai
@@ -18,9 +18,7 @@ tags:
 
 # Tabby Tavern 2.0 — Independent AI Lab
 
-Static one-pager for the **Tabby Tavern 2.0** product: TabbyAPI EXL3, SillyTavern character cards, Open WebUI, Ollama, SearXNG, MCPO.
-
-Taproot’s llama.cpp operator desk is a same-machine **neighbor**, not this stack.
+Static one-pager for the **whole LightBringer lab**: TabbyAPI EXL3, SillyTavern cards, Open WebUI, Ollama, SearXNG, MCPO, llama.cpp 262k operator desk, Continue / VS Code / Grok / Hermes.
 
 Open the **App** tab for the page.
 

@@ -1,19 +1,17 @@
 # Tabby-Tavern Development Log
 
-Engineering history for the containerized local AI lab. Public tree is sanitized — no live keys, no weights, no chat logs.
+Engineering history for the Independent AI Lab on LightBringer. Public tree is sanitized — no live keys, no weights, no chat logs.
 
-Tabby Tavern is **this** compose stack. Taproot is a **separate** project on the same machine. Do not merge the brands.
+**Tabby Tavern 2.0 is the whole lab:** EXL3 Tabby compose (this repo) + llama.cpp 262k operator desk (`~/taproot`) + VS Code / Continue / Grok / Hermes + MCP. Tabby **service names and ports stay Tabby**. Class files in `~/annie-scratch` stay out of this repo.
 
 ## Hardware baseline
 
 - Host: LightBringer — WSL2 Ubuntu
-- GPU: NVIDIA GeForce RTX 4070 (12 GB)
-- Environment: Docker Compose with NVIDIA GPU passthrough
-- Tabby inference: TabbyAPI + EXL3 / ExLlamaV3 (character path); Ollama (GGUF) secondary
-- Character frontend: SillyTavern (PNG character cards)
-- Tooling: MCPO + FastMCP stack server
-- Neighbor (not this repo): Taproot compose — llama.cpp Qwen3.5-9B on :1234 + Open WebUI :3001
-- Operator desk: VS Code (Linux snap + Windows Remote-WSL). Not a Tabby container.
+- GPU: NVIDIA GeForce RTX 4070 (12 GB) — **one heavy engine at a time**
+- Character / EXL3 layer: TabbyAPI + SillyTavern + Open WebUI :3000 + Ollama :11435 + SearXNG + MCPO
+- Long-context layer: llama.cpp Qwen3.5-9B `n_ctx` 262144 on :1234 + Open WebUI :3001
+- Desk: Windows VS Code + Remote-WSL + Continue 2.0; Grok 1.0.5; Hermes v0.20.0
+- Docker vision: `~/dockroot` helper + dockroot-mcp Space
 
 ## Week 1 — Core integration
 
@@ -95,36 +93,36 @@ Full from-scratch rebuild on clean WSL2 (same RTX 4070). Every fix is in the REA
 - Public `mcpo/config.json` no longer contains a live TabbyAPI key (placeholder only)
 - Cards, MCPO, WSL2 Dockerfile fix, and dual-backend Open WebUI are in the published compose
 
-## 2026-08-25 — operator path (Tabby down; Taproot neighbor owns the GPU)
+## 2026-08-25 — full lab: EXL3 compose + llama.cpp 262k desk
 
-GitHub README before this section described Tabby as if it were the live GPU owner. **Prefer the snapshot below** over that older framing. Tabby compose was not rewritten and was not renamed to Taproot.
+GitHub README was stale vs the live box (it still read as if Tabby owned the GPU). **This snapshot wins.** Tabby compose was **not** rewritten and was **not** renamed to Taproot. `~/annie-scratch` class files stay out of this repo.
 
-A brief Taproot rebrand of Tabby compose was **reverted**. Tabby names, ports, and brand stay Tabby. `~/annie-scratch` class files stay out of this repo and out of `~/taproot`.
+Tabby Tavern 2.0 **is** the whole LightBringer lab. The llama.cpp / Continue / Grok / Hermes path is first-class, not a footnote.
 
 ### What is actually running (LightBringer)
 
-- **Taproot** (`/home/jpanasuk/taproot/docker-compose.yml`, project name `taproot`) is a **different** stack:
+- **Operator layer** — `/home/jpanasuk/taproot/docker-compose.yml`, project name `taproot`:
   - `qwen38-llama-server` **Up**, `0.0.0.0:1234->8080`, image `ghcr.io/ggml-org/llama.cpp:server-cuda`, model Qwen3.5-9B UD-Q4_K_XL, `n_ctx` 262144. Container name is still `qwen38-llama-server` (yaml wants `taproot-qwen`; **not recreated** — do not bounce it).
-  - `taproot-webui` **Up** on **:3001**, `WEBUI_NAME=Taproot`, `OPENAI_API_BASE_URL=http://host.docker.internal:1234/v1`, data `/home/jpanasuk/taproot/open-webui-data`. Separate from Tabby Open WebUI **:3000**.
+  - `taproot-webui` **Up** on **:3001**, `WEBUI_NAME=Taproot`, `OPENAI_API_BASE_URL=http://host.docker.internal:1234/v1`, data `/home/jpanasuk/taproot/open-webui-data`. Separate from Tabby Open WebUI **:3000** so the UIs do not share a database.
 - `/home/jpanasuk/qwen38-agent/docker-compose.yml` still exists (27B then 9B 262k). Live llama started from this lineage.
-- `tabby-tavern_ai-network` was **removed** so the stacks do not mix.
+- `tabby-tavern_ai-network` was **removed** so the two GPU stacks do not collide (two heavy engines on 12 GB stall CUDA instead of erroring).
 - `/home/jpanasuk/tabby-tavern/docker-compose.yml` **restored** from `.bak-tabby` (Tabby names/ports). All Tabby containers **Exited** ~17 h, `restart=no`.
 - Grok 1.0.5 at `/home/jpanasuk/.local/bin/grok`. Hermes v0.20.0 at `~/.hermes/hermes-agent`.
-- VS Code Linux snap **1.134.0** on `~/annie-scratch` (Annie++ Python class only).
 - Windows VS Code **1.134.0** + Remote-WSL **0.104.3** + Continue **2.0** on `/home/jpanasuk/taproot`. Continue → `http://127.0.0.1:1234/v1` Qwen3.5-9B (`~/.continue/config.yaml`).
-- Dockroot `~/dockroot` is a local recipe/MCP helper (`tavern.sh`, `tavern_mcp.py`, `discover.py`, `recipes.py`), **not** running as a container.
+- Linux snap VS Code **1.134.0** on `~/annie-scratch` is **Annie++ Python class only** — not the lab desk.
+- Dockroot `~/dockroot` is a local recipe/MCP helper (`tavern.sh`, `tavern_mcp.py`, `discover.py`, `recipes.py`), **not** running as a container right now.
 
 ### VRAM last call
 
-RTX 4070: **11450 / 12282 MiB** with llama resident. Tabby GPU (Ollama / TabbyAPI) **stays down** while llama is on the 4070. Xwayland ~3.6 GB when the desktop is up. Do not kill grok / hermes / llama to clean tavern. Two heavy engines on 12 GB stall CUDA instead of erroring.
+RTX 4070: **11450 / 12282 MiB** with llama resident. Tabby GPU (Ollama / TabbyAPI) **stays down** while llama is on the 4070. Xwayland ~3.6 GB when the desktop is up. Do not kill grok / hermes / llama to clean tavern.
 
 No Qwen3.5-9B llama.cpp tok/s is recorded here.
 
 ### Public 2.0 packaging (same calendar day)
 
-- README retitled **Tabby Tavern 2.0** with a short “same machine, different stack” panel. Compose architecture unchanged.
-- Static HTML family under `docs/spaces/` (shared `tavern.css`): sell sheet one-pager, slightly longer lab-tour Space, connectivity companion, dockroot companion.
-- Intended new Hugging Face **Space** `jpanasuk/tabby-tavern-stack` (static SDK) is distinct from the existing **model card** at `huggingface.co/jpanasuk/tabby-tavern-stack`. Upload commands: `docs/spaces/UPLOAD.md`.
+- README retitled **Tabby Tavern 2.0** as the Independent AI Lab: EXL3 character path **and** llama.cpp 262k operator path **and** VS Code/Continue/Grok/Hermes **and** MCP. Compose architecture in this repo unchanged (Tabby names/ports).
+- Static HTML family under `docs/spaces/` (shared `tavern.css`): sell sheet, lab-tour Space, connectivity companion, dockroot companion — one product story.
+- Intended new Hugging Face **Space** `jpanasuk/tabby-tavern-stack` (static SDK) is distinct from the existing **model card** at `huggingface.co/jpanasuk/tabby-tavern-stack`. Upload commands: `docs/spaces/UPLOAD.md`. This environment has no HF token; the Space is not live until those commands run.
 
 ## Open follow-ups
 
