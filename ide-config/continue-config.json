@@ -1,0 +1,21 @@
+{
+  "models": [
+    {
+      "title": "Qwen3.5-9B",
+      "provider": "openai",
+      "model": "Qwen3.5-9B",
+      "apiBase": "http://qwen:8080/v1",
+      "apiKey": "qwen"
+    }
+  ],
+  "tabAutocompleteModel": {
+    "title": "Qwen3.5-9B",
+    "provider": "openai",
+    "model": "Qwen3.5-9B",
+    "apiBase": "http://qwen:8080/v1",
+    "apiKey": "qwen"
+  },
+  "embeddingsProvider": {
+    "provider": "transformers.js"
+  }
+}

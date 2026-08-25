@@ -1,40 +1,178 @@
+# Tabby Tavern UNIFIED stack (public tree)
+# Merges former Taproot (Qwen llama.cpp) + Basecamp coding pack + Tabby Tavern chat/MCP.
+# Default: 15 services, one network. TabbyAPI/Ollama: --profile alternate-inference
+# dockroot: --profile diagnostics
+# Copy .env.example -> .env and set your own keys. Weights are not included.
+
+# Unified Tabby-Tavern stack
+# All services share one Docker network: tabby-tavern_ai-network.
+# Default inference path: qwen (llama.cpp) -> Open WebUI.
+# tabbyapi and ollama are included under the `alternate-inference` profile
+# because loading multiple GPU engines simultaneously can exhaust VRAM.
+name: tabby-tavern
+
 networks:
   ai-network:
+    name: tabby-tavern_ai-network
     driver: bridge
 
+volumes:
+  open-webui:
+    name: tabby-tavern_open-webui
+  code-server-data:
+    name: basecamp_code-server-data
+  qdrant-data:
+    name: basecamp_qdrant-data
+  chroma-data:
+    name: basecamp_chroma-data
+  n8n-data:
+    name: basecamp_n8n-data
+  lobe-chat-data:
+    name: basecamp_lobe-chat-data
+  anythingllm-data:
+    name: basecamp_anythingllm-data
+  librechat-data:
+    name: basecamp_librechat-data
+  mongo-data:
+    name: basecamp_mongo-data
+  meilisearch-data:
+    name: basecamp_meilisearch-data
+  postgres-data:
+    name: basecamp_postgres_data
+
 services:
+  # Primary inference engine: Qwen3.5-9B GGUF on llama.cpp CUDA.
+  qwen:
+    image: ghcr.io/ggml-org/llama.cpp:server-cuda
+    container_name: tabby-tavern-qwen
+    restart: unless-stopped
+    ports:
+      - "1234:8080"
+    shm_size: "8gb"
+    gpus: all
+    volumes:
+      - ./models/Qwen3.5-9B-GGUF:/models:ro
+      - ./chat-templates/chat_template.jinja:/templates/chat_template.jinja:ro
+    environment:
+      NVIDIA_VISIBLE_DEVICES: all
+      NVIDIA_DRIVER_CAPABILITIES: compute,utility
+    command:
+      - -m
+      - /models/Qwen3.5-9B-UD-Q4_K_XL.gguf
+      - --alias
+      - Qwen3.5-9B
+      - --host
+      - "0.0.0.0"
+      - --port
+      - "8080"
+      - --ctx-size
+      - "262144"
+      - --ubatch-size
+      - "512"
+      - --parallel
+      - "1"
+      - --n-gpu-layers
+      - "99"
+      - --flash-attn
+      - on
+      - --cache-type-k
+      - q4_0
+      - --cache-type-v
+      - q4_0
+      - --fit
+      - on
+      - --fit-target
+      - "256"
+      - --fit-ctx
+      - "65536"
+      - --temp
+      - "0.7"
+      - --top-k
+      - "20"
+      - --top-p
+      - "0.95"
+      - --min-p
+      - "0"
+      - --repeat-penalty
+      - "1"
+      - --presence-penalty
+      - "0"
+      - --jinja
+      - --chat-template-file
+      - /templates/chat_template.jinja
+      - --reasoning-format
+      - deepseek
+      - --reasoning-effort
+      - medium
+      - --reasoning-preserve
+      - --chat-template-kwargs
+      - '{"reasoning_effort":"medium","preserve_thinking":true}'
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 15s
+      timeout: 5s
+      retries: 40
+      start_period: 180s
+    networks: [ai-network]
+
+  # EXL3/EXL2 engine. Start explicitly with --profile alternate-inference.
   tabbyapi:
+    profiles: [alternate-inference]
     image: local/tabbyapi:exl3-fixed
-    container_name: tabby-tavern-tabbyapi-1
+    container_name: tabby-tavern-tabbyapi
     restart: unless-stopped
     ports:
       - "5000:5000"
     volumes:
       - ./tabby_models:/app/models
-      - ./tabby_config/config.yml:/app/config.yml
+      - ./tabby_config/config.yml:/app/config.yml:ro
+      - ./tabby_config/api_tokens.yml:/app/api_tokens.yml:ro
+    gpus: all
+    networks: [ai-network]
+
+  # Ollama/GGUF engine. Start explicitly with --profile alternate-inference.
+  ollama:
+    profiles: [alternate-inference]
+    image: ollama/ollama:latest
+    container_name: tabby-tavern-ollama
+    restart: unless-stopped
+    ports:
+      - "11435:11434"
     environment:
-      - CUDA_VISIBLE_DEVICES=0
-      - CUDA_DEVICE_ORDER=PCI_BUS_ID
-      - NVIDIA_VISIBLE_DEVICES=all
-      - PYTORCH_CUDA_ALLOC_CONF=max_split_size_mb:128
-      - OMP_NUM_THREADS=8
-      - EXLLAMA_GPU_LAYERS=999
-      - EXLLAMA_KV_CACHE=q8_0
-      - EXLLAMA_FLASH_ATTENTION=1
-    deploy:
-      resources:
-        reservations:
-          devices:
-            - driver: nvidia
-              count: all
-              capabilities: [gpu, compute, utility]
-    shm_size: 16g
-    networks:
-      - ai-network
+      OLLAMA_FLASH_ATTENTION: "1"
+      OLLAMA_KV_CACHE_TYPE: q8_0
+    volumes:
+      - ./ollama_data:/root/.ollama
+    gpus: all
+    networks: [ai-network]
+
+  # Canonical chat UI for the unified stack.
+  open-webui:
+    image: ghcr.io/open-webui/open-webui:main
+    container_name: tabby-tavern-open-webui
+    restart: unless-stopped
+    ports:
+      - "3000:8080"
+    volumes:
+      - open-webui:/app/backend/data
+    environment:
+      ENABLE_OLLAMA_API: "false"
+      ENABLE_OPENAI_API: "true"
+      OPENAI_API_BASE_URL: http://qwen:8080/v1
+      OPENAI_API_KEY: ${QWEN_API_KEY:-qwen}
+      ENABLE_RAG_WEB_SEARCH: "true"
+      RAG_WEB_SEARCH_ENGINE: searxng
+      SEARXNG_QUERY_URL: http://searxng:8080/search?q=<query>
+    depends_on:
+      qwen:
+        condition: service_healthy
+      searxng:
+        condition: service_started
+    networks: [ai-network]
 
   sillytavern:
     image: ghcr.io/sillytavern/sillytavern:latest
-    container_name: tabby-tavern-sillytavern-1
+    container_name: tabby-tavern-sillytavern
     restart: unless-stopped
     ports:
       - "8000:8000"
@@ -43,97 +181,172 @@ services:
       - ./sillytavern_data:/home/node/app/data
       - ./cards:/opt/cards:ro
     environment:
-      - WHITELIST_MODE=false
-    networks:
-      - ai-network
-
-  ollama:
-    image: ollama/ollama:latest
-    container_name: tabby-tavern-ollama-1
-    restart: unless-stopped
-    # Host 11435 avoids colliding with a host-level `ollama serve` on 11434.
-    # Open WebUI still uses http://ollama:11434 on the compose network.
-    ports:
-      - "11435:11434"
-    environment:
-      - CUDA_VISIBLE_DEVICES=0
-      - CUDA_DEVICE_ORDER=PCI_BUS_ID
-      - NVIDIA_VISIBLE_DEVICES=all
-      - OMP_NUM_THREADS=8
-      - OLLAMA_FLASH_ATTENTION=1
-      - OLLAMA_KV_CACHE_TYPE=q8_0
-      - OLLAMA_NUM_PARALLEL=1
-    volumes:
-      - ./ollama_data:/root/.ollama
-    deploy:
-      resources:
-        reservations:
-          devices:
-            - driver: nvidia
-              count: all
-              capabilities: [gpu, compute, utility]
-    shm_size: 16g
-    networks:
-      - ai-network
-
-  open-webui:
-    image: ghcr.io/open-webui/open-webui:main
-    container_name: tabby-tavern-open-webui-1
-    restart: unless-stopped
-    ports:
-      - "3000:8080"
-    volumes:
-      - ./openwebui_data:/app/backend/data
-    environment:
-      - OLLAMA_BASE_URL=http://ollama:11434
-      - OPENAI_API_BASE_URL=http://tabbyapi:5000/v1
-      - OPENAI_API_KEY=REPLACE_WITH_YOUR_TABBY_API_KEY
-      - ENABLE_OPENAI_API=true
-      - ENABLE_RAG_WEB_SEARCH=true
-      - RAG_WEB_SEARCH_ENGINE=searxng
-      - SEARXNG_QUERY_URL=http://searxng:8080/search?q=<query>
-    depends_on:
-      - ollama
-      - tabbyapi
-      - searxng
-    networks:
-      - ai-network
+      WHITELIST_MODE: "false"
+    networks: [ai-network]
 
   searxng:
     image: docker.io/searxng/searxng:latest
-    container_name: tabby-tavern-searxng-1
+    container_name: tabby-tavern-searxng
     restart: unless-stopped
     ports:
       - "8080:8080"
     volumes:
       - ./searxng_config:/etc/searxng
     environment:
-      - BASE_URL=http://localhost:8080/
-      - INSTANCE_NAME=Tabby-Tavern-Search
-    networks:
-      - ai-network
+      BASE_URL: http://localhost:8080/
+      INSTANCE_NAME: Tabby-Tavern-Search
+    networks: [ai-network]
 
   mcpo:
     image: ghcr.io/open-webui/mcpo:main
-    container_name: tabby-tavern-mcpo-1
+    container_name: tabby-tavern-mcpo
     restart: unless-stopped
     ports:
       - "8001:8000"
     volumes:
       - ./mcpo/config.json:/app/config/config.json:ro
       - ./mcp-servers:/opt/mcp-servers:ro
-    command:
-      - --host
-      - "0.0.0.0"
-      - --port
-      - "8000"
-      - --config
-      - /app/config/config.json
-      - --api-key
-      - "REPLACE_WITH_YOUR_MCPO_API_KEY"
-    depends_on:
-      - tabbyapi
-      - ollama
-      - searxng
-    networks:
-      - ai-network
+    command: ["--host", "0.0.0.0", "--port", "8000", "--config", "/app/config/config.json", "--api-key", "${MCPO_API_KEY:-change-me}"]
+    networks: [ai-network]
+
+  # Read-only Docker/MCP observability. Not exposed on a host port.
+  dockroot:
+    profiles: [diagnostics]
+    build:
+      context: ../dockroot
+    image: local/dockroot-mcp:unified
+    container_name: tabby-tavern-dockroot
+    restart: "no"
+    networks: [ai-network]
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+
+  code-server:
+    image: codercom/code-server:latest
+    container_name: tabby-tavern-code-server
+    restart: unless-stopped
+    ports:
+      - "8443:8080"
+    volumes:
+      - code-server-data:/home/coder/.local/share/code-server
+      - ./workspace:/home/coder/workspace
+      - ./ide-config/continue-config.json:/home/coder/.config/Continue/config.json:ro
+    environment:
+      PASSWORD: ${CODE_SERVER_PASSWORD:-change-me}
+    user: root
+    entrypoint: >-
+      /bin/sh -c "chown -R coder:coder /home/coder 2>/dev/null;
+      su coder -c 'code-server --install-extension Continue.continue --force' 2>/dev/null;
+      su coder -c 'code-server --install-extension TabbyML.vscode-tabby --force' 2>/dev/null;
+      su coder -c 'code-server --install-extension coder.coder --force' 2>/dev/null;
+      exec su coder -c 'code-server --bind-addr 0.0.0.0:8080 --disable-telemetry'"
+    networks: [ai-network]
+
+  qdrant:
+    image: qdrant/qdrant:latest
+    container_name: tabby-tavern-qdrant
+    restart: unless-stopped
+    ports: ["6333:6333", "6334:6334"]
+    volumes: [qdrant-data:/qdrant/storage]
+    networks: [ai-network]
+
+  chroma:
+    image: chromadb/chroma:latest
+    container_name: tabby-tavern-chroma
+    restart: unless-stopped
+    ports: ["8005:8000"]
+    volumes: [chroma-data:/chroma/chroma]
+    networks: [ai-network]
+
+  n8n:
+    image: n8nio/n8n:latest
+    container_name: tabby-tavern-n8n
+    restart: unless-stopped
+    ports: ["5678:5678"]
+    volumes: [n8n-data:/home/node/.n8n]
+    environment:
+      N8N_BASIC_AUTH_ACTIVE: "false"
+      GENERIC_TIMEZONE: UTC
+    networks: [ai-network]
+
+  lobe-chat:
+    image: lobehub/lobe-chat:latest
+    container_name: tabby-tavern-lobe-chat
+    restart: unless-stopped
+    ports: ["3210:3210"]
+    volumes: [lobe-chat-data:/app/data]
+    environment:
+      OPENAI_PROXY_URL: http://qwen:8080/v1
+      OPENAI_API_KEY: ${QWEN_API_KEY:-qwen}
+    networks: [ai-network]
+
+  anythingllm:
+    image: mintplexlabs/anythingllm:latest
+    container_name: tabby-tavern-anythingllm
+    restart: unless-stopped
+    ports: ["3002:3001"]
+    volumes: [anythingllm-data:/app/server/storage]
+    environment:
+      STORAGE_DIR: /app/server/storage
+      OLLAMA_BASE_URL: http://ollama:11434
+    networks: [ai-network]
+
+  librechat:
+    image: ghcr.io/danny-avila/librechat:latest
+    container_name: tabby-tavern-librechat
+    restart: unless-stopped
+    depends_on: [mongo]
+    ports: ["3080:3080"]
+    volumes: [librechat-data:/app/librechat]
+    environment:
+      MONGO_URI: mongodb://mongo:27017/LibreChat
+      JWT_SECRET: ${LIBRECHAT_JWT_SECRET:-change-me}
+      OPENAI_API_KEY: ${QWEN_API_KEY:-qwen}
+      OPENAI_API_BASE: http://qwen:8080/v1
+      ALLOW_SOCIAL_LOGIN: "true"
+    networks: [ai-network]
+
+  mongo:
+    image: mongo:7
+    container_name: tabby-tavern-mongo
+    restart: unless-stopped
+    ports: ["27017:27017"]
+    volumes: [mongo-data:/data/db]
+    networks: [ai-network]
+
+  meilisearch:
+    image: getmeili/meilisearch:latest
+    container_name: tabby-tavern-meilisearch
+    restart: unless-stopped
+    ports: ["7700:7700"]
+    volumes: [meilisearch-data:/meili_data]
+    environment:
+      MEILI_MASTER_KEY: ${MEILI_MASTER_KEY:-change-me}
+      MEILI_ENV: development
+    networks: [ai-network]
+
+  postgres:
+    image: pgvector/pgvector:pg16
+    container_name: tabby-tavern-postgres
+    restart: unless-stopped
+    ports: ["5432:5432"]
+    environment:
+      POSTGRES_DB: hermes
+      POSTGRES_USER: hermes
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-change-me}
+    volumes: [postgres-data:/var/lib/postgresql/data]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U hermes -d hermes"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks: [ai-network]
+
+  # Optional legacy compatibility name for clients expecting `tabby`.
+  # Deliberately omitted: the old Tabby image was CUDA-linked and crash-looped.
+
+# Removed by design:
+# - flowise: upstream dependency export crash
+# - tabby: old image required CUDA libraries even in CPU mode
+# - second Open WebUI: one canonical UI avoids duplicated state and ports
+# - second Qwen service: unified into qwen

@@ -6,8 +6,12 @@
       "env": {
         "TABBYAPI_URL": "http://tabbyapi:5000",
         "OLLAMA_URL": "http://ollama:11434",
-        "TABBYAPI_KEY": "REPLACE_WITH_YOUR_TABBY_API_KEY"
+        "TABBYAPI_KEY": "${TABBYAPI_KEY}"
       }
+    },
+    "tavern": {
+      "command": "python3",
+      "args": ["/opt/mcp-servers/tavern_mcp.py"]
     }
   }
 }

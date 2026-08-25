@@ -31,24 +31,27 @@ pipeline_tag: text-generation
 library_name: exllama
 ---
 
-# Tabby-Tavern AI Stack
+# Tabby Tavern UNIFIED
 
-**Complete containerized local AI infrastructure** for a private lab:
+Taproot + Basecamp + Tabby Tavern on **one Compose project** and **one Docker network**.
+
+Default GPU engine is **Qwen3.5-9B** (llama.cpp CUDA). TabbyAPI EXL3 and Ollama are real, and they sit behind `--profile alternate-inference` so a 12 GB card does not load three engines at once.
 
 | Layer | Software |
 | --------------------- | ----------------------------------- |
-| High-perf inference | **TabbyAPI** + **EXL3 / ExLlamaV3** |
-| Character chat UI | **SillyTavern** (+ shipped **character cards**) |
-| General LLM workspace | **Open WebUI** (Ollama **and** TabbyAPI) |
-| GGUF backend | **Ollama** |
-| Private search | **SearXNG** |
-| Tooling / MCP | **MCPO** + FastMCP stack server |
+| Primary inference | **Qwen3.5-9B** · llama.cpp CUDA · `http://qwen:8080/v1` |
+| Alternate inference | **TabbyAPI EXL3** + **Ollama** (profile) |
+| Canonical chat | **Open WebUI** |
+| Character chat | **SillyTavern** + shipped **character cards** |
+| Private search | **SearXNG** (JSON) |
+| MCP | **MCPO** + FastMCP · optional **dockroot** diagnostics |
+| Coding pack (ex-Basecamp) | code-server, Continue, Qdrant, Chroma, n8n, Lobe, AnythingLLM, LibreChat, Mongo, Meilisearch, pgvector |
 
 This is a **private-lab / portfolio** stack — production-*shaped*, not a multi-tenant SaaS product and not a hosted inference endpoint.
 
 Lab baseline hardware: **NVIDIA GeForce RTX 4070** (Linux + Docker Compose + NVIDIA Container Toolkit, WSL2 Ubuntu).
 
-Release **v2.0.0** (Aug 2026) matches the live lab: MCPO is in compose, Open WebUI talks to both backends, SillyTavern cards ship in-tree, and the WSL2 EXL3 bring-up notes are in this card.
+Release **v3.0.0 UNIFIED** (Aug 2026) matches the live lab after Hermes reconciled Taproot and Basecamp into this tree: 15 default services on `tabby-tavern_ai-network`, Qwen healthy, MCPO `/docs` 200, character cards in `cards/`.
 
 | Surface | URL |
 | -------------------------- | ---------------------------------------------------------------------------------------------------------------------------------- |
@@ -67,24 +70,34 @@ Release **v2.0.0** (Aug 2026) matches the live lab: MCPO is in compose, Open Web
 
 ## Service ports (compose defaults)
 
-| Compose service | Container name (default) | Host port | In-container | Role |
-| --------------- | ------------------------------ | ------------ | ------------ | ------------------------------- |
-| `sillytavern` | `tabby-tavern-sillytavern-1` | **8000** | 8000 | Chat / character frontend |
-| `open-webui` | `tabby-tavern-open-webui-1` | **3000** | 8080 | General LLM workspace |
-| `tabbyapi` | `tabby-tavern-tabbyapi-1` | **5000** | 5000 | EXL3 high-performance inference |
-| `ollama` | `tabby-tavern-ollama-1` | **11435** | 11434 | GGUF model backend (host remap) |
-| `searxng` | `tabby-tavern-searxng-1` | **8080** | 8080 | Private metasearch |
-| `mcpo` | `tabby-tavern-mcpo-1` | **8001** | 8000 | MCP → OpenAPI proxy |
+Default path is **Qwen → Open WebUI**. Inside Docker use the service name, not localhost.
 
-Ollama is published on **11435** so a host-level `ollama serve` on 11434 does not collide. Open WebUI still reaches it on the compose network at `http://ollama:11434`.
+| Service | Host | In-network | Role |
+| ------- | ---- | ---------- | ---- |
+| `qwen` | **1234** | `http://qwen:8080/v1` | Primary llama.cpp CUDA · Qwen3.5-9B |
+| `open-webui` | **3000** | 8080 | Canonical chat UI |
+| `sillytavern` | **8000** | 8000 | Character frontend + cards |
+| `searxng` | **8080** | 8080 | Private JSON search |
+| `mcpo` | **8001** | 8000 | MCP → OpenAPI |
+| `code-server` | **8443** | 8080 | Browser VS Code + Continue |
+| `librechat` | **3080** | 3080 | Extra chat UI |
+| `lobe-chat` | **3210** | 3210 | Extra chat UI |
+| `anythingllm` | **3002** | 3001 | RAG workspace |
+| `n8n` | **5678** | 5678 | Workflows |
+| `qdrant` | **6333/6334** | 6333 | Vector DB |
+| `chroma` | **8005** | 8000 | Embeddings DB |
+| `meilisearch` | **7700** | 7700 | Full-text |
+| `postgres` | **5432** | 5432 | pgvector / Hermes memory |
+| `mongo` | **27017** | 27017 | LibreChat |
+| `tabbyapi` | **5000** | 5000 | EXL3 — `--profile alternate-inference` |
+| `ollama` | **11435** | 11434 | GGUF — `--profile alternate-inference` |
 
-Open WebUI is wired to **both** backends:
+Open WebUI on the unified stack:
 
 ```yaml
-OLLAMA_BASE_URL=http://ollama:11434
-OPENAI_API_BASE_URL=http://tabbyapi:5000/v1
-OPENAI_API_KEY=${TABBYAPI_API_KEY}
+ENABLE_OLLAMA_API=false
 ENABLE_OPENAI_API=true
+OPENAI_API_BASE_URL=http://qwen:8080/v1
 ENABLE_RAG_WEB_SEARCH=true
 RAG_WEB_SEARCH_ENGINE=searxng
 SEARXNG_QUERY_URL=http://searxng:8080/search?q=<query>

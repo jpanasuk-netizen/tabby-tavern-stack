@@ -58,3 +58,8 @@ tabbyAPI-src/.git/
 !**/.gitkeep
 !cards/**
 !sillytavern_data/default-user/characters/**
+
+docker-compose.live.yml
+_sanitize_compose.py
+*.py~
+

@@ -1,12 +1,12 @@
 ---
-title: Tabby Tavern — Independent AI Lab
+title: Tabby Tavern UNIFIED
 emoji: 🏠
-colorFrom: blue
-colorTo: indigo
+colorFrom: red
+colorTo: yellow
 sdk: static
 pinned: true
 license: mit
-short_description: v2.0.0 private AI lab — EXL3, cards, MCPO
+short_description: Taproot + Basecamp + Tabby Tavern. 15 services. One compose.
 tags:
   - portfolio
   - local-ai
@@ -14,14 +14,14 @@ tags:
   - private-ai
   - mcp
   - sillytavern
+  - llama-cpp
 ---
 
-# Tabby Tavern — Independent AI Lab
+# Tabby Tavern UNIFIED
 
-Static one-page for the **v2.0.0** stack: TabbyAPI EXL3, SillyTavern character cards, Open WebUI, Ollama, SearXNG, MCPO.
+Taproot inference, Basecamp coding pack, and Tabby Tavern chat/MCP on **one Compose file**.
 
-Open the **App** tab for the page.
+Open the **App** tab.
 
-- Model card: https://huggingface.co/jpanasuk/tabby-tavern-stack
-- GitHub release: https://github.com/jpanasuk-netizen/tabby-tavern-stack/releases/tag/v2.0.0
-- Companions: [dockroot-mcp](https://huggingface.co/spaces/jpanasuk/dockroot-mcp) · [connectivity skill](https://huggingface.co/spaces/jpanasuk/local-ai-stack-connectivity)
+- Stack: https://huggingface.co/jpanasuk/tabby-tavern-stack
+- GitHub: https://github.com/jpanasuk-netizen/tabby-tavern-stack

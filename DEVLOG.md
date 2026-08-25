@@ -6,10 +6,25 @@ Engineering history for the containerized local AI lab. Public tree is sanitized
 
 - GPU: NVIDIA GeForce RTX 4070 (12 GB)
 - Environment: WSL2 Ubuntu + Docker Compose with NVIDIA GPU passthrough
-- Primary inference path: TabbyAPI + EXL3 / ExLlamaV3
-- Secondary path: Ollama (GGUF)
+- Primary inference path (v3 UNIFIED): Qwen3.5-9B GGUF on llama.cpp CUDA (`qwen` service)
+- Alternate inference (profile): TabbyAPI EXL3 + Ollama GGUF
 - Character frontend: SillyTavern (PNG character cards)
-- Tooling: MCPO + FastMCP stack server
+- Tooling: MCPO + FastMCP; optional dockroot diagnostics
+- Coding pack: former Basecamp volumes on the same network
+
+## v3.0.0 UNIFIED — Taproot + Basecamp folded in (2026-08-25)
+
+Hermes session `20260825_002829` merged the running Taproot Qwen stack and Basecamp coding pack into `/home/jpanasuk/tabby-tavern/docker-compose.yml`.
+
+- Compose project: `tabby-tavern`
+- Network: `tabby-tavern_ai-network`
+- Default: 15 services. Qwen and Postgres healthy. SearXNG / MCPO / code-server / Qdrant / Meilisearch HTTP 200.
+- Primary endpoint: `http://qwen:8080/v1` in-network, `http://localhost:1234/v1` on the host. Model alias `Qwen3.5-9B`.
+- TabbyAPI + Ollama: `--profile alternate-inference` (VRAM contention).
+- dockroot: `--profile diagnostics`, socket read-only, no host port.
+- Basecamp named volumes preserved (`basecamp_*`).
+- Public tree sanitizes host model paths to `./models/...` and drops `external: true` so a stranger can `up` without those volume names pre-created.
+- Sell sheet rewritten from this live graph — not the old 6-service pitch and not the fake 21-service pitch.
 
 ## Week 1 — Core integration
 
